@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import './App.css';
 import Sidebar from './Components/Sidebar';
 import Pharmacies from './Pages/Pharmacies';
@@ -7,34 +7,71 @@ import ERUs from './Pages/ERUs';
 import Targets from './Pages/Targets';
 import Notifications from './Pages/Notifications';
 import Settings from './Pages/Settings';
+import Login from './Pages/Login';
 import styled from 'styled-components';
+import Register from './Pages/Register';
 
 export default function App() {
+
+  const location = useLocation();
+
+  // Determine if the current location is the login or registration page
+  const isAuthPage = location.pathname === '/Login' || location.pathname === '/register';
+
   return (
     <Container>
-      <Sidebar />
-      <Content>
-        <Routes>
-          <Route path="/" element={<Pharmacies />} />
-          <Route path="/pharmacies" element={<Pharmacies />} />
-          <Route path="/stock" element={<Stock />} />
-          <Route path="/eru" element={<ERUs />} />
-          <Route path="/targets" element={<Targets />} />
-          <Route path="/notifications" element={<Notifications />} />
-          <Route path="/settings" element={<Settings />} />
-        </Routes>
-      </Content>
+      {!isAuthPage && <Sidebar />}
+      <ContentWrapper>
+        <Gradient />
+        {isAuthPage ? (
+          <>
+            <Routes>
+              <Route path="/Login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+            </Routes>
+          </>
+        ) : (
+          <Content>
+            <Routes>
+              <Route path="/" element={<Pharmacies />} />
+              <Route path="/pharmacies" element={<Pharmacies />} />
+              <Route path="/stock" element={<Stock />} />
+              <Route path="/eru" element={<ERUs />} />
+              <Route path="/targets" element={<Targets />} />
+              <Route path="/notifications" element={<Notifications />} />
+              <Route path="/settings" element={<Settings />} />
+            </Routes>
+          </Content>
+        )}
+      </ContentWrapper>
     </Container>
   );
 }
+
+// Rest of the code...
 
 const Container = styled.div`
   display: flex;
   height: 150vh;
 `;
 
+const ContentWrapper = styled.div`
+  flex: 1;
+  position: relative;
+`;
+
+const Gradient = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 500px;
+  z-index: -50;
+  background: linear-gradient(180deg, rgb(225 106 50 / 35%) 35%, rgb(229 229 229) 100%, rgb(229 229 229) 50%);
+`;
+
 const Content = styled.div`
-  display: flex;
   margin-left: 270px;
   margin-top: 20px;
+  /* Add other styling for the content here */
 `;

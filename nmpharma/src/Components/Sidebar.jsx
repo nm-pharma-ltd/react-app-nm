@@ -70,7 +70,7 @@ export default function Sidebar() {
         </MenuItemIcon>
         Settings
       </MenuItem2>
-      <MenuItem2>
+      <MenuItem2 to="/Login" >
         <MenuItemIcon>
           <FaArrowRightFromBracket />
         </MenuItemIcon>
@@ -90,6 +90,7 @@ const StyledSidebar = styled.div`
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   overflow-y: auto;
   border-radius: 20px;
+  z-index: 999;
 `;
 
 const LogoContainer = styled.div`
@@ -151,7 +152,7 @@ const MenuItem = styled(NavLink)`
   }
 `;
 
-const MenuItem2 = styled.div`
+const MenuItem2 = styled(NavLink)`
   padding: 8px;
   display: flex;
   align-items: center;
@@ -161,15 +162,12 @@ const MenuItem2 = styled.div`
   border-radius: 10px;
   font-size: 14px;
   margin: 0 20px;
+  text-decoration: none;
 
   &:hover {
     color: #5d5d5d;
     -webkit-transition: all 0.25s ease-in-out;
     transition: all 0.25s ease-in-out;
-  }
-
-  &.active {
-    color: #555555;
   }
 `;
 
