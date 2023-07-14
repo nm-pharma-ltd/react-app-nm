@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
+import { NavLink, useNavigate } from 'react-router-dom'; // Import useNavigate hook
 import styled from 'styled-components';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import LogoBlack from '../img/Logo2.png';
@@ -8,6 +8,7 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate(); // Initialize useNavigate hook
 
+  
   const togglePasswordVisibility = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
@@ -23,20 +24,31 @@ export default function Register() {
       <LoginForm>
         <Logo src={LogoBlack} alt="Company Logo" />
         <Title>Register here</Title>
-        <Subtitle>Enter your email and password</Subtitle>
+        <Subtitle>Enter your credentials here.</Subtitle>
+        <InputLabel>
+          Name
+          <Input type="text" placeholder="Joe Doe" />
+        </InputLabel>
         <InputLabel>
           Email
-          <Input type="text" placeholder="Email" />
+          <Input type="email" placeholder="example@wow.com" />
         </InputLabel>
         <InputLabel>
           Password
-          <Input type={showPassword ? 'text' : 'password'} placeholder="Password" />
+          <Input type={showPassword ? 'text' : 'password'} placeholder="Strong password" />
           <EyeIcon onClick={togglePasswordVisibility}>
             {showPassword ? <FaEyeSlash /> : <FaEye />}
           </EyeIcon>
         </InputLabel>
-        <Button onClick={handleLogin}>Login</Button> {/* Update onClick handler */}
-        <RegisterLink href="#">New user? Register here</RegisterLink>
+        <InputLabel>
+          Password again
+          <Input type={showPassword ? 'text' : 'password'} placeholder="Type the same password as above" />
+          <EyeIcon onClick={togglePasswordVisibility}>
+            {showPassword ? <FaEyeSlash /> : <FaEye />}
+          </EyeIcon>
+        </InputLabel>
+        <Button onClick={handleLogin}>Register</Button> {/* Update onClick handler */}
+        <RegisterLink to="/Login" >Already have an account Login here</RegisterLink>
       </LoginForm>
     </Container>
   );
@@ -63,7 +75,6 @@ const LoginForm = styled.form`
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   background: #fff;
-  height: 530px;
   width: 420px;
   justify-content: center;
 `;
@@ -146,7 +157,7 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
-const RegisterLink = styled.a`
+const RegisterLink = styled(NavLink)`
   margin-top: 10px;
   font-size: 12px;
   color: #da552c; /* Change to the button color */

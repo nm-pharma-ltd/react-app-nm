@@ -16,7 +16,7 @@ export default function App() {
   const location = useLocation();
 
   // Determine if the current location is the login or registration page
-  const isAuthPage = location.pathname === '/Login' || location.pathname === '/register';
+  const isAuthPage = location.pathname === '/Login' || location.pathname === '/Register';
 
   return (
     <Container>
@@ -27,7 +27,7 @@ export default function App() {
           <>
             <Routes>
               <Route path="/Login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
+              <Route path="/Register" element={<Register />} />
             </Routes>
           </>
         ) : (
@@ -52,7 +52,7 @@ export default function App() {
 
 const Container = styled.div`
   display: flex;
-  height: 150vh;
+  //min-height: 150vh;
 `;
 
 const ContentWrapper = styled.div`

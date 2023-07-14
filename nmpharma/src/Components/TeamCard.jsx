@@ -29,32 +29,17 @@ const TeamCard = ({ teamName, monthGoal, yearGoal, currentAmount }) => {
       </ProgressBarWrapper>
       <Earned>
         <EarnedLabel>Earned now</EarnedLabel>
-        <EarnedAmount>
-          <GreenBox>
-          {currentAmount} €
-          </GreenBox>
-        </EarnedAmount>
+        <GreenBox>{currentAmount} €</GreenBox>
       </Earned>
     </TeamBox>
   );
 };
 
-const StyledLinearProgress = styled(LinearProgress)`
-  height: 12px;
-  border-radius: 6px;
-  background-color: #E16A32;
-
-  & .MuiLinearProgress-bar {
-    border-radius: 6px;
-    background-color: #FCAE91;
-  }
-`;
-
-
 const TeamBox = styled.div`
-  width: 350px;
+  min-width: 200px;
+  width: 31%;
   border: 1px solid #ccc;
-  border-radius: 20px;
+  border-radius: 8px;
   padding: 16px;
   margin-right: 16px;
   margin-bottom: 16px;
@@ -77,14 +62,14 @@ const Goal = styled.div`
   margin-bottom: 8px;
 `;
 
-const GoalLabel = styled.p`
+const GoalLabel = styled.span`
   margin: 0;
   margin-right: 8px;
   font-size: 14px;
   color: #555;
 `;
 
-const GoalAmount = styled.p`
+const GoalAmount = styled.span`
   margin: 0;
   font-size: 14px;
 `;
@@ -94,13 +79,14 @@ const ProgressBarWrapper = styled.div`
   margin-bottom: 8px;
 `;
 
-
+const StyledLinearProgress = styled(LinearProgress)`
+  height: 10px;
+`;
 
 const LinearProgressLabel = styled(Typography)`
   font-size: 12px;
   color: #555;
   margin-top: 4px;
-  text-align: center;
 `;
 
 const Earned = styled.div`
@@ -109,16 +95,16 @@ const Earned = styled.div`
   margin-top: 8px;
 `;
 
-const EarnedLabel = styled.p`
+const EarnedLabel = styled.span`
   margin: 0;
   margin-right: 8px;
   font-size: 14px;
   color: #555;
 `;
 
-const EarnedAmount = styled.p`
-  margin: 0;
-  font-size: 14px;
-`;
+// const EarnedAmount = styled.span`
+//   margin: 0;
+//   font-size: 14px;
+// `;
 
 export default TeamCard;

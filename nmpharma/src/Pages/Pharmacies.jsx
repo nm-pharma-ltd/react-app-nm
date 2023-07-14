@@ -5,6 +5,7 @@ import Clients from "../Components/Clients";
 import {FaCirclePlus} from 'react-icons/fa6'
 import { NavLink } from "react-router-dom";
 import TeamCard from '../Components/TeamCard';
+import ChatBox from "../Components/ChatBox";
 
 export default function Pharmacies() {
 
@@ -27,6 +28,7 @@ export default function Pharmacies() {
           <FaCirclePlus/>
         </IconLink>
       </IconContainer>
+
       <TeamsContainer>
       {teams.map((team, index) => (
         <TeamCard
@@ -38,7 +40,8 @@ export default function Pharmacies() {
         />
       ))}
       </TeamsContainer>
-
+      <h2>Chat</h2>
+      <ChatBox/>
     </>
   );
 }
@@ -65,12 +68,13 @@ const IconContainer = styled.div`
   justify-content: flex-start;
 `;
 
-const IconLink = styled(NavLink)`
+export const IconLink = styled(NavLink)`
   padding: 10px;
   cursor: pointer;
   text-decoration: none;
   display: flex;
   color: #d54529;
+  font-size: 20px;
 
   &:hover {
     color: #5d5d5d;
