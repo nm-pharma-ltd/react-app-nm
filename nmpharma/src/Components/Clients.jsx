@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { GreenBox, RedBox, ViewDetailsLink } from "./ProfitQuantityTable";
 
 export default function Clients() {
   return (
@@ -7,7 +8,7 @@ export default function Clients() {
       <Card>
         <CardHeader>
           <Title>Clients (Pharmacies)</Title>
-          <ViewDetailsLink href="#">View details</ViewDetailsLink>
+          <ViewDetailsLink to="/pharmacies/clientdetails">View details</ViewDetailsLink>
         </CardHeader>
         <Subtitle>TOP 10</Subtitle>
         <TableContainer>
@@ -17,7 +18,7 @@ export default function Clients() {
                 <TableHeaderCellLeft>RANK</TableHeaderCellLeft>
                 <TableHeaderCell>NAME</TableHeaderCell>
                 <TableHeaderCell>Profit</TableHeaderCell>
-                <TableHeaderCellRight>Monthly sales</TableHeaderCellRight>
+                <TableHeaderCellRight>MONTHLY SALES</TableHeaderCellRight>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -117,10 +118,7 @@ const Subtitle = styled.p`
   color: #7e7e7e;
 `;
 
-const ViewDetailsLink = styled.a`
-  color: #e16a32;
-  text-decoration: none;
-`;
+
 
 const TableContainer = styled.div`
   overflow-x: auto;
@@ -233,40 +231,4 @@ const renderProfitBox = (profit) => {
   }
 };
 
-const GreenBox = styled.div`
-  height: 22px;
-  text-align: center;
-  border-radius: 100px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #368639;
-  margin: 0 auto;
-  width: 65px;
-  background-color: #cfffd1;
-  font-size: 13px;
 
-  @media (max-width: 768px) {
-    width: 55px;
-    font-size: 12px;
-  }
-`;
-
-const RedBox = styled.div`
-  height: 22px;
-  text-align: center;
-  border-radius: 100px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #af0a0a;
-  margin: 0 auto;
-  width: 65px;
-  background-color: #ffc8c8;
-  font-size: 13px;
-
-  @media (max-width: 768px) {
-    width: 55px;
-    font-size: 12px;
-  }
-`;
