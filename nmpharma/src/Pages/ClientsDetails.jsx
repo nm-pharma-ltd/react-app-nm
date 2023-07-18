@@ -24,18 +24,18 @@ const Container = styled.div`
   margin-bottom: 20px;
 `;
 
-const TitleWrapper = styled.div`
+export const TitleWrapper = styled.div`
   display: flex;
   align-items: center;
   flex-wrap: wrap;
 `;
 
-const Title = styled.h2`
+export const Title = styled.h2`
   margin: 0;
   display: flex;
 `;
 
-const GoBackButton = styled(NavLink)`
+export const GoBackButton = styled(NavLink)`
   padding: 4px;
   cursor: pointer;
   font-weight: 600;

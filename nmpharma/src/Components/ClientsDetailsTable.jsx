@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { GreenBox, RedBox } from "./ProfitQuantityTable";
+import { GreenBox, ProductLink, RedBox } from "./ProfitQuantityTable";
 
 export default function ClientsDetailsTable() {
 
@@ -26,7 +26,11 @@ export default function ClientsDetailsTable() {
       rows.push(
         <TableRow key={i}>
           <TableCellLeft>{i}</TableCellLeft>
-          <TableCell>Pharmacy {i}</TableCell>
+          <TableCell>
+            <ProductLink to="/pharmacies/pharmacy1">
+              Pharmacy {i}
+            </ProductLink>
+          </TableCell>
           <TableCell>{renderProfitBox(Math.floor(Math.random() * 2000 - 1000))}</TableCell>
           <TableCellRight>{Math.floor(Math.random() * 2000)}€</TableCellRight>
         </TableRow>

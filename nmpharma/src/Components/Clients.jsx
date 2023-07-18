@@ -1,8 +1,29 @@
 import React from "react";
 import styled from "styled-components";
-import { GreenBox, RedBox, ViewDetailsLink } from "./ProfitQuantityTable";
+import { GreenBox, ProductLink, RedBox, ViewDetailsLink } from "./ProfitQuantityTable";
 
 export default function Clients() {
+  const topPharmacies = [
+    { rank: 1, name: "Pharmacy 1", profit: 500, monthlySales: 1250 },
+    { rank: 2, name: "Pharmacy 2", profit: -200, monthlySales: 580 },
+    { rank: 3, name: "Pharmacy 3", profit: 800, monthlySales: 950 },
+    { rank: 4, name: "Pharmacy 4", profit: 1200, monthlySales: 1520 },
+    { rank: 5, name: "Pharmacy 5", profit: -500, monthlySales: 420 },
+    { rank: 6, name: "Pharmacy 6", profit: 1500, monthlySales: 1875 },
+    { rank: 7, name: "Pharmacy 7", profit: 0, monthlySales: 120 },
+    { rank: 8, name: "Pharmacy 8", profit: -300, monthlySales: 380 },
+    { rank: 9, name: "Pharmacy 9", profit: 700, monthlySales: 890 },
+    { rank: 10, name: "Pharmacy 10", profit: 400, monthlySales: 650 },
+  ];
+
+  const renderProfitBox = (profit) => {
+    if (profit >= 0) {
+      return <GreenBox>{`${profit}€`}</GreenBox>;
+    } else {
+      return <RedBox>{`${profit}€`}</RedBox>;
+    }
+  };
+
   return (
     <>
       <Card>
@@ -22,66 +43,18 @@ export default function Clients() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              <TableRow>
-                <TableCellLeft>1</TableCellLeft>
-                <TableCell>Pharmacy 1</TableCell>
-                <TableCell>{renderProfitBox(500)}</TableCell>
-                <TableCellRight>1250€</TableCellRight>
-              </TableRow>
-              <TableRow>
-                <TableCellLeft>2</TableCellLeft>
-                <TableCell>Pharmacy 2</TableCell>
-                <TableCell>{renderProfitBox(-200)}</TableCell>
-                <TableCellRight>580€</TableCellRight>
-              </TableRow>
-              <TableRow>
-                <TableCellLeft>3</TableCellLeft>
-                <TableCell>Pharmacy 3</TableCell>
-                <TableCell>{renderProfitBox(800)}</TableCell>
-                <TableCellRight>950€</TableCellRight>
-              </TableRow>
-              <TableRow>
-                <TableCellLeft>4</TableCellLeft>
-                <TableCell>Pharmacy 4</TableCell>
-                <TableCell>{renderProfitBox(1200)}</TableCell>
-                <TableCellRight>1520€</TableCellRight>
-              </TableRow>
-              <TableRow>
-                <TableCellLeft>5</TableCellLeft>
-                <TableCell>Pharmacy 5</TableCell>
-                <TableCell>{renderProfitBox(-500)}</TableCell>
-                <TableCellRight>420€</TableCellRight>
-              </TableRow>
-              <TableRow>
-                <TableCellLeft>6</TableCellLeft>
-                <TableCell>Pharmacy 6</TableCell>
-                <TableCell>{renderProfitBox(1500)}</TableCell>
-                <TableCellRight>1875€</TableCellRight>
-              </TableRow>
-              <TableRow>
-                <TableCellLeft>7</TableCellLeft>
-                <TableCell>Pharmacy 7</TableCell>
-                <TableCell>{renderProfitBox(0)}</TableCell>
-                <TableCellRight>120€</TableCellRight>
-              </TableRow>
-              <TableRow>
-                <TableCellLeft>8</TableCellLeft>
-                <TableCell>Pharmacy 8</TableCell>
-                <TableCell>{renderProfitBox(-300)}</TableCell>
-                <TableCellRight>380€</TableCellRight>
-              </TableRow>
-              <TableRow>
-                <TableCellLeft>9</TableCellLeft>
-                <TableCell>Pharmacy 9</TableCell>
-                <TableCell>{renderProfitBox(700)}</TableCell>
-                <TableCellRight>890€</TableCellRight>
-              </TableRow>
-              <TableRow>
-                <TableCellLeft>10</TableCellLeft>
-                <TableCell>Pharmacy 10</TableCell>
-                <TableCell>{renderProfitBox(400)}</TableCell>
-                <TableCellRight>650€</TableCellRight>
-              </TableRow>
+              {topPharmacies.map((pharmacy) => (
+                <TableRow key={pharmacy.rank}>
+                  <TableCellLeft>{pharmacy.rank}</TableCellLeft>
+                  <TableCell>
+                    <ProductLink to={`/pharmacies/pharmacy${pharmacy.rank}`}>
+                      {pharmacy.name}
+                    </ProductLink>
+                  </TableCell>
+                  <TableCell>{renderProfitBox(pharmacy.profit)}</TableCell>
+                  <TableCellRight>{`${pharmacy.monthlySales}€`}</TableCellRight>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </TableContainer>
@@ -89,6 +62,9 @@ export default function Clients() {
     </>
   );
 }
+
+// Remaining code...
+
 
 
 const Card = styled.div`
@@ -98,7 +74,7 @@ const Card = styled.div`
   padding: 20px;
   margin-top: 20px;
   margin-right: 20px;
-  width: 45%;
+  width: 48%;
   min-width: 500px;
 `;
 
@@ -215,20 +191,5 @@ const TableCellRight = styled.td`
   }
 `;
 
-const renderProfitBox = (profit) => {
-  if (profit >= 0) {
-    return (
-      <GreenBox>
-        {`${profit}€`}
-      </GreenBox>
-    );
-  } else {
-    return (
-      <RedBox>
-        {`${profit}€`}
-      </RedBox>
-    );
-  }
-};
 
 

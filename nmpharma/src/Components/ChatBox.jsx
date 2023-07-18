@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { IconLink } from '../Pages/Pharmacies';
 import { FaCirclePlus } from 'react-icons/fa6';
+import { BsPersonCircle } from "react-icons/bs";
+import { IconLink } from '../Pages/Pharmacies';
 
 const ChatBox = () => {
   const [messages, setMessages] = useState([]);
@@ -47,10 +48,14 @@ const ChatBox = () => {
       {messages.map((message) => (
         <MessageContainer key={message.id}>
           <MessageHeader>
+
             <AvatarDiv>
-              <Avatar />
+              <Avatar>
+                <UserLogo/>
+              </Avatar>  
               <UserName>{message.userName}</UserName>
             </AvatarDiv>
+
             <MessageText>{message.message}</MessageText>
           </MessageHeader>
         </MessageContainer>
@@ -59,7 +64,9 @@ const ChatBox = () => {
   );
 };
 
-
+const UserLogo = styled(BsPersonCircle)`
+  font-size: 2rem;
+`;
 
 const BoxChat = styled.div`
   display: flex;
@@ -67,6 +74,8 @@ const BoxChat = styled.div`
   align-items: center;
   margin: 10px;
 `;
+
+
 
 const ChatBoxWrapper = styled.div`
   width: auto;
@@ -80,6 +89,7 @@ const ChatBoxWrapper = styled.div`
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  max-height: 20em;
 `;
 
 const MessageContainer = styled.div`
@@ -102,8 +112,8 @@ const Avatar = styled.div`
   min-width: 30px;
   min-height: 30px;
   border-radius: 50%;
-  background-color: #ccc;
-  margin-right: 8px;
+  background-color: #fff;
+  margin-right: 1em;
 `;
 
 const UserName = styled.span`
@@ -114,10 +124,7 @@ const UserName = styled.span`
 
 const MessageText = styled.span`
   font-size: 12px;
-  font-weight: bold;
   outline: none;
-
-  
 `;
 
 const ChatInput = styled.input`

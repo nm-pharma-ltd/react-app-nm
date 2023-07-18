@@ -32,9 +32,9 @@ export default function Sidebar() {
         ERUs / Tenders
       </MenuItem>
       <MenuItem to="/targets" >
-        <MenuItemIcon>  
+        <MenuItemIcon>
           <FaBullseye />
-        </MenuItemIcon> 
+        </MenuItemIcon>
         Targets
       </MenuItem>
       <MenuItem to="/notifications" >
@@ -42,7 +42,7 @@ export default function Sidebar() {
           <FaBell />
         </MenuItemIcon>
         Notifications
-        <NotificationPop />
+        <NotificationPop>4</NotificationPop>
       </MenuItem>
       <MenuHeading className="space">Teams</MenuHeading>
       <MenuItem2>
@@ -55,13 +55,13 @@ export default function Sidebar() {
         <MenuItemIcon>
           <TeamBullet2 />
         </MenuItemIcon>
-        Government sales
+        Goverment sales
       </MenuItem2>
       <MenuItem2>
         <MenuItemIcon>
           <TeamBullet3 />
         </MenuItemIcon>
-        Worldwide sales
+        Company sales
       </MenuItem2>
       <MenuHeading />
       <MenuItem2>
@@ -89,7 +89,7 @@ const StyledSidebar = styled.div`
   background-color: #ffffff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   overflow-y: auto;
-  border-radius: 20px;
+  // border-radius: 20px;
   z-index: 999;
 `;
 
@@ -177,10 +177,14 @@ const MenuItemIcon = styled.div`
 `;
 
 const NotificationPop = styled.div`
-  width: 12px;
-  height: 12px;
-  border-radius: 100%;
-  background-color: #E13251;
-  margin-left: 53px;
-  color: #fff;
+    width: 19px;
+    height: 19px;
+    border-radius: 5px;
+    background-color: #E13251;
+    margin-left: 40px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 `;

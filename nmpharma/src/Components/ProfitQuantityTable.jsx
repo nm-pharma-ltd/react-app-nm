@@ -3,92 +3,70 @@ import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
 export default function ProfitQuantityTable() {
+  const topProducts = [
+    { rank: 1, name: "Voltaren", profit: 500, sold: 1250, target: 1520 },
+    { rank: 2, name: "Xanax", profit: -200, sold: 580, target: 1050 },
+    { rank: 3, name: "Ibuprofen", profit: 800, sold: 950, target: 1700 },
+    { rank: 4, name: "Mirekren", profit: 1200, sold: 1520, target: 1700 },
+    { rank: 5, name: "Šuriken", profit: -500, sold: 420, target: 500 },
+    { rank: 6, name: "Prcaren", profit: 1500, sold: 1875, target: 2000 },
+    { rank: 7, name: "Zkurvyryn 300mg", profit: 0, sold: 0, target: 100 },
+    { rank: 8, name: "Zpičisyn 250mg", profit: -300, sold: 380, target: 500 },
+    { rank: 9, name: "Tobolky na šulina 66ks", profit: 700, sold: 890, target: 1000 },
+    { rank: 10, name: "Šprcky", profit: 400, sold: 650, target: 820 },
+  ];
+
+  const renderProfitBox = (profit) => {
+    if (profit >= 0) {
+      return <GreenBox>{`${profit}€`}</GreenBox>;
+    } else {
+      return <RedBox>{`${profit}€`}</RedBox>;
+    }
+  };
+
   return (
-<>
-  <Card>
-    <CardHeader>
-      <Title>Product Profit & Quantity</Title>
-      <ViewDetailsLink to="/pharmacies/productdetails">View details</ViewDetailsLink>
-    </CardHeader>
-    <Subtitle>TOP 10</Subtitle>
-    <TableContainer>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHeaderCellLeft>RANK</TableHeaderCellLeft>
-            <TableHeaderCell>NAME</TableHeaderCell>
-            <TableHeaderCell>PROFIT</TableHeaderCell>
-            <TableHeaderCellRight>SOLD/TARGET</TableHeaderCellRight>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow>
-            <TableCellLeft>1</TableCellLeft>
-            <TableCell>Product 1</TableCell>
-            <TableCell>{renderProfitBox(500)}</TableCell>
-            <TableCellRight>1250€ / 1520€</TableCellRight>
-          </TableRow>
-          <TableRow>
-            <TableCellLeft>2</TableCellLeft>
-            <TableCell>Product 2</TableCell>
-            <TableCell>{renderProfitBox(-200)}</TableCell>
-            <TableCellRight>580€ / 1050€</TableCellRight>
-          </TableRow>
-          <TableRow>
-            <TableCellLeft>3</TableCellLeft>
-            <TableCell>Product 3</TableCell>
-            <TableCell>{renderProfitBox(800)}</TableCell>
-            <TableCellRight>950€ / 1700€</TableCellRight>
-          </TableRow>
-          <TableRow>
-            <TableCellLeft>4</TableCellLeft>
-            <TableCell>Product 4</TableCell>
-            <TableCell>{renderProfitBox(1200)}</TableCell>
-            <TableCellRight>1520€ / 1700€</TableCellRight>
-          </TableRow>
-          <TableRow>
-            <TableCellLeft>5</TableCellLeft>
-            <TableCell>Product 5</TableCell>
-            <TableCell>{renderProfitBox(-500)}</TableCell>
-            <TableCellRight>420€ / 500€</TableCellRight>
-          </TableRow>
-          <TableRow>
-            <TableCellLeft>6</TableCellLeft>
-            <TableCell>Product 6</TableCell>
-            <TableCell>{renderProfitBox(1500)}</TableCell>
-            <TableCellRight>1875€ / 2000€</TableCellRight>
-          </TableRow>
-          <TableRow>
-            <TableCellLeft>7</TableCellLeft>
-            <TableCell>Product 7</TableCell>
-            <TableCell>{renderProfitBox(0)}</TableCell>
-            <TableCellRight>0€ / 100€</TableCellRight>
-          </TableRow>
-          <TableRow>
-            <TableCellLeft>8</TableCellLeft>
-            <TableCell>Product 8</TableCell>
-            <TableCell>{renderProfitBox(-300)}</TableCell>
-            <TableCellRight>380€ / 500€</TableCellRight>
-          </TableRow>
-          <TableRow>
-            <TableCellLeft>9</TableCellLeft>
-            <TableCell>Product 9</TableCell>
-            <TableCell>{renderProfitBox(700)}</TableCell>
-            <TableCellRight>890€ / 1000€</TableCellRight>
-          </TableRow>
-          <TableRow>
-            <TableCellLeft>10</TableCellLeft>
-            <TableCell>Product 10</TableCell>
-            <TableCell>{renderProfitBox(400)}</TableCell>
-            <TableCellRight>650€ / 820€</TableCellRight>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </TableContainer>
-  </Card>
-</>
-);
+    <>
+      <Card>
+        <CardHeader>
+          <Title>Product Profit & Quantity</Title>
+          <ViewDetailsLink to="/pharmacies/productdetails">View details</ViewDetailsLink>
+        </CardHeader>
+        <Subtitle>TOP 10</Subtitle>
+        <TableContainer>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHeaderCellLeft>RANK</TableHeaderCellLeft>
+                <TableHeaderCell>NAME</TableHeaderCell>
+                <TableHeaderCell>PROFIT</TableHeaderCell>
+                <TableHeaderCellRight>SOLD/TARGET</TableHeaderCellRight>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {topProducts.map((product) => (
+                <TableRow key={product.rank}>
+                  <TableCellLeft>{product.rank}</TableCellLeft>
+                  <TableCell>
+                    <ProductLink to={`/pharmacies/product${product.rank}`}>
+                      {product.name}
+                    </ProductLink>
+                  </TableCell>
+                  <TableCell>{renderProfitBox(product.profit)}</TableCell>
+                  <TableCellRight>{`${product.sold}€ / ${product.target}€`}</TableCellRight>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Card>
+    </>
+  );
 }
+
+// Remaining code...
+
+
+
 
 const Card = styled.div`
   background-color: #ffffff;
@@ -97,7 +75,7 @@ const Card = styled.div`
   padding: 20px;
   margin-top: 20px;
   margin-right: 20px;
-  width: 45%;
+  width: 48%;
   min-width: 500px;
 `;
 
@@ -122,7 +100,7 @@ export const ViewDetailsLink = styled(NavLink)`
   text-decoration: none;
   transition: all 0.25s ease-in-out;
 
-  &:hover{
+  &:hover {
     color: #753619;
     margin-right: 3px;
   }
@@ -223,21 +201,15 @@ const TableCellRight = styled.td`
   }
 `;
 
-const renderProfitBox = (profit) => {
-  if (profit >= 0) {
-    return (
-      <GreenBox>
-        {`${profit}€`}
-      </GreenBox>
-    );
-  } else {
-    return (
-      <RedBox>
-        {`${profit}€`}
-      </RedBox>
-    );
+export const ProductLink = styled(NavLink)`
+  color: #000000;
+  text-decoration: none;
+  transition: all 0.25s ease-in-out;
+
+  &:hover {
+    color: #e16a32;
   }
-};
+`;
 
 
 export const GreenBox = styled.div`

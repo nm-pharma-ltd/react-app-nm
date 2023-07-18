@@ -98,7 +98,7 @@ const Subtitle = styled.p`
   color: #555;
 `;
 
-const InputLabel = styled.label`
+export const InputLabel = styled.label`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -109,7 +109,7 @@ const InputLabel = styled.label`
   position: relative;
 `;
 
-const Input = styled.input`
+export const Input = styled.input`
   width: 100%;
   padding: 12px;
   margin-top: 4px;
