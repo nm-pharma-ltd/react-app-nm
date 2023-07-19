@@ -1,9 +1,10 @@
 import React from 'react';
-import Chart from 'chart.js/auto';
+import {Chart} from 'chart.js/auto';
 import { Line } from 'react-chartjs-2';
 import styled from 'styled-components';
 
 const LineChart = () => {
+  
   const data = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
     datasets: [

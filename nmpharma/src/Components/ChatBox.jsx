@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { FaCirclePlus } from 'react-icons/fa6';
+import {  FaTimesCircle, FaTimes } from 'react-icons/fa';
+import { FaCirclePlus  } from 'react-icons/fa6';
 import { BsPersonCircle } from "react-icons/bs";
 import { IconLink } from '../Pages/Pharmacies';
 
@@ -31,6 +32,11 @@ const ChatBox = () => {
     }
   };
 
+  const handleRemoveMessage = (id) => {
+    const updatedMessages = messages.filter((message) => message.id !== id);
+    setMessages(updatedMessages);
+  };
+
   return (
     <ChatBoxWrapper>
       <BoxChat>
@@ -39,24 +45,25 @@ const ChatBox = () => {
           placeholder="Leave a message here..."
           value={inputValue}
           onChange={handleInputChange}
-          onKeyDown={handleKeyDown} // Přidáme tuto událost
+          onKeyDown={handleKeyDown}
         />
         <IconLink onClick={handleSendMessage}>
-          <FaCirclePlus/>
+          <FaCirclePlus />
         </IconLink>
       </BoxChat>
       {messages.map((message) => (
         <MessageContainer key={message.id}>
           <MessageHeader>
-
             <AvatarDiv>
               <Avatar>
-                <UserLogo/>
-              </Avatar>  
+                <UserLogo />
+              </Avatar>
               <UserName>{message.userName}</UserName>
             </AvatarDiv>
-
             <MessageText>{message.message}</MessageText>
+            <RemoveIcon onClick={() => handleRemoveMessage(message.id)}>
+              <FaTimes />
+            </RemoveIcon>
           </MessageHeader>
         </MessageContainer>
       ))}
@@ -74,8 +81,6 @@ const BoxChat = styled.div`
   align-items: center;
   margin: 10px;
 `;
-
-
 
 const ChatBoxWrapper = styled.div`
   width: auto;
@@ -95,13 +100,11 @@ const ChatBoxWrapper = styled.div`
 const MessageContainer = styled.div`
   display: flex;
   flex-direction: column;
-  border-top: 1px solid #ccc; 
-  padding: 15px 0; 
+  border-top: 1px solid #ccc;
+  padding: 15px 0;
 `;
 
 const MessageHeader = styled.div`
-  display: flex;
-  align-items: center;
   display: flex;
   align-items: center;
 `;
@@ -136,24 +139,18 @@ const ChatInput = styled.input`
   &:focus {
     border-color: #fff;
     outline: none;
-
   }
 `;
 
-// const ChatButton = styled.button`
-//   padding: 8px 16px;
-//   background-color: #E16A32;
-//   border: none;
-//   font-size: 14px;
-//   cursor: pointer;
-//   color: #fff;
-// `;
-
-const AvatarDiv = styled.div`
-    display: flex;
-    align-items: center;
+const RemoveIcon = styled(FaTimes)`
+  color: #4f4f4f;
+  margin-left: auto;
+  cursor: pointer;
 `;
 
-
+const AvatarDiv = styled.div`
+  display: flex;
+  align-items: center;
+`;
 
 export default ChatBox;

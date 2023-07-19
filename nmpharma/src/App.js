@@ -13,7 +13,7 @@ import Register from './Pages/Register';
 import ProductDetails from './Pages/ProductDetails';
 import ClientDetails from './Pages/ClientsDetails';
 import SingleProductDetails from './Pages/SingleProductDetails';
-import SinglePharmacyDetails from './Pages/SinglePharmacyDetails';
+import { SinglePharmacyDetails } from './Pages/SinglePharmacyDetails';
 
 
 export default function App() {

@@ -3,18 +3,26 @@ import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
 export default function ProfitQuantityTable() {
-  const topProducts = [
-    { rank: 1, name: "Voltaren", profit: 500, sold: 1250, target: 1520 },
-    { rank: 2, name: "Xanax", profit: -200, sold: 580, target: 1050 },
-    { rank: 3, name: "Ibuprofen", profit: 800, sold: 950, target: 1700 },
-    { rank: 4, name: "Mirekren", profit: 1200, sold: 1520, target: 1700 },
-    { rank: 5, name: "Šuriken", profit: -500, sold: 420, target: 500 },
-    { rank: 6, name: "Prcaren", profit: 1500, sold: 1875, target: 2000 },
-    { rank: 7, name: "Zkurvyryn 300mg", profit: 0, sold: 0, target: 100 },
-    { rank: 8, name: "Zpičisyn 250mg", profit: -300, sold: 380, target: 500 },
-    { rank: 9, name: "Tobolky na šulina 66ks", profit: 700, sold: 890, target: 1000 },
-    { rank: 10, name: "Šprcky", profit: 400, sold: 650, target: 820 },
-  ];
+
+  
+  const generateRows = () => {
+    const rows = [];
+    for (let i = 1; i <= 10; i++) {
+      rows.push(
+        <TableRow key={i}>
+          <TableCellLeft>{i}</TableCellLeft>
+          <TableCell>
+            <ProductLink to={`/pharmacies/product${i}`}>
+              Product {i}
+            </ProductLink>
+          </TableCell>
+          <TableCell>{renderProfitBox(Math.floor(Math.random() * 2000 - 1000))}</TableCell>
+          <TableCellRight>{`${Math.floor(Math.random() * 2000)}€ / ${Math.floor(Math.random() * 2000 + 1000)}€`}</TableCellRight>
+        </TableRow>
+      );
+    }
+    return rows;
+  };
 
   const renderProfitBox = (profit) => {
     if (profit >= 0) {
@@ -43,18 +51,7 @@ export default function ProfitQuantityTable() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {topProducts.map((product) => (
-                <TableRow key={product.rank}>
-                  <TableCellLeft>{product.rank}</TableCellLeft>
-                  <TableCell>
-                    <ProductLink to={`/pharmacies/product${product.rank}`}>
-                      {product.name}
-                    </ProductLink>
-                  </TableCell>
-                  <TableCell>{renderProfitBox(product.profit)}</TableCell>
-                  <TableCellRight>{`${product.sold}€ / ${product.target}€`}</TableCellRight>
-                </TableRow>
-              ))}
+              {generateRows()}
             </TableBody>
           </Table>
         </TableContainer>
@@ -64,7 +61,6 @@ export default function ProfitQuantityTable() {
 }
 
 // Remaining code...
-
 
 
 

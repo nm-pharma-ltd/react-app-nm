@@ -3,18 +3,27 @@ import styled from "styled-components";
 import { GreenBox, ProductLink, RedBox, ViewDetailsLink } from "./ProfitQuantityTable";
 
 export default function Clients() {
-  const topPharmacies = [
-    { rank: 1, name: "Pharmacy 1", profit: 500, monthlySales: 1250 },
-    { rank: 2, name: "Pharmacy 2", profit: -200, monthlySales: 580 },
-    { rank: 3, name: "Pharmacy 3", profit: 800, monthlySales: 950 },
-    { rank: 4, name: "Pharmacy 4", profit: 1200, monthlySales: 1520 },
-    { rank: 5, name: "Pharmacy 5", profit: -500, monthlySales: 420 },
-    { rank: 6, name: "Pharmacy 6", profit: 1500, monthlySales: 1875 },
-    { rank: 7, name: "Pharmacy 7", profit: 0, monthlySales: 120 },
-    { rank: 8, name: "Pharmacy 8", profit: -300, monthlySales: 380 },
-    { rank: 9, name: "Pharmacy 9", profit: 700, monthlySales: 890 },
-    { rank: 10, name: "Pharmacy 10", profit: 400, monthlySales: 650 },
-  ];
+
+
+  
+  const generateRows = () => {
+    const rows = [];
+    for (let i = 1; i <= 10; i++) {
+      rows.push(
+        <TableRow key={i}>
+          <TableCellLeft>{i}</TableCellLeft>
+          <TableCell>
+            <ProductLink to={`/pharmacies/pharmacy${i}`}>
+              Pharmacy {i}
+            </ProductLink>
+          </TableCell>
+          <TableCell>{renderProfitBox(Math.floor(Math.random() * 2000 - 1000))}</TableCell>
+          <TableCellRight>{`${Math.floor(Math.random() * 2000)}€`}</TableCellRight>
+        </TableRow>
+      );
+    }
+    return rows;
+  };
 
   const renderProfitBox = (profit) => {
     if (profit >= 0) {
@@ -43,18 +52,7 @@ export default function Clients() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {topPharmacies.map((pharmacy) => (
-                <TableRow key={pharmacy.rank}>
-                  <TableCellLeft>{pharmacy.rank}</TableCellLeft>
-                  <TableCell>
-                    <ProductLink to={`/pharmacies/pharmacy${pharmacy.rank}`}>
-                      {pharmacy.name}
-                    </ProductLink>
-                  </TableCell>
-                  <TableCell>{renderProfitBox(pharmacy.profit)}</TableCell>
-                  <TableCellRight>{`${pharmacy.monthlySales}€`}</TableCellRight>
-                </TableRow>
-              ))}
+              {generateRows()}
             </TableBody>
           </Table>
         </TableContainer>

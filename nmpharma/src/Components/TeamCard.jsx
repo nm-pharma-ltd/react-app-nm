@@ -4,11 +4,14 @@ import Typography from '@mui/material/Typography';
 import styled from 'styled-components';
 import { GreenBox } from './ProfitQuantityTable';
 
-const TeamCard = ({ teamName, monthGoal, yearGoal, currentAmount }) => {
+const TeamCard = ({ teamName, monthGoal, yearGoal, currentAmount }) => { //Props předávání dat
+
+  //Výpočet progressu
   const monthProgress = (currentAmount / monthGoal) * 100;
   const yearProgress = (currentAmount / yearGoal) * 100;
 
   return (
+    
     <TeamBox>
       <TeamName>{teamName}</TeamName>
 
