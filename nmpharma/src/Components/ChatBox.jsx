@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import {  FaTimesCircle, FaTimes } from 'react-icons/fa';
+import {  FaTimes } from 'react-icons/fa';
 import { FaCirclePlus  } from 'react-icons/fa6';
 import { BsPersonCircle } from "react-icons/bs";
 import { IconLink } from '../Pages/Pharmacies';

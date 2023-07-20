@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { NavLink, useNavigate } from "react-router-dom";
-import { GreenBox, RedBox } from './ProfitQuantityTable';
 
 export default function Table({ title, subtitle, viewDetailsLink, width, columns, data }) {
 
@@ -127,14 +126,63 @@ const TableRow = styled.tr`
 
 
 
-const ViewDetailsLink = styled(NavLink)`
+export const ViewDetailsLink = styled(NavLink)`
   color: #e16a32;
   text-decoration: none;
   transition: all 0.25s ease-in-out;
-  cursor: pointer;
 
   &:hover {
     color: #753619;
     margin-right: 3px;
   }
-`
+`;
+
+
+export const ProductLink = styled(NavLink)`
+  color: #000000;
+  text-decoration: none;
+  transition: all 0.25s ease-in-out;
+
+  &:hover {
+    color: #e16a32;
+  }
+`;
+
+
+export const GreenBox = styled.div`
+  height: 22px;
+  text-align: center;
+  border-radius: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #0e9f6e;
+  margin: 0 auto;
+  width: 70px;
+  background-color: #def7ec;
+  font-size: 13px;
+
+  @media (max-width: 768px) {
+    width: 55px;
+    font-size: 12px;
+  }
+`;
+
+export const RedBox = styled.div`
+  height: 22px;
+  text-align: center;
+  border-radius: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #a72e39;
+  margin: 0 auto;
+  width: 65px;
+  background-color: #fde8e8;
+  font-size: 13px;
+
+  @media (max-width: 768px) {
+    width: 55px;
+    font-size: 12px;
+  }
+`;

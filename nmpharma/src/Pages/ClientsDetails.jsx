@@ -81,6 +81,7 @@ export const GoBackButton = styled(NavLink)`
   cursor: pointer;
   font-weight: 600;
   width: 80px;
+  min-width: 80px;
   text-decoration: none;
   color: #d54529;
   font-size: 14px;
@@ -95,11 +96,6 @@ export const GoBackButton = styled(NavLink)`
     color: #fff;
     background: #d54629dd;
 
-  }
-
-  @media (max-width: 768px) {
-    width: 100%;
-    text-align: center;
   }
 `;
 

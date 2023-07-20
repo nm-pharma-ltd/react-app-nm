@@ -1,7 +1,7 @@
 import React from "react";
 import { styled } from "styled-components";
-import { NavLink } from "react-router-dom";
 import Table from "../Components/Table";
+import { GoBackButton } from "./ClientsDetails";
 
 export default function ProductDetails() {
 
@@ -77,32 +77,7 @@ const Title = styled.h2`
   display: flex;
 `;
 
-const GoBackButton = styled(NavLink)`
-  padding: 4px;
-  cursor: pointer;
-  font-weight: 600;
-  width: 80px;
-  text-decoration: none;
-  color: #d54529;
-  font-size: 14px;
-  text-align: center;
-  border: 3px solid #d54529;
-  margin: 0px 20px;
-  border-radius: 10px;
-  transition: all 0.25s ease-in-out;
 
-
-  &:hover {
-    color: #fff;
-    background: #d54629dd;
-
-  }
-
-  @media (max-width: 768px) {
-    width: 100%;
-    text-align: center;
-  }
-`;
 
 const MamRadVelkyZadky = styled.div`
   display: flex;

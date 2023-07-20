@@ -14,6 +14,7 @@ import ProductDetails from './Pages/ProductDetails';
 import ClientDetails from './Pages/ClientsDetails';
 import SingleProductDetails from './Pages/SingleProductDetails';
 import { SinglePharmacyDetails } from './Pages/SinglePharmacyDetails';
+import TeamDetails from './Pages/TeamDetails';
 
 
 export default function App() {
@@ -40,15 +41,26 @@ export default function App() {
             <Routes>
               <Route path="/" element={<Pharmacies />} />
               <Route path="/pharmacies" element={<Pharmacies />} />
+
+
               <Route path="/pharmacies/productdetails" element={<ProductDetails/>} />
               <Route path="/pharmacies/clientdetails" element={<ClientDetails/>} />
               <Route path="/pharmacies/product1" element={<SingleProductDetails/>} />
               <Route path="/pharmacies/pharmacy1" element={<SinglePharmacyDetails/>} />
+
+
               <Route path="/stock" element={<Stock />} />
               <Route path="/eru" element={<ERUs />} />
+
+
               <Route path="/targets" element={<Targets />} />
+
+              <Route path="/targets/teamdetails" element={<TeamDetails />} />
+
+
               <Route path="/notifications" element={<Notifications />} />
               <Route path="/settings" element={<Settings />} />
+
             </Routes>
           </Content>
         )}

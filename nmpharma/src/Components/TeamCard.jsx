@@ -2,7 +2,8 @@ import React from 'react';
 import LinearProgress from '@mui/material/LinearProgress';
 import Typography from '@mui/material/Typography';
 import styled from 'styled-components';
-import { GreenBox } from './ProfitQuantityTable';
+import { GreenBox } from './Table';
+import { NavLink } from 'react-router-dom';
 
 const TeamCard = ({ teamName, monthGoal, yearGoal, currentAmount }) => { //Props předávání dat
 
@@ -12,7 +13,7 @@ const TeamCard = ({ teamName, monthGoal, yearGoal, currentAmount }) => { //Props
 
   return (
     
-    <TeamBox>
+    <TeamBox to="/targets/teamdetails" >
       <TeamName>{teamName}</TeamName>
 
 
@@ -44,7 +45,7 @@ const TeamCard = ({ teamName, monthGoal, yearGoal, currentAmount }) => { //Props
   );
 };
 
-const TeamBox = styled.div`
+const TeamBox = styled(NavLink)`
   min-width: 200px;
     width: 31%;
     border-radius: 20px;
@@ -58,6 +59,15 @@ const TeamBox = styled.div`
     flex-direction: column;
     align-items: flex-start;
     justify-content: space-between;
+    cursor: pointer;
+    text-decoration: none;
+    color: #000;
+    transition: all 0.25s ease-in-out;
+
+
+    &:hover{
+      box-shadow: 0 3px 4px rgba(0, 0, 0, 0.25);
+    }
 `;
 
 const TeamName = styled.h3`
@@ -110,9 +120,6 @@ const EarnedLabel = styled.span`
   color: #555;
 `;
 
-// const EarnedAmount = styled.span`
-//   margin: 0;
-//   font-size: 14px;
-// `;
+
 
 export default TeamCard;
