@@ -1,12 +1,43 @@
 import React from "react";
 import { styled } from "styled-components";
 import { GoBackButton, TitleWrapper } from "./ClientsDetails";
-import TeamCardDetail from "../Components/TeamCardDetails";
+import TeamCardDetail from "../Components/TeamCardDetails"; // Import the gradientColors array
+import { FaUserCircle } from "react-icons/fa";
+import { GreenBox } from "../Components/Table";
+import { useParams } from "react-router";
 
 const TeamDetails = () => {
+  const { id } = useParams();
+
   const teams = [
-    { name: 'Private sales', monthGoal: 10000, yearGoal: 100000, currentAmount: 8000 },
+    {
+      name: "Private sales",
+      monthGoal: 10000,
+      yearGoal: 100000,
+      currentAmount: 8000,
+    },
+    {
+      name: "Government sales",
+      monthGoal: 20000,
+      yearGoal: 200000,
+      currentAmount: 15000,
+    },
+    {
+      name: "Company sales",
+      monthGoal: 100000,
+      yearGoal: 300000,
+      currentAmount: 12000,
+    },
   ];
+
+  const teamIndex = parseInt(id, 10);
+  const team = teams[teamIndex];
+
+  if (!team) {
+    return <div>Team not found</div>;
+  }
+
+  const { name, monthGoal, yearGoal, currentAmount } = team;
 
   const teamMembers = [
     { name: "John Doe", role: "Manager", monthAmount: 8000, yearAmount: 90000 },
@@ -21,31 +52,33 @@ const TeamDetails = () => {
         <GoBackButton to="/targets">Back</GoBackButton>
       </TitleWrapper>
       <TeamsContainer>
-        {teams.map((team, index) => (
-          <TeamCardDetail
-            key={index}
-            teamName={team.name}
-            monthGoal={team.monthGoal}
-            yearGoal={team.yearGoal}
-            currentAmount={team.currentAmount}
-          />
-        ))}
+        <TeamCardDetail
+          teamName={name}
+          monthGoal={monthGoal}
+          yearGoal={yearGoal}
+          currentAmount={currentAmount}
+          cardwidth="100%"
+          progressBarHeight={10}
+          index={teamIndex} // Pass the teamIndex to TeamCardDetail
+        />
       </TeamsContainer>
       <h2>Team members</h2>
       <TeamsContainerM>
         {teamMembers.map((member, index) => (
           <TeamMemberCard key={index}>
-            <Avatar />
+            <Avatar>
+              <FaUserCircle size={75} color="#fff" />
+            </Avatar>
             <MemberName>{member.name}</MemberName>
             <MemberRole>{member.role}</MemberRole>
             <StatsContainer>
               <Stat>
                 <StatLabel>Month</StatLabel>
-                <StatValue>{member.monthAmount} €</StatValue>
+                <GreenBox>{member.monthAmount} €</GreenBox>
               </Stat>
               <Stat>
                 <StatLabel>Year</StatLabel>
-                <StatValue>{member.yearAmount} €</StatValue>
+                <GreenBox>{member.yearAmount} €</GreenBox>
               </Stat>
             </StatsContainer>
           </TeamMemberCard>
@@ -55,7 +88,6 @@ const TeamDetails = () => {
   );
 };
 
-
 const TeamsContainerM = styled.div`
   margin-top: 20px;
   display: flex;
@@ -64,7 +96,6 @@ const TeamsContainerM = styled.div`
   flex-wrap: wrap;
   margin-right: 20px;
 `;
-
 
 const TeamsContainer = styled.div`
   margin-top: 20px;
@@ -84,13 +115,17 @@ const TeamMemberCard = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-width: 190px;
 `;
 
 const Avatar = styled.div`
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background-color: #ccc; /* Add avatar image or icon here */
+  background-color: #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const MemberName = styled.h3`
@@ -123,11 +158,6 @@ const StatLabel = styled.span`
   margin-bottom: 6px;
   font-size: 12px;
   color: #777;
-`;
-
-const StatValue = styled.span`
-  font-size: 14px;
-  font-weight: 600;
 `;
 
 export default TeamDetails;

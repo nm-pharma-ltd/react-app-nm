@@ -161,6 +161,7 @@ export const GreenBox = styled.div`
   width: 70px;
   background-color: #def7ec;
   font-size: 13px;
+  font-weight: 600;
 
   @media (max-width: 768px) {
     width: 55px;
@@ -180,6 +181,7 @@ export const RedBox = styled.div`
   width: 65px;
   background-color: #fde8e8;
   font-size: 13px;
+  font-weight: 600;
 
   @media (max-width: 768px) {
     width: 55px;

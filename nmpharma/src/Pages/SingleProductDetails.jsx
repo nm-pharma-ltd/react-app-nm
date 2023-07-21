@@ -1,5 +1,5 @@
 import React from "react";
-import LineChart from "../Components/Chart";
+import LineChart from "../Components/LineChart";
 import BarChart from "../Components/BarChart"
 import { GoBackButton, Title, TitleWrapper } from "./ClientsDetails";
 
@@ -14,6 +14,7 @@ export default function SingleProductDetails() {
       </TitleWrapper>
       <BarChart />
       <LineChart />
+      <h2>Targets</h2>
       
 
       </>

@@ -47,6 +47,7 @@ const ChartContainer = styled.div`
   height: 500px;
   margin-top: 20px;
   margin-right: 20px;
+  margin-bottom: 20px;
 `;
 
 const StyledLine = styled(Line)`

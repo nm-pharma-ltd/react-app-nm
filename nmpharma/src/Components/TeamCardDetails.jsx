@@ -6,50 +6,66 @@ import { NavLink } from 'react-router-dom';
 import { GreenBox } from '../Components/Table';
 import { TiMediaRecord } from 'react-icons/ti';
 
-export default function TeamCardDetail({ teamName, monthGoal, yearGoal, currentAmount }) {
+
+export const gradientColors = [
+  'linear-gradient(to bottom right, #742700, #ff7f50, #cc6849)', // Bronze
+  'linear-gradient(to bottom right,  #c0c0c0, #646464, #b0b0b0)', // Silver
+  'linear-gradient(to bottom right,#f3ca4a, #9c7e03, #ffc100)', // Gold
+];
+
+export default function TeamCardDetail({ teamName, monthGoal, yearGoal, currentAmount, cardwidth, progressbarheight, index, backgroundgradient }) {
+  
   const monthProgress = (currentAmount / monthGoal) * 100;
   const yearProgress = (currentAmount / yearGoal) * 100;
 
   return (
-    <TeamBox to="/targets/teamdetails">
-      <TeamName>
-        {teamName}
-        <TeamBadge>
-          <TeamBulletOrange/>
-          Team
-        </TeamBadge>
-      </TeamName>
+    <>
+      <TeamBox
+        to={`/targets/teamdetails/${index}`}
+        cardwidth={cardwidth}
+        backgroundgradient={gradientColors[index % gradientColors.length]}
+      >
+        <TeamName>
+          {teamName}
+          <TeamBadge>
+            <TeamBulletOrange />
+            Team
+          </TeamBadge>
+        </TeamName>
 
-      <Goal>
-        <GoalLabel>Month goal</GoalLabel>
-        <GoalAmount>{monthGoal} €</GoalAmount>
-      </Goal>
-      <ProgressBarWrapper>
-        <StyledLinearProgress variant="determinate" value={monthProgress} />
-        <LinearProgressLabel>{`${monthProgress}%`}</LinearProgressLabel>
-      </ProgressBarWrapper>
+        <Goal>
+          <GoalLabel>Month goal</GoalLabel>
+          <GoalAmount>{monthGoal} €</GoalAmount>
+        </Goal>
+        <ProgressBarWrapper progressbarheight={progressbarheight}>
+          <StyledLinearProgress variant="determinate" value={monthProgress} />
+          <LinearProgressLabel>{`${monthProgress}%`}</LinearProgressLabel>
+        </ProgressBarWrapper>
 
-      <Goal>
-        <GoalLabel>Year goal</GoalLabel>
-        <GoalAmount>{yearGoal} €</GoalAmount>
-      </Goal>
-      <ProgressBarWrapper>
-        <StyledLinearProgress variant="determinate" value={yearProgress} />
-        <LinearProgressLabel>{`${yearProgress}%`}</LinearProgressLabel>
-      </ProgressBarWrapper>
+        <Goal>
+          <GoalLabel>Year goal</GoalLabel>
+          <GoalAmount>{yearGoal} €</GoalAmount>
+        </Goal>
+        <ProgressBarWrapper progressbarheight={progressbarheight}>
+          <StyledLinearProgress variant="determinate" value={yearProgress} />
+          <LinearProgressLabel>{`${yearProgress}%`}</LinearProgressLabel>
+        </ProgressBarWrapper>
 
-      <Earned>
-        <EarnedLabel>Earned now</EarnedLabel>
-        <GreenBox>{currentAmount} €</GreenBox>
-      </Earned>
-    </TeamBox>
+        <Earned>
+          <EarnedLabel>Earned now</EarnedLabel>
+          <GreenBox>{currentAmount} €</GreenBox>
+        </Earned>
+      </TeamBox>
+    </>
   );
-}
+};
+
+
 
 const TeamBulletOrange = styled(TiMediaRecord)`
-    color: #004099;
-    font-size: 14px;
-`
+  color: #e7f0ff;
+  font-size: 14px;
+`;
 
 export const TeamBadge = styled.div`
   height: 22px;
@@ -58,10 +74,10 @@ export const TeamBadge = styled.div`
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  color: #004099;
+  color: #e7f0ff;
   margin: 0 20px;
   width: 68px;
-  background-color: #a7b0ff;
+  background-color: #5c6c84;
   font-size: 13px;
   font-weight: 600;
 
@@ -71,14 +87,14 @@ export const TeamBadge = styled.div`
   }
 `;
 
-
 const TeamBox = styled(NavLink)`
-  width: 100%;
+  width: calc(${(props) => props.cardwidth} - 20px);
   border-radius: 20px;
   padding: 20px;
   margin-right: 16px;
   margin-bottom: 16px;
-  background: linear-gradient(to bottom right, #742700, #ff7f50, #cc6849 );
+  background: ${props => props.backgroundgradient}; // Use the provided background gradient
+  background-color: ${(props) => props.teamColor};
   height: 370px;
   display: flex;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -93,7 +109,7 @@ const TeamBox = styled(NavLink)`
   &:hover {
     box-shadow: 0 3px 4px rgba(0, 0, 0, 0.25);
   }
-`;
+`
 
 const TeamName = styled.h3`
   font-size: 22px;
@@ -129,20 +145,20 @@ const GoalAmount = styled.span`
 const ProgressBarWrapper = styled.div`
   width: 100%;
   margin-bottom: 10px;
+  height: ${({ progressbarheight }) => progressbarheight || '8px'};
 `;
 
 const StyledLinearProgress = styled(LinearProgress)`
   &.MuiLinearProgress-root {
-    height: 8px;
+    height: ${({ progressBarHeight }) => progressBarHeight || '8px'};
     border-radius: 5px;
-    background-color: rgba(0,0,0, 0.28); /* Darker color for unprogressed part */
+    background-color: rgba(0, 0, 0, 0.28); /* Darker color for unprogressed part */
   }
 
   & .MuiLinearProgress-barColorPrimary {
     background-color: #fff;
   }
 `;
-
 
 const LinearProgressLabel = styled(Typography)`
   font-size: 12px;
@@ -153,7 +169,6 @@ const Earned = styled.div`
   display: flex;
   align-items: center;
   margin: 0 auto;
-
 `;
 
 const EarnedLabel = styled.span`

@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { FaCirclePlus } from 'react-icons/fa6';
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
-import TeamCard from '../Components/TeamCard';
 import ChatBox from "../Components/ChatBox";
 import { Input, InputLabel } from "./Register";
 import { Title } from "./ClientsDetails";
 import Table from "../Components/Table";
+import TeamCardDetail, { gradientColors } from "../Components/TeamCardDetails";
 
 export default function Pharmacies() {
   const [showPopup, setShowPopup] = useState(false);
@@ -29,7 +29,7 @@ export default function Pharmacies() {
     { rank: 9, name: 'Product 9', profit: 200, soldTarget: `${405}€ / ${1050}€` },
     { rank: 10, name: 'Product 10', profit: 300, soldTarget: `${705}€ / ${1050}€` },
   ];
-  
+
 
   const pharmacies = [
     { rank: 1, name: 'Pharmacy 1', profit: 500, monthlysales: `${1520}€` },
@@ -43,7 +43,7 @@ export default function Pharmacies() {
     { rank: 9, name: 'Pharmacy 9', profit: 200, monthlysales: `${1050}€` },
     { rank: 10, name: 'Pharmacy 10', profit: 300, monthlysales: `${1050}€` },
   ];
-  
+
 
   const handleOpenPopup = () => {
     setShowPopup(true);
@@ -96,12 +96,16 @@ export default function Pharmacies() {
       {/* Zobrazení karet týmů */}
       <TeamsContainer>
         {teams.map((team, index) => (
-          <TeamCard
+          <TeamCardDetail
             key={index}
             teamName={team.name}
             monthGoal={team.monthGoal}
             yearGoal={team.yearGoal}
             currentAmount={team.currentAmount}
+            cardwidth={'31%'}
+            progressbarheight={'10px'}
+            index={index} // Pass the index as a prop
+            backgroundgradient={gradientColors[index % gradientColors.length]} // Use the index to select a color from the colors array
           />
         ))}
       </TeamsContainer>

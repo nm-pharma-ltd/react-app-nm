@@ -1,5 +1,5 @@
 import React from "react";
-import LineChart from "../Components/Chart";
+import LineChart from "../Components/LineChart";
 import { GoBackButton, Title, TitleWrapper } from "./ClientsDetails";
 import Table from "../Components/Table";
 

@@ -55,7 +55,8 @@ export default function App() {
 
               <Route path="/targets" element={<Targets />} />
 
-              <Route path="/targets/teamdetails" element={<TeamDetails />} />
+              <Route path="/targets/teamdetails/:id" element={<TeamDetails />} />
+     
 
 
               <Route path="/notifications" element={<Notifications />} />

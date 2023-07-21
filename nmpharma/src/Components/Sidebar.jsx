@@ -45,19 +45,19 @@ export default function Sidebar() {
         <NotificationPop>4</NotificationPop>
       </MenuItem>
       <MenuHeading className="space">Teams</MenuHeading>
-      <MenuItem2>
+      <MenuItem2 to="/targets/teamdetails/0">
         <MenuItemIcon>
           <TeamBullet1 />
         </MenuItemIcon>
         Private sales
       </MenuItem2>
-      <MenuItem2>
+      <MenuItem2 to="/targets/teamdetails/1">
         <MenuItemIcon>
           <TeamBullet2 />
         </MenuItemIcon>
         Goverment sales
       </MenuItem2>
-      <MenuItem2>
+      <MenuItem2 to="/targets/teamdetails/2">
         <MenuItemIcon>
           <TeamBullet3 />
         </MenuItemIcon>
@@ -120,10 +120,10 @@ const TeamBullet1 = styled(TiMediaRecord)`
     color: #E16A32;
 `
 const TeamBullet2 = styled(TiMediaRecord)`
-    color: #29CC97;
+    color: #8d8d8d;
 `
 const TeamBullet3 = styled(TiMediaRecord)`
-    color: #E13251;
+    color: #af8e12;
 `
 
 const MenuItem = styled(NavLink)`
