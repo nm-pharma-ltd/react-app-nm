@@ -75,7 +75,7 @@ export const TeamBadge = styled.div`
   justify-content: space-evenly;
   align-items: center;
   color: #e7f0ff;
-  margin: 0 20px;
+  margin: 0 0 0 20px;
   width: 68px;
   background-color: #5c6c84;
   font-size: 13px;
@@ -105,9 +105,19 @@ const TeamBox = styled(NavLink)`
   text-decoration: none;
   color: #fff;
   transition: all 0.25s ease-in-out;
+  min-width: 320px;
 
   &:hover {
     box-shadow: 0 3px 4px rgba(0, 0, 0, 0.25);
+  }
+
+  @media (max-width: 1278px){
+    min-width: 47%;
+  }
+
+  @media (max-width: 1024px){
+    min-width: unset;
+    width: 100%;
   }
 `
 
@@ -117,7 +127,10 @@ const TeamName = styled.h3`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 10px;
+
+  @media (max-width: 1440px){
+    font-size: 20px;
+  }
 `;
 
 const Goal = styled.div`

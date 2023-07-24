@@ -133,12 +133,14 @@ const TeamsContainer = styled.div`
   flex-wrap: wrap;
 `;
 
-const MamRadVelkyZadky = styled.div`
+export const MamRadVelkyZadky = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   flex-wrap: wrap;
   margin-bottom: 20px;
+
+ 
 `;
 
 const IconContainer = styled.div`

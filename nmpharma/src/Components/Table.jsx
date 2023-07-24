@@ -62,6 +62,10 @@ const Card = styled.div`
   margin-right: 25px;
   width: ${props => props.width || '48%'};
   min-width: 500px;
+
+  @media (max-width: 1320px){
+    width: 100%;
+  }
 `;
 
 const CardHeader = styled.div`

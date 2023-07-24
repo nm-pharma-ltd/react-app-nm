@@ -177,9 +177,9 @@ const MenuItemIcon = styled.div`
 `;
 
 const NotificationPop = styled.div`
-    width: 19px;
+    width: 23px;
     height: 19px;
-    border-radius: 5px;
+    border-radius: 20px;
     background-color: #E13251;
     margin-left: 40px;
     color: #fff;
@@ -187,4 +187,5 @@ const NotificationPop = styled.div`
     align-items: center;
     justify-content: center;
     text-align: center;
+    font-size: 12px;
 `;
