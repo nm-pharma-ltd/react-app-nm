@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { FaTimes } from 'react-icons/fa';
 import { FaCircleXmark } from 'react-icons/fa6';
 
+
 const AlertWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -17,6 +18,7 @@ const AlertWrapper = styled.div`
   align-content: center;
 `;
 
+
 const Boxik = styled.div`
   background: #dc3545;
   height: 33px;
@@ -29,6 +31,7 @@ const Boxik = styled.div`
   min-width: 33px;
   min-height: 33px;
 `;
+
 
 const DangerBadge = styled.span`
   font-weight: bold;

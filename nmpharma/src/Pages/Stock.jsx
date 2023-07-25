@@ -9,12 +9,17 @@ export default function Stock() {
     <>
       <Kontainer>
         <h2>Stock</h2>
+        <UnderlineH>Sorted by Suppliers</UnderlineH>
         <StockCard />
       </Kontainer>
     </>
   );
 
 }
+
+const UnderlineH = styled.h3`
+  color: #5b5b5b;
+`
 
 const Kontainer = styled.div`
   display: flex;

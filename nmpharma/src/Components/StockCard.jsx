@@ -1,27 +1,183 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { FaChevronDown } from 'react-icons/fa';
-import { TeamBadge } from './TeamCardDetails';
+import { TableCell, TableHeaderCell } from './Table';
+import { TiMediaRecord } from 'react-icons/ti';
 
-const slideDown = keyframes`
-  from {
-    max-height: 0;
-    opacity: 0;
-  }
-  to {
-    max-height: 1000px;
-    opacity: 1;
-  }
+const StockCard = () => {
+  const cardRef = useRef(null);
+  const [expanded, setExpanded] = useState(false);
+  const [cardWidth, setCardWidth] = useState(null);
+
+  const [inputValue, setInputValue] = useState('');
+  const [monthsOfStock, setMonthsOfStock] = useState(0);
+  const [onOrder, setOnOrder] = useState(80);
+  const [incoming, setIncoming] = useState(100);
+  const [totalInStock, setTotalInStock] = useState(120);
+
+  const handleCalculation = () => {
+    const testData = 100; // Use the value entered in the input box
+    const toOrder = inputValue ? parseInt(inputValue, 10) : 0; // Use the value entered in the input box
+  
+    // Perform the calculation
+    const result = (onOrder + incoming + totalInStock + toOrder) / testData;
+    setMonthsOfStock(result);
+  };
+
+  const handleExpand = () => {
+    setExpanded((prevExpanded) => !prevExpanded);
+
+    // Perform the calculation when the card is expanded
+    if (!expanded) {
+      handleCalculation();
+    }
+  };
+
+  useEffect(() => {
+    if (cardRef.current) {
+      setCardWidth(cardRef.current.offsetWidth);
+    }
+
+    const handleResize = () => {
+      if (cardRef.current) {
+        setCardWidth(cardRef.current.offsetWidth);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  const handleColorChange = () => {
+    return monthsOfStock < 6;
+  };
+
+
+  return (
+    <>
+      <CardContainer ref={cardRef} expanded={expanded ? 1 : 0}>
+        <CardHeaderContainer onClick={handleExpand}>
+          <CardTitle>
+            THE001
+            <IncomingBadge>
+              <TeamBulletI />
+              Incoming
+            </IncomingBadge>
+            <OnOrderBadge>
+              <TeamBulletO/>
+              On-Order
+            </OnOrderBadge>
+          </CardTitle>
+          <ExpandIcon expanded={expanded ? 1 : 0} />
+        </CardHeaderContainer>
+      </CardContainer>
+
+      {expanded && (
+        <ExpandedCard expanded={expanded ? 1 : 0} notopradius={expanded.toString()} width={cardWidth}>
+          <ExpandedCardContent>
+            <TableContainer>
+              <TableHead>
+                <TableRow>
+                  <TableHeaderCell align='center'>STOCK CODE</TableHeaderCell>
+                  <TableHeaderCell align='center'>PRODUCT NAME</TableHeaderCell>
+                  <TableHeaderCell align='center'>INCOMING</TableHeaderCell>
+                  <TableHeaderCell align='center'>ON ORDER</TableHeaderCell>
+                  <TableHeaderCell align='center'>TOTAL IN STOCK</TableHeaderCell>
+                  <TableHeaderCell align='center'>MONTHS OF STOCK</TableHeaderCell>
+                  <TableHeaderCell align='center'>TO ORDER</TableHeaderCell>
+                  <TableHeaderCell align='center'>ACTIONS</TableHeaderCell>
+                </TableRow>
+              </TableHead>
+              <tbody>
+                <TableRow>
+                  <TableCellCode align='center'>NMP019</TableCellCode>
+                  <TableCell align='center'>AMLODIPINE TEVA 10 MG</TableCell>
+                  <TableCellInc align='center' onClick={() => setIncoming(incoming + 1)}>
+                    + {incoming}
+                  </TableCellInc>
+                  <TableCellOrder align='center' onClick={() => setOnOrder(onOrder + 1)}>
+                    + {onOrder}
+                  </TableCellOrder>
+                  <TableCellTotal align='center'>
+                    {totalInStock}
+                  </TableCellTotal>
+                  <TableCellTotal lessThanSixMonths={handleColorChange()} align='center'>{monthsOfStock.toFixed(2)}</TableCellTotal>
+                  <TableCell align='center'>
+                    <UniInput>
+                      <InputStock
+                        placeholder='123'
+                        type="number"
+                        name='calculations'
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
+                      />
+                      <CalcButton onClick={handleCalculation}>=</CalcButton>
+                    </UniInput>
+                  </TableCell>
+                  <TableCell align='center'>
+                    <MoreButton>More</MoreButton>
+                  </TableCell>
+                </TableRow>
+                {/* Add more data rows here */}
+              </tbody>
+            </TableContainer>
+          </ExpandedCardContent>
+        </ExpandedCard>
+      )}
+    </>
+  );
+};
+
+export const TableCellCode = styled.td`
+  padding: 10px;
+  border-bottom: 1px solid #e0e0e0;
+  font-weight: 600;
+  text-align: ${props => (props.align === 'right' ? 'right' : props.align === 'center' ? 'center' : 'left')};
+`;
+export const TableCellOrder = styled.td`
+  padding: 10px;
+  border-bottom: 1px solid #e0e0e0;
+  color: #5b5b5b;
+  font-weight: 700;
+  text-align: ${props => (props.align === 'right' ? 'right' : props.align === 'center' ? 'center' : 'left')};
+`;
+export const TableCellInc = styled.td`
+  padding: 10px;
+  color: #284671;
+  border-bottom: 1px solid #e0e0e0;
+  font-weight: 700;
+  text-align: ${props => (props.align === 'right' ? 'right' : props.align === 'center' ? 'center' : 'left')};
+`;
+export const TableCellTotal = styled.td`
+  padding: 10px;
+  font-weight: 600;
+  border-bottom: 1px solid #e0e0e0;
+  text-align: ${props => (props.align === 'right' ? 'right' : props.align === 'center' ? 'center' : 'left')};
+  color: ${props => (props.lessThanSixMonths ? 'red' : '#0d680e')};
 `;
 
-const slideUp = keyframes`
-  from {
-    max-height: 1000px;
-    opacity: 1;
-  }
-  to {
-    max-height: 0;
-    opacity: 0;
+const UniInput = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  margin: 0 auto;
+`
+export const InputStock = styled.input`
+  border: 1px solid #e9e9e9;
+    border-radius: 4px;
+    font-size: 14px;
+    background: #f7f8ff;
+    outline: none;
+    transition: border-color 0.3s ease;
+    height: 40px;
+    width: 55px;
+    text-align: center;
+    onChange={(e) => setInputValue(e.target.value)}
+
+  &:focus {
+    border-color: #949494;
   }
 `;
 
@@ -56,29 +212,37 @@ const ExpandIcon = styled(FaChevronDown)`
   transform: ${(props) => (props.expanded ? 'rotate(180deg)' : 'rotate(0deg)')};
 `;
 
+
 const ExpandedCard = styled.div`
   background-color: #f5f5f5;
-  border-radius: ${(props) => (props.noTopRadius ? '0' : '10px')} ${(props) => (props.noTopRadius ? '0' : '10px')} 10px 10px;
+  border-radius: ${(props) => (props.notopradius ? '0' : '10px')} ${(props) => (props.notopradius ? '0' : '10px')} 10px 10px;
   padding: 20px;
   max-height: ${(props) => (props.expanded ? '1000px' : '0')};
   overflow: hidden;
   animation: ${(props) => (props.expanded ? slideDown : slideUp)} 0.3s ease-in-out;
+  overflow-x: auto;
+  width: ${(props) => (props.expanded ? props.width + 'px' : 'fit-content')};
+  min-width: ${(props) => (props.expanded ? props.width + 'px' : '100%')};
+`;
+
+const ExpandedCardContent = styled.div`
+  /* Limit the width of the expanded content to the card's width */
+  max-width: 100%;
 `;
 
 const TableContainer = styled.table`
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
+  /* Remove fixed width from the table */
 `;
+
+
 
 const TableHead = styled.thead`
   background-color: #f5f5f5;
 `;
 
-const TableHeadCell = styled.th`
-  padding: 10px;
-  text-align: left;
-`;
+
 
 const TableRow = styled.tr`
   &:nth-child(even) {
@@ -86,75 +250,101 @@ const TableRow = styled.tr`
   }
 `;
 
-const TableCell = styled.td`
-  padding: 10px;
-`;
+
 
 const MoreButton = styled.button`
   background-color: #d54529;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 500;
+`;
+
+const CalcButton = styled.button`
+  background-color: #575757;
   color: #fff;
   padding: 5px 10px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  margin: 0 10px;
+
 `;
 
-const StockCard = () => {
-  const [expanded, setExpanded] = useState(false);
+export const TeamBulletI = styled(TiMediaRecord)`
+  color: #1c3a57; 
+  font-size: 14px;
+`;
 
-  const handleExpand = () => {
-    setExpanded((prevExpanded) => !prevExpanded);
-  };
+export const TeamBulletO = styled(TiMediaRecord)`
+  color: #484c51; 
+  font-size: 14px;
+`;
 
-  return (
-    <>
-      <CardContainer expanded={expanded}>
-        <CardHeaderContainer onClick={handleExpand}>
-          <CardTitle>
-            THE001
-            <TeamBadge>Incoming</TeamBadge>
-          </CardTitle>
-          <ExpandIcon expanded={expanded} />
-        </CardHeaderContainer>
-      </CardContainer>
+export const IncomingBadge = styled.div`
+  height: 22px;
+  text-align: center;
+  border-radius: 100px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  color:  #1c3a57; 
+  margin: 0 0 0 20px;
+  background-color: #bdd9ff; 
+  min-width: fit-content;
+  width: 90px;
+  font-size: 13px;
+  font-weight: 600;
 
-      {expanded && (
-        <ExpandedCard expanded={expanded} noTopRadius>
-          <TableContainer>
-            <TableHead>
-              <TableRow>
-                <TableHeadCell>STOCK CODE</TableHeadCell>
-                <TableHeadCell>PRODUCT NAME</TableHeadCell>
-                <TableHeadCell>ON ORDER</TableHeadCell>
-                <TableHeadCell>INCOMING</TableHeadCell>
-                <TableHeadCell>TOTAL IN STOCK</TableHeadCell>
-                <TableHeadCell>MONTHS OF STOCK</TableHeadCell>
-                <TableHeadCell>TO ORDER</TableHeadCell>
-                <TableHeadCell>ACTIONS</TableHeadCell>
-              </TableRow>
-            </TableHead>
-            <tbody>
-              <TableRow>
-                <TableCell>NMP019</TableCell>
-                <TableCell>AMLODIPINE TEVA 10 MG</TableCell>
-                <TableCell>+80</TableCell>
-                <TableCell>+100</TableCell>
-                <TableCell>120</TableCell>
-                <TableCell>12</TableCell>
-                <TableCell>
-                  <input type="number" />
-                </TableCell>
-                <TableCell>
-                  <MoreButton>More</MoreButton>
-                </TableCell>
-              </TableRow>
-              {/* Add more data rows here */}
-            </tbody>
-          </TableContainer>
-        </ExpandedCard>
-      )}
-    </>
-  );
-};
+  @media (max-width: 768px) {
+    font-size: 12px;
+  }
+`;
+
+
+export const OnOrderBadge = styled.div`
+  height: 22px;
+  text-align: center;
+  border-radius: 100px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  color:  #484c51; 
+  margin: 0 0 0 20px;
+  background-color:  #d5d5d5; 
+  min-width: fit-content;
+  width: 90px;
+  font-size: 13px;
+  font-weight: 600;
+
+  @media (max-width: 768px) {
+    font-size: 12px;
+  }
+`;
+
+const slideDown = keyframes`
+  from {
+    max-height: 0;
+    opacity: 0;
+  }
+  to {
+    max-height: 1000px;
+    opacity: 1;
+  }
+`;
+
+const slideUp = keyframes`
+  from {
+    max-height: 1000px;
+    opacity: 1;
+  }
+  to {
+    max-height: 0;
+    opacity: 0;
+  }
+`;
+
 
 export default StockCard;

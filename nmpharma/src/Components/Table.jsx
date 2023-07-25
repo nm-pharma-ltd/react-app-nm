@@ -98,11 +98,12 @@ const TableHead = styled.thead`
   border-bottom: 1px solid #e0e0e0;
 `;
 
-const TableHeaderCell = styled.th`
+export const TableHeaderCell = styled.th`
   padding: 10px;
   text-align: ${props => (props.align === 'right' ? 'right' : props.align === 'center' ? 'center' : 'left')};
   color: #909090;
   font-weight: 500;
+  text-wrap: nowrap;
 
   span {
     display: block;
@@ -110,7 +111,7 @@ const TableHeaderCell = styled.th`
   }
 `;
 
-const TableCell = styled.td`
+export const TableCell = styled.td`
   padding: 10px;
   border-bottom: 1px solid #e0e0e0;
   text-align: ${props => (props.align === 'right' ? 'right' : props.align === 'center' ? 'center' : 'left')};

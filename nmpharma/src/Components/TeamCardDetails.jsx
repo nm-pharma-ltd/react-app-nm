@@ -28,7 +28,7 @@ export default function TeamCardDetail({ teamName, monthGoal, yearGoal, currentA
         <TeamName>
           {teamName}
           <TeamBadge>
-            <TeamBulletOrange />
+            <TeamBulletO />
             Team
           </TeamBadge>
         </TeamName>
@@ -62,7 +62,7 @@ export default function TeamCardDetail({ teamName, monthGoal, yearGoal, currentA
 
 
 
-const TeamBulletOrange = styled(TiMediaRecord)`
+export const TeamBulletO = styled(TiMediaRecord)`
   color: #e7f0ff;
   font-size: 14px;
 `;

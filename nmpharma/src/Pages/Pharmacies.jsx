@@ -240,10 +240,7 @@ const AddTeamPopup = ({ onClose }) => {
           Team Name
           <Input type="text" value={teamName} onChange={handleTeamNameChange} ></Input>
         </InputLabel>
-        <InputLabel>
-          Team Members
-          <Input type="number" value={teamMembers} onChange={handleTeamMembersChange} />
-        </InputLabel>
+        
         <ButtonContainer>
           <Button onClick={handleSave}>Save & Upload</Button>
           <Button onClick={onClose}>Cancel</Button>
