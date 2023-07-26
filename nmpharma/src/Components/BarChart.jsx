@@ -27,55 +27,91 @@ const BarChart = () => {
     }
   };
 
+  // Calculate the total sold for the year
   const totalSold = data.datasets[1].data.reduce((acc, value) => acc + value, 0);
 
   return (
-    <ChartContainer>
-      <ChartWrapper>
-        <Bar data={data} options={options} />
-      </ChartWrapper>
-      <InfoContainer>
-        <Info>Total Sold: {totalSold}</Info>
-        {/* Další tři důležité informace můžete přidat podle potřeby */}
-      </InfoContainer>
-    </ChartContainer>
+    <Kontaineros>
+      <ChartContainer>
+        <ResponsiveChart>
+          <Bar data={data} options={options} />
+        </ResponsiveChart>
+        <InfoContainer>
+          <InfoBox>
+            <InfoLabel>Total Sold:</InfoLabel>
+            <InfoValue>{totalSold}</InfoValue>
+          </InfoBox>
+          <InfoBox>
+            <InfoLabel>Délka pinďoura:</InfoLabel>
+            <InfoValue>93cm</InfoValue>
+          </InfoBox>
+          <InfoBox>
+            <InfoLabel>Kvalita grafu:</InfoLabel>
+            <InfoValue>Full HD</InfoValue>
+          </InfoBox>
+          <InfoBox>
+            <InfoLabel>Refresh rate:</InfoLabel>
+            <InfoValue>64 fps</InfoValue>
+          </InfoBox>
+        </InfoContainer>
+      </ChartContainer>
+    </Kontaineros>
   )
 };
+
+const Kontaineros = styled.div`
+  width: 100%;
+  margin: 0 auto;
+`;
 
 const ChartContainer = styled.div`
   background-color: #ffffff;
   border-radius: 20px;
   padding: 20px;
   margin-top: 20px;
+  margin-right: 20px;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  width: auto;
 
-  @media screen and (min-width: 768px) {
-    flex-direction: row;
-    align-items: flex-start;
+  @media (max-width: 1200px){
+    flex-direction: column;
   }
 `;
 
-const ChartWrapper = styled.div`
+const ResponsiveChart = styled.div`
   width: 100%;
-  height: 300px;
-  margin-bottom: 20px;
+  height: auto;
 `;
 
 const InfoContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  justify-content: space-between;
+  margin: 20px;
 
-  @media screen and (min-width: 768px) {
-    align-items: flex-start;
+  @media (max-width: 1200px){
+    flex-direction: column;
   }
 `;
 
-const Info = styled.p`
+const InfoBox = styled.div`
+  border-bottom: 1px solid #ccc;
+  padding: 10px;
+  margin: 10px;
+  width: 100%;
+`;
+
+const InfoLabel = styled.p`
   font-size: 18px;
   font-weight: bold;
+  text-align: center;
+  margin-bottom: 5px;
+`;
+
+const InfoValue = styled.p`
+  font-size: 20px;
+  text-align: center;
+  margin: 0;
 `;
 
 export default BarChart;

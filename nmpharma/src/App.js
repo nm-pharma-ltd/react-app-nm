@@ -50,13 +50,15 @@ export default function App() {
 
 
               <Route path="/stock" element={<Stock />} />
+              <Route path="/stock/forecastdetails/:id" element={""} />
+
+
               <Route path="/eru" element={<ERUs />} />
 
 
               <Route path="/targets" element={<Targets />} />
-
               <Route path="/targets/teamdetails/:id" element={<TeamDetails />} />
-     
+
 
 
               <Route path="/notifications" element={<Notifications />} />

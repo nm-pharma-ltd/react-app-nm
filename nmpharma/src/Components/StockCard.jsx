@@ -3,6 +3,8 @@ import styled, { keyframes } from 'styled-components';
 import { FaChevronDown } from 'react-icons/fa';
 import { TableCell, TableHeaderCell } from './Table';
 import { TiMediaRecord } from 'react-icons/ti';
+import { GoBackButton } from '../Pages/ClientsDetails';
+
 
 const StockCard = () => {
   const cardRef = useRef(null);
@@ -117,7 +119,7 @@ const StockCard = () => {
                     </UniInput>
                   </TableCell>
                   <TableCell align='center'>
-                    <MoreButton>More</MoreButton>
+                    <GoBackButton to='/stock/forecastdetails'>More</GoBackButton>
                   </TableCell>
                 </TableRow>
                 {/* Add more data rows here */}
@@ -223,6 +225,8 @@ const ExpandedCard = styled.div`
   overflow-x: auto;
   width: ${(props) => (props.expanded ? props.width + 'px' : 'fit-content')};
   min-width: ${(props) => (props.expanded ? props.width + 'px' : '100%')};
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
 `;
 
 const ExpandedCardContent = styled.div`
@@ -252,15 +256,15 @@ const TableRow = styled.tr`
 
 
 
-const MoreButton = styled.button`
-  background-color: #d54529;
-  color: #fff;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: 500;
-`;
+// const MoreButton = styled.button`
+//   background-color: #d54529;
+//   color: #fff;
+//   padding: 10px 20px;
+//   border: none;
+//   border-radius: 5px;
+//   cursor: pointer;
+//   font-weight: 500;
+// `;
 
 const CalcButton = styled.button`
   background-color: #575757;

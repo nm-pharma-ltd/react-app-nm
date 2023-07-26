@@ -11,6 +11,10 @@ export default function Stock() {
         <h2>Stock</h2>
         <UnderlineH>Sorted by Suppliers</UnderlineH>
         <StockCard />
+        <StockCard />
+        <StockCard />
+        <StockCard />
+
       </Kontainer>
     </>
   );
