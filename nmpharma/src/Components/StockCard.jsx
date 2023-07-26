@@ -13,7 +13,7 @@ const StockCard = () => {
   const [monthsOfStock, setMonthsOfStock] = useState(0);
   const [onOrder, setOnOrder] = useState(80);
   const [incoming, setIncoming] = useState(100);
-  const [totalInStock, setTotalInStock] = useState(120);
+  const totalInStock = 120;
 
   const handleCalculation = () => {
     const testData = 100; // Use the value entered in the input box
@@ -103,7 +103,7 @@ const StockCard = () => {
                   <TableCellTotal align='center'>
                     {totalInStock}
                   </TableCellTotal>
-                  <TableCellTotal lessThanSixMonths={handleColorChange()} align='center'>{monthsOfStock.toFixed(2)}</TableCellTotal>
+                  <TableCellTotal lessthansixmonths={handleColorChange().toString()} align='center'>{monthsOfStock.toFixed(2)}</TableCellTotal>
                   <TableCell align='center'>
                     <UniInput>
                       <InputStock
@@ -155,7 +155,7 @@ export const TableCellTotal = styled.td`
   font-weight: 600;
   border-bottom: 1px solid #e0e0e0;
   text-align: ${props => (props.align === 'right' ? 'right' : props.align === 'center' ? 'center' : 'left')};
-  color: ${props => (props.lessThanSixMonths ? 'red' : '#0d680e')};
+  color: ${props => (props.lessthansixmonths ? 'red' : '#0d680e')};
 `;
 
 const UniInput = styled.div`

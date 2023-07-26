@@ -3,19 +3,32 @@ import { FaCirclePlus } from 'react-icons/fa6';
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import ChatBox from "../Components/ChatBox";
-import { Input, InputLabel } from "./Register";
 import { Title } from "./ClientsDetails";
 import Table from "../Components/Table";
 import TeamCardDetail, { gradientColors } from "../Components/TeamCardDetails";
+import AddTeamPopup from "../Components/AddTeam";
+
 
 export default function Pharmacies() {
-  const [showPopup, setShowPopup] = useState(false);
-
-  const teams = [
+  const [isAddTeamPopupOpen, setIsAddTeamPopupOpen] = useState(false);
+  const [teams, setTeams] = useState([
     { name: 'Private sales', monthGoal: 10000, yearGoal: 100000, currentAmount: 8000 },
     { name: 'Government sales', monthGoal: 20000, yearGoal: 200000, currentAmount: 15000 },
     { name: 'Company sales', monthGoal: 100000, yearGoal: 300000, currentAmount: 12000 },
-  ];
+  ]);
+
+  const handleAddTeamClick = () => {
+    setIsAddTeamPopupOpen(true);
+  };
+
+  const handleClosePopup = () => {
+    setIsAddTeamPopupOpen(false);
+  };
+
+  const handleSaveTeam = (newTeam) => {
+    setTeams((prevTeams) => [...prevTeams, newTeam]);
+    setIsAddTeamPopupOpen(false);
+  };
 
   const products = [
     { rank: 1, name: 'Voltaren', profit: 500, soldTarget: `${1250}€ / ${1520}€` },
@@ -29,8 +42,6 @@ export default function Pharmacies() {
     { rank: 9, name: 'Product 9', profit: 200, soldTarget: `${405}€ / ${1050}€` },
     { rank: 10, name: 'Product 10', profit: 300, soldTarget: `${705}€ / ${1050}€` },
   ];
-
-
   const pharmacies = [
     { rank: 1, name: 'Pharmacy 1', profit: 500, monthlysales: `${1520}€` },
     { rank: 2, name: 'Pharmacy 2', profit: 80, monthlysales: `${50}€` },
@@ -43,15 +54,6 @@ export default function Pharmacies() {
     { rank: 9, name: 'Pharmacy 9', profit: 200, monthlysales: `${1050}€` },
     { rank: 10, name: 'Pharmacy 10', profit: 300, monthlysales: `${1050}€` },
   ];
-
-
-  const handleOpenPopup = () => {
-    setShowPopup(true);
-  };
-
-  const handleClosePopup = () => {
-    setShowPopup(false);
-  };
 
   return (
     <>
@@ -88,10 +90,13 @@ export default function Pharmacies() {
 
       <IconContainer>
         <h2>Teams</h2>
-        <IconLink onClick={handleOpenPopup}>
+        <IconLink onClick={handleAddTeamClick}>
           <FaCirclePlus />
         </IconLink>
       </IconContainer>
+      {isAddTeamPopupOpen && (
+        <AddTeamPopup onClose={handleClosePopup} onSave={handleSaveTeam} />
+      )}
 
       {/* Zobrazení karet týmů */}
       <TeamsContainer>
@@ -114,16 +119,10 @@ export default function Pharmacies() {
       <h2>Chat</h2>
       <ChatBox />
 
-      {showPopup && <AddTeamPopup onClose={handleClosePopup} />}
     </>
   );
 }
 
-
-const PopTitle = styled.h2`
-  margin-bottom: 20px;
-  display: flex;
-`;
 
 const TeamsContainer = styled.div`
   margin-top: 20px;
@@ -162,90 +161,3 @@ export const IconLink = styled(NavLink)`
     transition: all 0.25s ease-in-out;
   }
 `;
-
-const PopupContainer = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-  transition: all 0.25s ease-in-out;
-`;
-
-const PopupContent = styled.div`
-  background-color: #fff;
-    border-radius: 20px;
-    padding: 20px;
-    width: 500px;
-    display: flex;
-    flex-direction: column;
-`;
-
-const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 20px;
-`;
-
-const Button = styled.button`
-  padding: 10px 20px;
-  margin-left: 10px;
-  border: none;
-  border-radius: 5px;
-  background-color: #d54529;
-  color: #fff;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #c23d2a;
-  }
-`;
-
-
-
-
-
-
-
-
-const AddTeamPopup = ({ onClose }) => {
-  const [teamName, setTeamName] = useState("");
-  const [teamMembers, setTeamMembers] = useState("");
-
-  const handleTeamNameChange = (event) => {
-    setTeamName(event.target.value);
-  };
-
-  const handleTeamMembersChange = (event) => {
-    setTeamMembers(event.target.value);
-  };
-
-  const handleSave = () => {
-    // Perform save logic here
-    console.log("Team Name:", teamName);
-    console.log("Team Members:", teamMembers);
-    onClose();
-  };
-
-  return (
-    <PopupContainer>
-      <PopupContent>
-        <PopTitle>Add New Team</PopTitle>
-        <InputLabel>
-          Team Name
-          <Input type="text" value={teamName} onChange={handleTeamNameChange} ></Input>
-        </InputLabel>
-        
-        <ButtonContainer>
-          <Button onClick={handleSave}>Save & Upload</Button>
-          <Button onClick={onClose}>Cancel</Button>
-        </ButtonContainer>
-      </PopupContent>
-    </PopupContainer>
-  );
-};

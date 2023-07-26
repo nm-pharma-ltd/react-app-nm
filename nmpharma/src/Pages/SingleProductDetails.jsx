@@ -12,8 +12,10 @@ export default function SingleProductDetails() {
         <Title>Sales activity - Voltaren</Title>
         <GoBackButton to="/pharmacies">Back</GoBackButton>
       </TitleWrapper>
+
       <BarChart />
       <LineChart />
+      
       <h2>Targets</h2>
       
 

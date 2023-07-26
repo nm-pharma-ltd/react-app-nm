@@ -9,14 +9,13 @@ const BarChart = () => {
       {
         label: 'Target',
         data: [12, 19, 3, 5, 2, 3, 7, 9, 6, 1, 10, 22],
-        backgroundColor: '#dc3545', 
+        backgroundColor: '#dc3545',
       },
       {
         label: 'Sold',
         data: [9, 18, 2, 5, 2, 3, 2, 1, 5, 1, 10, 25],
-        backgroundColor: '#3ebc62', 
+        backgroundColor: '#3ebc62',
       },
-      
     ]
   };
 
@@ -28,23 +27,55 @@ const BarChart = () => {
     }
   };
 
-  return(
+  const totalSold = data.datasets[1].data.reduce((acc, value) => acc + value, 0);
+
+  return (
     <ChartContainer>
-      <Bar data={data} options={options} />
+      <ChartWrapper>
+        <Bar data={data} options={options} />
+      </ChartWrapper>
+      <InfoContainer>
+        <Info>Total Sold: {totalSold}</Info>
+        {/* Další tři důležité informace můžete přidat podle potřeby */}
+      </InfoContainer>
     </ChartContainer>
   )
-  
 };
 
 const ChartContainer = styled.div`
   background-color: #ffffff;
   border-radius: 20px;
   padding: 20px;
-  height: 500px;
   margin-top: 20px;
-  margin-right: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  @media screen and (min-width: 768px) {
+    flex-direction: row;
+    align-items: flex-start;
+  }
 `;
 
+const ChartWrapper = styled.div`
+  width: 100%;
+  height: 300px;
+  margin-bottom: 20px;
+`;
 
+const InfoContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  @media screen and (min-width: 768px) {
+    align-items: flex-start;
+  }
+`;
+
+const Info = styled.p`
+  font-size: 18px;
+  font-weight: bold;
+`;
 
 export default BarChart;
