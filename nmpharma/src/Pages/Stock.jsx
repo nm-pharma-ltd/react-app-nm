@@ -25,7 +25,7 @@ const UnderlineH = styled.h3`
   color: #5b5b5b;
 `
 
-const Kontainer = styled.div`
+export const Kontainer = styled.div`
   display: flex;
   flex-direction: column;
   margin: 20px 20px 20px 0px;

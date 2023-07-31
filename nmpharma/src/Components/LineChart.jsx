@@ -44,7 +44,7 @@ const ChartContainer = styled.div`
   background-color: #ffffff;
   border-radius: 20px;
   padding: 20px;
-  height: 500px;
+  
   margin-top: 20px;
   margin-right: 20px;
   margin-bottom: 20px;

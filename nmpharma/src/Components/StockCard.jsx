@@ -71,6 +71,7 @@ const StockCard = () => {
               <TeamBulletO/>
               On-Order
             </OnOrderBadge>
+            <GoBackButton to="/stock/supplier">Forecast</GoBackButton>
           </CardTitle>
           <ExpandIcon expanded={expanded ? 1 : 0} />
         </CardHeaderContainer>
@@ -109,7 +110,7 @@ const StockCard = () => {
                   <TableCell align='center'>
                     <UniInput>
                       <InputStock
-                        placeholder='123'
+                        placeholder='300'
                         type="number"
                         name='calculations'
                         value={inputValue}

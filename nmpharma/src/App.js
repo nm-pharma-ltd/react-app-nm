@@ -15,6 +15,8 @@ import ClientDetails from './Pages/ClientsDetails';
 import SingleProductDetails from './Pages/SingleProductDetails';
 import { SinglePharmacyDetails } from './Pages/SinglePharmacyDetails';
 import TeamDetails from './Pages/TeamDetails';
+import ForecastSingleProduct from './Pages/ForecastSingleProduct';
+import Supplier from './Pages/Supplier';
 
 
 export default function App() {
@@ -50,8 +52,11 @@ export default function App() {
 
 
               <Route path="/stock" element={<Stock />} />
-              <Route path="/stock/forecastdetails/:id" element={""} />
 
+              <Route path="/stock/supplier" element={<Supplier/>} />
+
+              <Route path="/stock/forecastdetails/" element={<ForecastSingleProduct/>} />
+              
 
               <Route path="/eru" element={<ERUs />} />
 

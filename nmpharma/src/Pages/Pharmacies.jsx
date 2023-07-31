@@ -52,8 +52,8 @@ export default function Pharmacies() {
     { rank: 7, name: 'Pharmacy 7', profit: -400, monthlysales: `${1520}€` },
     { rank: 8, name: 'Pharmacy 8', profit: -80, monthlysales: `${1050}€` },
     { rank: 9, name: 'Pharmacy 9', profit: 200, monthlysales: `${1050}€` },
-    { rank: 10, name: 'Pharmacy 10', profit: 300, monthlysales: `${1050}€` },
-  ];
+      { rank: 10, name: 'Pharmacy 10', profit: 300, monthlysales: `${1050}€` },
+    ];
 
   return (
     <>
