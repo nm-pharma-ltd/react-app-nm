@@ -4,6 +4,7 @@ import { Kontainer } from "./Stock";
 import { FaBox, FaCalendarAlt, FaTruck } from "react-icons/fa";
 import DataCard from "../Components/DataCard";
 import { styled } from "styled-components";
+import { GoBackButton, TitleWrapper } from "./ClientsDetails";
 
 
 
@@ -11,18 +12,22 @@ export default function ForecastSingleProduct() {
 
     return (
         <Kontainer>
-            <h2>Product detail - Voltaren </h2>
+            <TitleWrapper>
+              <h2>Forecast details - Voltaren </h2>
+              <GoBackButton to={'/stock'}>Back</GoBackButton>
+            </TitleWrapper>
             <DataKontainer>
-                <DataCard title="INCOMING" amount="100" icon={FaBox} iconBackgroundColor="#bdd9ff" textColor={"#1b53a2"} />
-                <DataCard title="ON ORDER" amount="200" icon={FaTruck} iconBackgroundColor="#d5d5d5" textColor={"#4f4f4f"} />
-                <DataCard title="TOTAL IN STOCK" amount="300" icon={FaBox} iconBackgroundColor="#a4da05 " textColor={"#336814 "} />
-                <DataCard title="MONTHS OF STOCK" amount="400" icon={FaCalendarAlt} iconBackgroundColor="#ff9933" textColor={"#875625"} />
+                <DataCard title="INCOMING" amount="+100" pluspercentage={'+12% '} timewhen={' than last month'} icon={FaBox} iconBackgroundColor="#bdd9ff"  />
+                <DataCard title="ON ORDER" amount="+200"  pluspercentage={'+4% '} timewhen={' then last week'} icon={FaTruck} iconBackgroundColor="#d5d5d5"  />
+                <DataCard title="TOTAL IN STOCK" amount="680"  pluspercentage={'+4% '} timewhen={' then last year'}  icon={FaBox} iconBackgroundColor="#a4da05 " />
+                <DataCard title="MONTHS OF STOCK" amount="9"   pluspercentage={'+23% '} timewhen={' then last year'}  icon={FaCalendarAlt} iconBackgroundColor="#ff9933" />
             </DataKontainer>
             <StockCard />
         </Kontainer>
     );
-
 }
+
+
 
 const DataKontainer = styled.div`
     display: flex;
