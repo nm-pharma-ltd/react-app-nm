@@ -135,7 +135,7 @@ export const ViewDetailsLink = styled(NavLink)`
   color: #e16a32;
   text-decoration: none;
   transition: all 0.25s ease-in-out;
-
+    
   &:hover {
     color: #753619;
     margin-right: 3px;

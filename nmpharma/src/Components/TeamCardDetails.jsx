@@ -6,18 +6,18 @@ import { NavLink } from 'react-router-dom';
 import { GreenBox } from '../Components/Table';
 import { TiMediaRecord } from 'react-icons/ti';
 
-
 export const gradientColors = [
   'linear-gradient(to bottom right, #742700, #ff7f50, #cc6849)', // Bronze
   'linear-gradient(to bottom right,  #c0c0c0, #646464, #b0b0b0)', // Silver
-  'linear-gradient(to bottom right,#f3ca4a, #9c7e03, #ffc100)',// Gold
-  'linear-gradient(to bottom right,#7ce47c, #1c603d, #1a9459)', 
+  'linear-gradient(to bottom right,#f3ca4a, #9c7e03, #ffc100)', // Gold
+  'linear-gradient(to bottom right,#7ce47c, #1c603d, #1a9459)',
 ];
 
 export default function TeamCardDetail({ teamName, monthGoal, yearGoal, currentAmount, cardwidth, progressbarheight, index, backgroundgradient }) {
-  
   const monthProgress = (currentAmount / monthGoal) * 100;
   const yearProgress = (currentAmount / yearGoal) * 100;
+
+  
 
   return (
     <>
@@ -40,7 +40,7 @@ export default function TeamCardDetail({ teamName, monthGoal, yearGoal, currentA
         </Goal>
         <ProgressBarWrapper progressbarheight={progressbarheight}>
           <StyledLinearProgress variant="determinate" value={monthProgress} />
-          <LinearProgressLabel>{`${monthProgress}%`}</LinearProgressLabel>
+          <LinearProgressLabel>{`${Math.floor(monthProgress)}%`}</LinearProgressLabel>
         </ProgressBarWrapper>
 
         <Goal>
@@ -49,7 +49,7 @@ export default function TeamCardDetail({ teamName, monthGoal, yearGoal, currentA
         </Goal>
         <ProgressBarWrapper progressbarheight={progressbarheight}>
           <StyledLinearProgress variant="determinate" value={yearProgress} />
-          <LinearProgressLabel>{`${yearProgress}%`}</LinearProgressLabel>
+          <LinearProgressLabel>{`${Math.floor(yearProgress)}%`}</LinearProgressLabel>
         </ProgressBarWrapper>
 
         <Earned>
@@ -60,7 +60,6 @@ export default function TeamCardDetail({ teamName, monthGoal, yearGoal, currentA
     </>
   );
 };
-
 
 
 export const TeamBulletO = styled(TiMediaRecord)`

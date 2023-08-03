@@ -71,7 +71,7 @@ const TeamDetails = () => {
             </Avatar>
             <MemberName>{member.name}</MemberName>
             <MemberRole>{member.role}</MemberRole>
-            <StatsContainer>
+            {/* <StatsContainer>
               <Stat>
                 <StatLabel>Month</StatLabel>
                 <GreenBox>{member.monthAmount} €</GreenBox>
@@ -80,7 +80,7 @@ const TeamDetails = () => {
                 <StatLabel>Year</StatLabel>
                 <GreenBox>{member.yearAmount} €</GreenBox>
               </Stat>
-            </StatsContainer>
+            </StatsContainer> */}
           </TeamMemberCard>
         ))}
       </TeamsContainerM>
@@ -116,6 +116,10 @@ const TeamMemberCard = styled.div`
   flex-direction: column;
   align-items: center;
   min-width: 190px;
+
+  @media(max-width: 868px){
+    
+  }
 `;
 
 const Avatar = styled.div`

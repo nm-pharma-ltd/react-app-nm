@@ -4,9 +4,10 @@ import { FaChevronDown } from 'react-icons/fa';
 import { TableCell, TableHeaderCell } from './Table';
 import { TiMediaRecord } from 'react-icons/ti';
 import { GoBackButton } from '../Pages/ClientsDetails';
-
+import { NavLink } from 'react-router-dom';
 
 const StockCard = () => {
+
   const cardRef = useRef(null);
   const [expanded, setExpanded] = useState(false);
   const [cardWidth, setCardWidth] = useState(null);
@@ -20,7 +21,7 @@ const StockCard = () => {
   const handleCalculation = () => {
     const testData = 100; // Use the value entered in the input box
     const toOrder = inputValue ? parseInt(inputValue, 10) : 0; // Use the value entered in the input box
-  
+
     // Perform the calculation
     const result = (onOrder + incoming + totalInStock + toOrder) / testData;
     setMonthsOfStock(result);
@@ -46,6 +47,7 @@ const StockCard = () => {
       }
     };
 
+
     window.addEventListener('resize', handleResize);
     return () => {
       window.removeEventListener('resize', handleResize);
@@ -53,8 +55,9 @@ const StockCard = () => {
   }, []);
 
   const handleColorChange = () => {
-    return monthsOfStock < 6;
+    return monthsOfStock < 6 ? 'red' : 'green';
   };
+
 
 
   return (
@@ -68,12 +71,14 @@ const StockCard = () => {
               Incoming
             </IncomingBadge>
             <OnOrderBadge>
-              <TeamBulletO/>
+              <TeamBulletO />
               On-Order
             </OnOrderBadge>
-            <GoBackButton to="/stock/supplier">Forecast</GoBackButton>
           </CardTitle>
-          <ExpandIcon expanded={expanded ? 1 : 0} />
+          <RightKontainer>
+            <ForeButton to="/stock/supplier">Forecast</ForeButton>
+            <ExpandIcon expanded={expanded ? 1 : 0} />
+          </RightKontainer>
         </CardHeaderContainer>
       </CardContainer>
 
@@ -106,7 +111,13 @@ const StockCard = () => {
                   <TableCellTotal align='center'>
                     {totalInStock}
                   </TableCellTotal>
-                  <TableCellTotal lessthansixmonths={handleColorChange().toString()} align='center'>{monthsOfStock.toFixed(2)}</TableCellTotal>
+                  <TableCellTotal
+                    color={handleColorChange()}
+                    align='center'
+                  >
+                    {monthsOfStock.toFixed(2)}
+                  </TableCellTotal>
+
                   <TableCell align='center'>
                     <UniInput>
                       <InputStock
@@ -133,6 +144,11 @@ const StockCard = () => {
   );
 };
 
+const RightKontainer = styled.div`
+  display: flex;
+  align-items: center;
+`
+
 export const TableCellCode = styled.td`
   padding: 10px;
   border-bottom: 1px solid #e0e0e0;
@@ -153,13 +169,16 @@ export const TableCellInc = styled.td`
   font-weight: 700;
   text-align: ${props => (props.align === 'right' ? 'right' : props.align === 'center' ? 'center' : 'left')};
 `;
+
+
 export const TableCellTotal = styled.td`
   padding: 10px;
   font-weight: 600;
   border-bottom: 1px solid #e0e0e0;
   text-align: ${props => (props.align === 'right' ? 'right' : props.align === 'center' ? 'center' : 'left')};
-  color: ${props => (props.lessthansixmonths ? 'red' : '#0d680e')};
+  color: ${props => props.color || ''};
 `;
+
 
 const UniInput = styled.div`
   display: flex;
@@ -277,6 +296,27 @@ const CalcButton = styled.button`
   margin: 0 10px;
 
 `;
+
+const ForeButton = styled(NavLink)`
+  background-color: #fff;
+  color: #575757;
+  padding: 5px 10px;
+  border: 3px solid #575757;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 0 20px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: 0.2s ease-in-out;
+
+  &:hover{
+    background-color: #575757;
+    color: #fff;
+
+  }
+`;
+
 
 export const TeamBulletI = styled(TiMediaRecord)`
   color: #1c3a57; 
