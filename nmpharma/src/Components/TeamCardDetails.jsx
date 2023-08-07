@@ -67,6 +67,7 @@ export const TeamBulletO = styled(TiMediaRecord)`
   font-size: 14px;
 `;
 
+
 export const TeamBadge = styled.div`
   height: 22px;
   text-align: center;
@@ -86,6 +87,7 @@ export const TeamBadge = styled.div`
     font-size: 12px;
   }
 `;
+
 
 const TeamBox = styled(NavLink)`
   width: calc(${(props) => props.cardwidth} - 20px);
@@ -107,6 +109,7 @@ const TeamBox = styled(NavLink)`
   transition: all 0.25s ease-in-out;
   min-width: 320px;
 
+  
   &:hover {
     box-shadow: 0 3px 4px rgba(0, 0, 0, 0.25);
   }

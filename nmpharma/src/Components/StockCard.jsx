@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { FaChevronDown } from 'react-icons/fa';
-import { TableCell, TableHeaderCell } from './Table';
+import { TableCell, TableHeaderCell, ViewDetailsLink } from './Table';
 import { TiMediaRecord } from 'react-icons/ti';
 import { GoBackButton } from '../Pages/ClientsDetails';
 import { NavLink } from 'react-router-dom';
@@ -130,8 +130,8 @@ const StockCard = () => {
                       <CalcButton onClick={handleCalculation}>=</CalcButton>
                     </UniInput>
                   </TableCell>
-                  <TableCell align='center'>
-                    <GoBackButton to='/stock/forecastdetails'>More</GoBackButton>
+                  <TableCell >
+                    <ForeButton to='/stock/forecastdetails'>More</ForeButton>
                   </TableCell>
                 </TableRow>
                 {/* Add more data rows here */}
