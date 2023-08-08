@@ -5,14 +5,17 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { StyleSheetManager } from 'styled-components';
+import { Provider as MyProvider } from './providers/provider';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <StyleSheetManager shouldForwardProp={(prop) => prop !== 'align' && prop !== 'progressbarheight'}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <MyProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </MyProvider>
     </StyleSheetManager>
   </React.StrictMode>
 );

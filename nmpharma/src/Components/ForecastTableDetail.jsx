@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { GoBackButton } from '../Pages/ClientsDetails';
 import { NavLink } from 'react-router-dom';
 
-export default function ForecastTable({ title, subtitle, width, columns, data, subcode }) {
+export default function ForecastTableDetail({ width, columns, data }) {
 
   const generateRows = () => {
     return data.map((item, index) => (
@@ -15,7 +15,7 @@ export default function ForecastTable({ title, subtitle, width, columns, data, s
             return (
               <TableCell key={colIndex} align={column.align}>
                 <KontDown>
-                  <InputForecast type="number" placeholder="20" />
+                  <InputForecast type="number"  placeholder="20" />
                   <span>{item[column.field]}</span>
                 </KontDown>
               </TableCell>
@@ -26,16 +26,8 @@ export default function ForecastTable({ title, subtitle, width, columns, data, s
     ));
   };
 
-
   return (
     <Card>
-      <CardHeader>
-        <Title>{title}</Title>
-      </CardHeader>
-      <Kont>
-        {subcode && <Subcode>{subcode}</Subcode>}
-        <Subtitle>{subtitle}</Subtitle>
-      </Kont>
       <TableContainer>
         <TableElement>
           <TableHead>
@@ -49,31 +41,15 @@ export default function ForecastTable({ title, subtitle, width, columns, data, s
           </TableHead>
           <TableBody>{generateRows()}</TableBody>
         </TableElement>
-        <ButtonSidebar>
-          <TableHead>
-            <TableRow>
-              <TableHeaderCell>ACTIONS</TableHeaderCell>
-            </TableRow>
-          </TableHead>
-          {data.map((item, index) => (
-            <SidebarButton to="/stock/forecastdetails" key={index}>More</SidebarButton>
-          ))}
-        </ButtonSidebar>
       </TableContainer>
     </Card>
   );
 }
 
-const Kont = styled.div`
-  display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-`
 
 const Card = styled.div`
   background-color: #ffffff;
-  border-radius: 20px;
+  border-radius: 15px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 20px;
   margin-top: 20px;
@@ -85,31 +61,6 @@ const Card = styled.div`
   @media (max-width: 768px) {
     max-width: 100%;
   }
-`;
-
-
-
-const CardHeader = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
-  text-wrap: nowrap;
-
-`;
-
-const Title = styled.h3`
-  margin: 0 10px 0 0;
-`;
-
-const Subtitle = styled.p`
-  margin: 0 0 10px 0;
-  color: #7e7e7e;
-`;
-const Subcode = styled.p`
-  margin: 0 10px 10px 0;
-  color: #4d4d4d;
-  font-weight: 500;
 `;
 
 const TableContainer = styled.div`
@@ -160,42 +111,9 @@ const TableHeaderCell = styled.th`
   }
 `;
 
-const ButtonSidebar = styled.div`
-  position: sticky; 
-  top: 0; 
-  right: 0; 
-  display: flex;
-  flex-direction: column;
-  background: #ffffff;
-  box-shadow: -2px 0px 4px rgba(0, 0, 0, 0.1); 
-  border-bottom: 1px solid #e0e0e0;
-
-`;
-
-const SidebarButton = styled(NavLink)`
-  background-color: #fff;
-  color: #575757;
-  padding: 6px 10px;
-  border: 3px solid #575757;
-  border-radius: 5px;
-  cursor: pointer;
-  margin: 15px;
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 500;
-  transition: 0.2s ease-in-out;
-
-
-  &:hover{
-    background-color: #575757;
-    color: #fff;
-
-  }
-`;
-
 const KontDown = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   justify-content: space-between;
   width: 75px;
@@ -212,8 +130,9 @@ const InputForecast = styled.input`
   transition: border-color 0.3s ease;
   height: 35px;
   width: 55px;
-  text-align: center;
+  text-align: right;
   margin-right: 5px;
+  margin-bottom: 5px;
 
   &:focus {
     border-color: #949494;

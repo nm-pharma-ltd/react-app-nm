@@ -37,7 +37,6 @@ function Tabulky() {
       ]}
       data={testData}
     />
-    
     </MamRadVelkyZadky>
   );
 }

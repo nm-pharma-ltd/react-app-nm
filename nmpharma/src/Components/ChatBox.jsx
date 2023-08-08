@@ -1,18 +1,35 @@
-import React, { useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import styled from 'styled-components';
-import {  FaTimes } from 'react-icons/fa';
-import { FaCirclePlus  } from 'react-icons/fa6';
+import { FaTimes } from 'react-icons/fa';
+import { FaCirclePlus } from 'react-icons/fa6';
 import { BsPersonCircle } from "react-icons/bs";
 import { IconLink } from '../Pages/Pharmacies';
+import { Context, NOTES } from '../providers/provider'; 
 
 const ChatBox = () => {
-  const [messages, setMessages] = useState([]);
+  // Získání stavu a dispečera z globálního kontextu
+  const [store, dispatch] = useContext(Context);
+
+  // Získání zpráv ze stavu, nebo použití prázdného pole
+  const messages = store.messages || [];
+
+  // Stav pro uchování textu nové zprávy
   const [inputValue, setInputValue] = useState('');
 
+  // Efekt, který se spustí při změně stavu store (tzn. načtení nebo změna stavu)
+  useEffect(() => {
+    // Pokud jsou zprávy v store, vymaž text nové zprávy
+    if (store && store.messages) {
+      setInputValue('');
+    }
+  }, [store]); // Efekt se spustí při změně store
+
+  // Funkce pro změnu hodnoty inputValue při změně vstupního pole
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
 
+  // Funkce pro odeslání zprávy
   const handleSendMessage = () => {
     if (inputValue.trim() !== '') {
       const newMessage = {
@@ -21,22 +38,34 @@ const ChatBox = () => {
         message: inputValue,
       };
 
-      setMessages([...messages, newMessage]);
+      // Vytvoření aktualizovaného pole zpráv s novou zprávou
+      const updatedMessages = [...messages, newMessage];
+
+      // Aktualizace stavu v globálním kontextu pomocí dispečera
+      dispatch({ type: NOTES, payload: { messages: updatedMessages } });
+
+      // Vymazání textu nové zprávy
       setInputValue('');
     }
   };
 
+  // Funkce pro odeslání zprávy při stisknutí klávesy Enter
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
       handleSendMessage();
     }
   };
 
+  // Funkce pro odstranění zprávy
   const handleRemoveMessage = (id) => {
+    // Filtrace zpráv - odstranění zprávy s daným id
     const updatedMessages = messages.filter((message) => message.id !== id);
-    setMessages(updatedMessages);
+
+    // Aktualizace stavu v globálním kontextu pomocí dispečera
+    dispatch({ type: NOTES, payload: { messages: updatedMessages } });
   };
 
+  // Vykreslení komponenty ChatBox
   return (
     <ChatBoxWrapper>
       <BoxChat>
@@ -87,7 +116,6 @@ const ChatBoxWrapper = styled.div`
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 16px;
-  margin-right: 16px;
   margin-bottom: 40px;
   margin-top: 20px;
   background: #fff;
