@@ -1,80 +1,54 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const DataCardLarge = ({ supplier, code, name, icon, iconBackgroundColor }) => {
-
-  const Icon = icon;
-
+const DataCardLarge = ({ supplier, code, name, profit, price }) => {
   return (
     <CardContainer>
-      <TopKont>
-        <CardContent>
-          <CardTitle>{supplier}</CardTitle>
-          <CardAmount>{code}</CardAmount>
-          <CardAmount>{name}</CardAmount>
-        </CardContent>
-        <IconContainer color={iconBackgroundColor}>
-          <Icon size={22} />
-        </IconContainer>
-      </TopKont>
+      <CardContent>
+        <CardTitle>{supplier}</CardTitle>
+        <CardAmount>{code}</CardAmount>
+        <CardAmount>{name}</CardAmount>
+      </CardContent>
+      <VerticalDivider />
+      <ProfitPriceContainer>
+        <CardTitle>Price:</CardTitle>
+        <CardAmount>{`${price} €`}</CardAmount>
+        <CardTitle>Profit:</CardTitle>
+        <CardAmount>{`+${profit} €`}</CardAmount>
+      </ProfitPriceContainer>
     </CardContainer>
   );
 };
 
-const TopKont = styled.div`
- display: flex;
- align-items: center;
- justify-content: space-between;
- width: 100%;
-`
-
-
 const CardContainer = styled.div`
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;  // 1fr for left, 1px for divider, 1fr for right
+  align-items: center;
   border-radius: 15px;
   padding: 20px;
   margin-top: 20px;
   margin-bottom: 5px;
   width: 100%;
-  height: 90px;
+  height: 80px;
   background: #fff;
   box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
-  justify-content: space-between;
 
   @media (max-width: 1024px){
     width: 100%;
-    display: flex;
-    flex-direction: row;
     align-items: center;
-    justify-content: space-between;
   }
 `;
 
-const IconContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: ${(props) => props.color || '#f5f5f5'};
-  border-radius: 10px;
-  height: 60px;
-  width: 60px;
-  margin-right: 15px;
+const VerticalDivider = styled.div`
+  height: 60%;
+  background-color: #c5c5c5;
+  grid-column: 2; // this ensures it's in the center column
 `;
 
 const CardContent = styled.div`
   display: flex;
-  flex-direction: row;
   align-items: center;
-  justify-content: space-between;
-  width: auto;
-
-  @media (max-width: 1024px){
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-  }
-
+  justify-content: flex-start; // added to push content to the left
 `;
 
 const CardTitle = styled.h3`
@@ -83,12 +57,6 @@ const CardTitle = styled.h3`
   font-size: 16px;
   color: ${(props) => props.textColor || '#808080'};
   font-weight: 500;
- 
-  @media (max-width: 1024px){
-    margin-right: 10px;
-  }
-
-  
 `;
 
 const CardAmount = styled.p`
@@ -97,6 +65,26 @@ const CardAmount = styled.p`
   margin-right: 18px;
   font-weight: 600;
   color: #272424;
+`;
+
+const ProfitPriceContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; // added to push content to the right
+`;
+
+const Profit = styled.p`
+  margin-right: 20px;
+  font-size: 18px;
+  color: #272424;
+  white-space: nowrap; 
+`;
+
+const Price = styled.p`
+  margin: 0;
+  font-size: 18px;
+  color: #272424;
+  white-space: nowrap;
 `;
 
 export default DataCardLarge;

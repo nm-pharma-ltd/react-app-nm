@@ -7,6 +7,7 @@ import { Title } from "./ClientsDetails";
 import Table from "../Components/Table";
 import TeamCardDetail, { gradientColors } from "../Components/TeamCardDetails";
 import AddTeamPopup from "../Components/AddTeam";
+import { Konto } from "./ForecastSingleProduct";
 
 
 export default function Pharmacies() {
@@ -52,8 +53,8 @@ export default function Pharmacies() {
     { rank: 7, name: 'Pharmacy 7', profit: -400, monthlysales: `${1520}€` },
     { rank: 8, name: 'Pharmacy 8', profit: -80, monthlysales: `${1050}€` },
     { rank: 9, name: 'Pharmacy 9', profit: 200, monthlysales: `${1050}€` },
-      { rank: 10, name: 'Pharmacy 10', profit: 300, monthlysales: `${1050}€` },
-    ];
+    { rank: 10, name: 'Pharmacy 10', profit: 300, monthlysales: `${1050}€` },
+  ];
 
   return (
     <>
@@ -114,10 +115,10 @@ export default function Pharmacies() {
           />
         ))}
       </TeamsContainer>
-
-
       <h2>Chat</h2>
-      <ChatBox />
+      <Konto>
+        <ChatBox />
+      </Konto>
 
     </>
   );
@@ -126,6 +127,7 @@ export default function Pharmacies() {
 
 const TeamsContainer = styled.div`
   margin-top: 20px;
+  margin-right: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;

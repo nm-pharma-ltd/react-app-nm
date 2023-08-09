@@ -113,8 +113,7 @@ const BoxChat = styled.div`
 
 const ChatBoxWrapper = styled.div`
   width: auto;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  border-radius: 20px;
   padding: 16px;
   margin-bottom: 40px;
   margin-top: 20px;

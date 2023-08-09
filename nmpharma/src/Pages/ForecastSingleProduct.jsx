@@ -2,6 +2,7 @@ import React from "react";
 import ForecastTable from "../Components/ForecastTable";
 import { Kontainer } from "./Stock";
 import { FaBox, FaCalendarAlt, FaTruck } from "react-icons/fa";
+import {FaCircle} from "react-icons/fa6"
 import DataCard from "../Components/DataCard";
 import { styled } from "styled-components";
 import { GoBackButton, TitleWrapper } from "./ClientsDetails";
@@ -45,7 +46,7 @@ export default function ForecastSingleProduct() {
         <DataCard title="ON ORDER" amount="+200" pluspercentage={'+4% '} timewhen={' then last week'} icon={FaTruck} iconBackgroundColor="#d5d5d5" />
         <DataCard title="TOTAL IN STOCK" amount="680" pluspercentage={'+4% '} timewhen={' then last year'} icon={FaBox} iconBackgroundColor="#a4da05 " />
         <DataCard title="MONTHS OF STOCK" amount="9" pluspercentage={'+23% '} timewhen={' then last year'} icon={FaCalendarAlt} iconBackgroundColor="#ff9933" />
-        <DataCardLarge supplier="THE001" code="NMP019" name="AMLODIPINE TEVA 10 MG" icon={FaCalendarAlt} iconBackgroundColor="#ff9933" />
+        <DataCardLarge supplier="THE001" code="NMP019" name="AMLODIPINE TEVA 10 MG" price={200} profit={82} />
       </DataKontainer>
 
 
@@ -84,6 +85,6 @@ const DataKontainer = styled.div`
     flex-wrap: wrap;
     width: 100%;
 `
-const Konto = styled.div`
+export const Konto = styled.div`
     margin-right: 20px;
 `
