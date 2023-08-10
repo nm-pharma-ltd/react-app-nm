@@ -17,18 +17,25 @@ import { SinglePharmacyDetails } from './Pages/SinglePharmacyDetails';
 import TeamDetails from './Pages/TeamDetails';
 import ForecastSingleProduct from './Pages/ForecastSingleProduct';
 import Supplier from './Pages/Supplier';
+import { useState } from 'react';
 
 
 export default function App() {
-
   const location = useLocation();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Initialize with true
 
   // Determine if the current location is the login or registration page
   const isAuthPage = location.pathname === '/Login' || location.pathname === '/Register';
 
+  const toggleSidebar = () => {
+    setIsSidebarOpen(prevState => !prevState);
+  };
+
   return (
     <Container>
-      {!isAuthPage && <Sidebar />}
+      {!isAuthPage && (
+        <Sidebar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+      )}
       <ContentWrapper>
         <Gradient />
         {isAuthPage ? (
@@ -39,7 +46,7 @@ export default function App() {
             </Routes>
           </>
         ) : (
-          <Content>
+          <Content open={isSidebarOpen}>
             <Routes>
               <Route path="/" element={<Pharmacies />} />
               <Route path="/pharmacies" element={<Pharmacies />} />
@@ -100,7 +107,7 @@ const Gradient = styled.div`
 `;
 
 const Content = styled.div`
-  margin-left: 270px;
+  margin-left: ${props => (props.open ? '270px' : '20px')};
   margin-top: 20px;
-  /* Add other styling for the content here */
+  transition: margin-left 0.3s;
 `;

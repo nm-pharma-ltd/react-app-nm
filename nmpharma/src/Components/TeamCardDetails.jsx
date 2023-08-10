@@ -8,8 +8,9 @@ import { TiMediaRecord } from 'react-icons/ti';
 
 export const gradientColors = [
   'linear-gradient(to bottom right, #742700, #ff7f50, #cc6849)', // Bronze
-  'linear-gradient(to bottom right,  #c0c0c0, #646464, #b0b0b0)', // Silver
-  'linear-gradient(to bottom right,#f3ca4a, #9c7e03, #ffc100)', // Gold
+  'linear-gradient(to bottom right,  #646464,#c0c0c0 , #868585)', // Silver
+  'linear-gradient(to bottom right, #a48300, #ffcf40, #9f7700)', // Gold
+  'linear-gradient(to bottom right,#0510b5, #4462a7, #062367)',
   'linear-gradient(to bottom right,#7ce47c, #1c603d, #1a9459)',
 ];
 

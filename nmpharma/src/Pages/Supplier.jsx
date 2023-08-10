@@ -1,5 +1,5 @@
 import React from "react";
-import { MamRadVelkyZadky } from "./Pharmacies";
+import { MamRadVelkyZadky2 } from "./Pharmacies";
 import { GoBackButton, TitleWrapper } from "./ClientsDetails";
 import ForecastTable from "../Components/ForecastTable";
 
@@ -13,7 +13,7 @@ const testData = [
 
 function Tabulky() {
   return (
-    <MamRadVelkyZadky>
+    <MamRadVelkyZadky2>
       <TitleWrapper>
         <h2>Supplier - THE001</h2>
         <GoBackButton to='/stock'>Back</GoBackButton>
@@ -37,8 +37,10 @@ function Tabulky() {
       ]}
       data={testData}
     />
-    </MamRadVelkyZadky>
+    </MamRadVelkyZadky2>
   );
 }
 
 export default Tabulky;
+
+

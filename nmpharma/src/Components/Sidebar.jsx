@@ -3,12 +3,13 @@ import styled from 'styled-components';
 import LogoBlack from '../img/Logo2.png';
 import { FaUser, FaChartBar, FaListAlt, FaBullseye, FaBell, FaCog } from 'react-icons/fa';
 import { TiMediaRecord } from "react-icons/ti";
-import { FaArrowRightFromBracket } from "react-icons/fa6";
+import { FaAngleLeft, FaAngleRight, FaArrowRightFromBracket } from "react-icons/fa6";
 import { NavLink } from 'react-router-dom';
 
-export default function Sidebar() {
+export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
+
   return (
-    <StyledSidebar>
+    <StyledSidebar open={isSidebarOpen}>
       <LogoContainer>
         <Logo src={LogoBlack} alt="Company Logo" />
       </LogoContainer>
@@ -76,21 +77,51 @@ export default function Sidebar() {
         </MenuItemIcon>
         Log out
       </MenuItem2>
+      {window.innerWidth < 1024 && (
+        <ToggleSidebarButton onClick={toggleSidebar}>
+          {isSidebarOpen ? <FaAngleLeft color='#737373' /> : <FaAngleRight color='#737373' />}
+        </ToggleSidebarButton>
+      )}
     </StyledSidebar>
   );
 }
 
-const StyledSidebar = styled.div`
+const ToggleSidebarButton = styled.div`
   position: fixed;
-  top: 0;
-  left: 0;
+  bottom: 10px;
+  left: ${props => (props.open ? '270px' : '20px')}; 
+  width: 50px;
+  height: 50px;
+  background-color: #a6a6a636;
+  box-shadow: 0 0 10px rgb(0 0 0 / 24%);
+  border: 1px solid #61616120;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 1000;
+  transition: 0.3s, background-color 0.3s;
+
+  &:hover {
+    background-color: #6161612b;
+  }
+`;
+
+
+const StyledSidebar = styled.div`
   height: 100vh;
   width: 250px;
   background-color: #ffffff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   overflow-y: auto;
-  // border-radius: 20px;
+  border-radius: 0 20px 20px 0 ;
   z-index: 999;
+  position: fixed;
+  top: 0;
+  left: ${props => (props.open ? '0' : '-250px')};
+  width: ${props => (props.open ? '250px' : '0')};
+  transition: 0.3s;
 `;
 
 const LogoContainer = styled.div`
@@ -125,6 +156,7 @@ const TeamBullet2 = styled(TiMediaRecord)`
 const TeamBullet3 = styled(TiMediaRecord)`
     color: #af8e12;
 `
+
 
 const MenuItem = styled(NavLink)`
   padding: 13px;

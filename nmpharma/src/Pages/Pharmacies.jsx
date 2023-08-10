@@ -9,28 +9,25 @@ import TeamCardDetail, { gradientColors } from "../Components/TeamCardDetails";
 import AddTeamPopup from "../Components/AddTeam";
 import { Konto } from "./ForecastSingleProduct";
 
-
 export default function Pharmacies() {
+
   const [isAddTeamPopupOpen, setIsAddTeamPopupOpen] = useState(false);
+
   const [teams, setTeams] = useState([
     { name: 'Private sales', monthGoal: 10000, yearGoal: 100000, currentAmount: 8000 },
     { name: 'Government sales', monthGoal: 20000, yearGoal: 200000, currentAmount: 15000 },
     { name: 'Company sales', monthGoal: 100000, yearGoal: 300000, currentAmount: 12000 },
   ]);
-
   const handleAddTeamClick = () => {
     setIsAddTeamPopupOpen(true);
   };
-
   const handleClosePopup = () => {
     setIsAddTeamPopupOpen(false);
   };
-
   const handleSaveTeam = (newTeam) => {
     setTeams((prevTeams) => [...prevTeams, newTeam]);
     setIsAddTeamPopupOpen(false);
   };
-
   const products = [
     { rank: 1, name: 'Voltaren', profit: 500, soldTarget: `${1250}€ / ${1520}€` },
     { rank: 2, name: 'Product 2', profit: 80, soldTarget: `${580}€ / ${1050}€` },
@@ -59,7 +56,6 @@ export default function Pharmacies() {
   return (
     <>
       <Title>Sales activity</Title>
-
       <MamRadVelkyZadky>
         <Table
           title="Product Profit & Quantity"
@@ -88,7 +84,6 @@ export default function Pharmacies() {
           data={pharmacies}
         />
       </MamRadVelkyZadky>
-
       <IconContainer>
         <h2>Teams</h2>
         <IconLink onClick={handleAddTeamClick}>
@@ -98,8 +93,6 @@ export default function Pharmacies() {
       {isAddTeamPopupOpen && (
         <AddTeamPopup onClose={handleClosePopup} onSave={handleSaveTeam} />
       )}
-
-      {/* Zobrazení karet týmů */}
       <TeamsContainer>
         {teams.map((team, index) => (
           <TeamCardDetail
@@ -110,8 +103,8 @@ export default function Pharmacies() {
             currentAmount={team.currentAmount}
             cardwidth={'31%'}
             progressbarheight={'10px'}
-            index={index} // Pass the index as a prop
-            backgroundgradient={gradientColors[index % gradientColors.length]} // Use the index to select a color from the colors array
+            index={index} 
+            backgroundgradient={gradientColors[index % gradientColors.length]}
           />
         ))}
       </TeamsContainer>
@@ -119,7 +112,6 @@ export default function Pharmacies() {
       <Konto>
         <ChatBox />
       </Konto>
-
     </>
   );
 }
@@ -140,9 +132,17 @@ export const MamRadVelkyZadky = styled.div`
   align-items: flex-start;
   flex-wrap: wrap;
   margin-bottom: 20px;
-
- 
 `;
+
+export const MamRadVelkyZadky2 = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-right: 20px;
+  margin-bottom: 20px;
+`;
+
 
 const IconContainer = styled.div`
   display: flex;

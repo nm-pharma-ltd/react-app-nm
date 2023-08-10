@@ -1,9 +1,23 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { GoBackButton } from '../Pages/ClientsDetails';
 import { NavLink } from 'react-router-dom';
 
 export default function ForecastTable({ title, subtitle, width, columns, data, subcode }) {
+
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  const tableWidth = (windowWidth * 0.79) - 400;
 
   const generateRows = () => {
     return data.map((item, index) => (
@@ -28,7 +42,7 @@ export default function ForecastTable({ title, subtitle, width, columns, data, s
 
 
   return (
-    <Card>
+    <Card style={{ width: `${tableWidth}px` }}>
       <CardHeader>
         <Title>{title}</Title>
       </CardHeader>
@@ -79,12 +93,7 @@ const Card = styled.div`
   margin-top: 20px;
   margin-right: 20px;
   margin-bottom: 20px;
-  max-width: 100vw;
-  width: 100%;
-  
-  @media (max-width: 768px) {
-    max-width: 100%;
-  }
+  min-width: 100%;  
 `;
 
 

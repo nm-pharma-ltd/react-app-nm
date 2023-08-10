@@ -1,9 +1,23 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { GoBackButton } from '../Pages/ClientsDetails';
-import { NavLink } from 'react-router-dom';
 
 export default function ForecastTableDetail({ width, columns, data }) {
+
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  const tableWidth = (windowWidth * 0.79) - 400; 
 
   const generateRows = () => {
     return data.map((item, index) => (
@@ -27,7 +41,7 @@ export default function ForecastTableDetail({ width, columns, data }) {
   };
 
   return (
-    <Card>
+    <Card style={{ width: `${tableWidth}px` }}> 
       <TableContainer>
         <TableElement>
           <TableHead>
@@ -48,34 +62,27 @@ export default function ForecastTableDetail({ width, columns, data }) {
 
 
 const Card = styled.div`
+  box-sizing: border-box;
   background-color: #ffffff;
   border-radius: 15px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 20px;
   margin-top: 20px;
-  margin-right: 20px;
   margin-bottom: 20px;
-  max-width: 100vw;
-  width: 100%;
+  min-width: 100%; 
   
-  @media (max-width: 768px) {
-    max-width: 100%;
-  }
 `;
 
 const TableContainer = styled.div`
-    max-width: 100%;
-    overflow-x: auto;
+    width: 100%;
+    overflow-x: auto; 
     margin-bottom: 20px;
-    display: flex; 
+    display: flex;
 `;
 
 const TableElement = styled.table`
-    min-width: 100%;
-    width: max-content; 
-    border-collapse: collapse;
+    width: 100%; 
 `;
-
 
 const TableHead = styled.thead`
   border-bottom: 1px solid #e0e0e0;
