@@ -98,7 +98,7 @@ const Card = styled.div`
 
 
 
-const CardHeader = styled.div`
+export const CardHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -107,14 +107,15 @@ const CardHeader = styled.div`
 
 `;
 
-const Title = styled.h3`
+export const Title = styled.h3`
   margin: 0 10px 0 0;
 `;
 
-const Subtitle = styled.p`
+export const Subtitle = styled.p`
   margin: 0 0 10px 0;
   color: #7e7e7e;
 `;
+
 const Subcode = styled.p`
   margin: 0 10px 10px 0;
   color: #4d4d4d;

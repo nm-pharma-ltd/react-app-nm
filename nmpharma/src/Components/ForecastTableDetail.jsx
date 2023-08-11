@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { CardHeader, Subtitle, Title } from './ForecastTable';
 
-export default function ForecastTableDetail({ width, columns, data }) {
+export default function ForecastTableDetail({ width, columns, data, title, subtitle }) {
 
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -9,15 +10,15 @@ export default function ForecastTableDetail({ width, columns, data }) {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
     };
-    
+
     window.addEventListener('resize', handleResize);
-    
+
     return () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
 
-  const tableWidth = (windowWidth * 0.79) - 400; 
+  const tableWidth = (windowWidth * 0.79) - 400;
 
   const generateRows = () => {
     return data.map((item, index) => (
@@ -29,7 +30,7 @@ export default function ForecastTableDetail({ width, columns, data }) {
             return (
               <TableCell key={colIndex} align={column.align}>
                 <KontDown>
-                  <InputForecast type="number"  placeholder="20" />
+                  <InputForecast type="number" placeholder="20" />
                   <span>{item[column.field]}</span>
                 </KontDown>
               </TableCell>
@@ -41,7 +42,11 @@ export default function ForecastTableDetail({ width, columns, data }) {
   };
 
   return (
-    <Card style={{ width: `${tableWidth}px` }}> 
+    <Card style={{ width: `${tableWidth}px` }}>
+      <CardHeader>
+        <Title>{title}</Title>
+      </CardHeader>
+      <Subtitle>{subtitle}</Subtitle>
       <TableContainer>
         <TableElement>
           <TableHead>
@@ -59,6 +64,8 @@ export default function ForecastTableDetail({ width, columns, data }) {
     </Card>
   );
 }
+
+
 
 
 const Card = styled.div`

@@ -52,6 +52,8 @@ export default function ForecastSingleProduct() {
 
       <ForecastTableDetail
         width="100%"
+        title="Product Forecast"
+        subtitle="Year 2023"
         columns={[
           { label: 'Jan', field: 'January', align: 'center' },
           { label: 'Feb', field: 'February', align: 'center' },

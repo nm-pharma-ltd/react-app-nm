@@ -65,7 +65,7 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
         Company sales
       </MenuItem2>
       <MenuHeading />
-      <MenuItem2>
+      <MenuItem2 to="/settings">
         <MenuItemIcon>
           <FaCog />
         </MenuItemIcon>
