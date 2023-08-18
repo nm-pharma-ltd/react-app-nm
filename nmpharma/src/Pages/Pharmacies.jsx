@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaCirclePlus } from 'react-icons/fa6';
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
@@ -8,6 +8,7 @@ import Table from "../Components/Table";
 import TeamCardDetail, { gradientColors } from "../Components/TeamCardDetails";
 import AddTeamPopup from "../Components/AddTeam";
 import { Konto } from "./ForecastSingleProduct";
+import ApiService from "../api/ApiService";
 
 export default function Pharmacies() {
 
@@ -28,48 +29,76 @@ export default function Pharmacies() {
     setTeams((prevTeams) => [...prevTeams, newTeam]);
     setIsAddTeamPopupOpen(false);
   };
-  const products = [
-    { rank: 1, name: 'Voltaren', profit: 500, soldTarget: `${1250}€ / ${1520}€` },
-    { rank: 2, name: 'Product 2', profit: 80, soldTarget: `${580}€ / ${1050}€` },
-    { rank: 3, name: 'Product 3', profit: 200, soldTarget: `${405}€ / ${1050}€` },
-    { rank: 4, name: 'Product 4', profit: 300, soldTarget: `${705}€ / ${1050}€` },
-    { rank: 5, name: 'Product 5', profit: 150, soldTarget: `${820}€ / ${1050}€` },
-    { rank: 6, name: 'Product 6', profit: 400, soldTarget: `${1250}€ / ${1520}€` },
-    { rank: 7, name: 'Product 7', profit: -400, soldTarget: `${1250}€ / ${1520}€` },
-    { rank: 8, name: 'Product 8', profit: -80, soldTarget: `${580}€ / ${1050}€` },
-    { rank: 9, name: 'Product 9', profit: 200, soldTarget: `${405}€ / ${1050}€` },
-    { rank: 10, name: 'Product 10', profit: 300, soldTarget: `${705}€ / ${1050}€` },
-  ];
-  const pharmacies = [
-    { rank: 1, name: 'Pharmacy 1', profit: 500, monthlysales: `${1520}€` },
-    { rank: 2, name: 'Pharmacy 2', profit: 80, monthlysales: `${50}€` },
-    { rank: 3, name: 'Pharmacy 3', profit: 200, monthlysales: `${1050}€` },
-    { rank: 4, name: 'Pharmacy 4', profit: 300, monthlysales: `${1050}€` },
-    { rank: 5, name: 'Pharmacy 5', profit: 150, monthlysales: `${1050}€` },
-    { rank: 6, name: 'Pharmacy 6', profit: 400, monthlysales: `${1520}€` },
-    { rank: 7, name: 'Pharmacy 7', profit: -400, monthlysales: `${1520}€` },
-    { rank: 8, name: 'Pharmacy 8', profit: -80, monthlysales: `${1050}€` },
-    { rank: 9, name: 'Pharmacy 9', profit: 200, monthlysales: `${1050}€` },
-    { rank: 10, name: 'Pharmacy 10', profit: 300, monthlysales: `${1050}€` },
-  ];
+  const [products, setProducts] = useState([]); // State pro ukládání dat
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const productsData = await ApiService.get("products/sales/2023/1");
+        
+        // Ensure data is sorted by rank
+        const sortedData = productsData.sort((a, b) => a.rank - b.rank);
+        
+        const processedData = sortedData.map(product => ({
+          ...product,
+          soldTarget: `${product.quantitySold} / ${product.quantityTarget}`,
+          monthlyProfit: parseFloat(product.monthlyProfit).toFixed(0),
+        }));
+    
+        // Set only the top 10 products
+        setProducts(processedData.slice(0, 10));
+        console.log(processedData.slice(0, 10));
+    
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+    
+    fetchData();
+  }, []);
+
+  const [pharmaciesData, setPharmaciesData] = useState([]);
+
+  useEffect(() => {
+    async function fetchPharmacyData() {
+      try {
+        const fetchedData = await ApiService.get("clients/sales/2023/1");
+        
+        const sortedPharmacies = fetchedData.sort((a, b) => b.monthlySale - a.monthlySale);
+        const processedPharmacies = sortedPharmacies.map((pharmacy, index) => ({
+          rank: index + 1,
+          clientName: pharmacy.clientName,
+          monthlyProfit: pharmacy.monthlyProfit.toFixed(0),
+          monthlySale: parseFloat(pharmacy.monthlySale).toFixed(0) + "€"
+        }));
+    
+        setPharmaciesData(processedPharmacies.slice(0, 10)); // Display top 10
+      } catch (error) {
+        console.error('Error fetching pharmacy data:', error);
+      }
+    }
+  
+    fetchPharmacyData();
+  }, []);
+  
 
   return (
     <>
       <Title>Sales activity</Title>
       <MamRadVelkyZadky>
-        <Table
-          title="Product Profit & Quantity"
-          subtitle="TOP 10"
-          viewDetailsLink="/pharmacies/productdetails"
-          width="47%"
-          columns={[
-            { label: 'RANK', field: 'rank', align: 'left' },
-            { label: 'NAME', field: 'name', align: 'left' },
-            { label: 'PROFIT', field: 'profit', align: 'center' },
-            { label: 'SOLD/TARGET', field: 'soldTarget', align: 'right' },
-          ]}
-          data={products}
-        />
+      <Table
+        title="Product Profit & Quantity"
+        subtitle="TOP 10"
+        viewDetailsLink="/pharmacies/productdetails"
+        width="47%"
+        columns={[
+          { label: 'RANK', field: 'rank', align: 'left' },
+          { label: 'NAME', field: 'productDescription', align: 'left' },
+          { label: 'PROFIT', field: 'monthlyProfit', align: 'center' },
+          { label: 'SOLD/TARGET', field: 'soldTarget', align: 'right' }, 
+        ]}        
+        data={products}
+      />
         <Table
           title="Pharmacies (Clients)"
           subtitle="TOP 10"
@@ -77,12 +106,12 @@ export default function Pharmacies() {
           width="47%"
           columns={[
             { label: 'RANK', field: 'rank', align: 'left' },
-            { label: 'NAME', field: 'name', align: 'left' },
-            { label: 'PROFIT', field: 'profit', align: 'center' },
-            { label: 'MONTHLY SALES', field: 'monthlysales', align: 'right' },
+            { label: 'NAME', field: 'clientName', align: 'left' },
+            { label: 'PROFIT', field: 'monthlyProfit', align: 'center' },
+            { label: 'MONTHLY SALES', field: 'monthlySale', align: 'right' },
           ]}
-          data={pharmacies}
-        />
+          data={pharmaciesData}
+          />
       </MamRadVelkyZadky>
       <IconContainer>
         <h2>Teams</h2>

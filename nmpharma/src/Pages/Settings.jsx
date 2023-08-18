@@ -1,58 +1,76 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { NavLink } from 'react-router-dom';
 import { MamRadVelkyZadky } from './Pharmacies';
+import { ProfileSettings } from './ProfileSettings';
+import { Appearance } from './Appearance';
+import { NotificationsSettings } from './NotificationsSettings';
+import ConfirmationPopup from '../Components/ConfirmationPopUp';
 
 export default function Settings() {
-  const [activeLink, setActiveLink] = useState('');
 
-  const handleNavLinkClick = (link) => {
-    setActiveLink(link);
-  };
+  const [activeLink, setActiveLink] = useState('profile'); // Initialize to 'profile'
 
   const renderContent = () => {
     switch (activeLink) {
       case 'profile':
-        return <Profile />;
+        return <ProfileSettings />;
       case 'appearance':
         return <Appearance />;
       case 'notifications':
-        return <Notifications />;
-      case 'data-export':
-        return <DataExport />;
-      case 'delete-profile':
-        return <DeleteProfile />;
+        return <NotificationsSettings />;
       default:
-        return <div>Select an option from the left menu.</div>;
+        return <ProfileSettings />;
     }
   };
+
+  const [showConfirmPopup, setShowConfirmPopup] = useState(false);
+
+  const handleDeleteProfile = () => {
+    setShowConfirmPopup(true);
+  };
+
+  const handleClosePopup = () => {
+    setShowConfirmPopup(false);
+  };
+
+  const handleConfirmDelete = () => {
+    console.log("Profile deleted!");
+    // Implement actual delete logic here.
+    setShowConfirmPopup(false);
+  };
+
+
 
   return (
     <MamRadVelkyZadky>
       <h2>Settings</h2>
       <SettingsCard>
         <NavLinks>
-          <MenuItem active={activeLink === 'profile'} onClick={() => setActiveLink('profile')}>
+          <MenuItem isactive={activeLink === 'profile'} onClick={() => setActiveLink('profile')}>
             Profile
           </MenuItem>
-          <MenuItem active={activeLink === 'appearance'} onClick={() => setActiveLink('appearance')}>
+          <MenuItem isactive={activeLink === 'appearance'} onClick={() => setActiveLink('appearance')}>
             Appearance
           </MenuItem>
-          <MenuItem active={activeLink === 'notifications'} onClick={() => setActiveLink('notifications')}>
+          <MenuItem isactive={activeLink === 'notifications'} onClick={() => setActiveLink('notifications')}>
             Notifications
           </MenuItem>
-          <MenuItem active={activeLink === 'data-export'} onClick={() => setActiveLink('data-export')}>
-            Data Export
-          </MenuItem>
-          <MenuItem active={activeLink === 'delete-profile'} onClick={() => setActiveLink('delete-profile')}>
+          <MenuItemDelete isactive={activeLink === 'delete-profile'} onClick={handleDeleteProfile}>
             Delete Profile
-          </MenuItem>
+          </MenuItemDelete>
         </NavLinks>
         <Content>{renderContent()}</Content>
+        {showConfirmPopup && (
+          <ConfirmationPopup
+            onClose={handleClosePopup}
+            onConfirm={handleConfirmDelete}
+          />
+        )}
       </SettingsCard>
     </MamRadVelkyZadky>
   );
 }
+
 
 const SettingsCard = styled.div`
   background-color: #ffffff;
@@ -74,40 +92,54 @@ const NavLinks = styled.nav`
 
 const Content = styled.div`
   flex: 1;
-  padding: 10px;
+  padding: 9px;
 `;
 
 const MenuItem = styled.div`
-  padding: 13px;
+  padding: 13px 25px;
   display: flex;
   align-items: center;
   cursor: pointer;
   color: #b1b1b1;
-  transition: background-color 0.3s;
   border-radius: 10px;
   font-size: 14px;
-  margin: 0 20px;
   text-decoration: none;
+  transition: 0.15s all ease-in-out;
 
   &:hover {
     background-color: #e0e0e037;
     color: #5d5d5d;
-    -webkit-transition: all 0.25s ease-in-out;
-    transition: all 0.25s ease-in-out;
   }
 
-  ${props => props.active && `
+  ${props => props.isactive && `
     background-color: #eeeff8;
     color: #2e2e2e;
     font-weight: 500;
+
+    &:hover {
+      background-color: #eeeff8;
+      color: #2e2e2e;
+    }
   `}
 `;
 
+const MenuItemDelete = styled.div`
+  padding: 13px 25px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: #b11414;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: 0.15s all ease-in-out;
+
+  &:hover {
+    color: #480a0a;
+    padding-top: 10px;
+  }
+
+`;
 
 
-
-export const Profile = () => <div>Profile Content</div>;
-export const Appearance = () => <div>Appereance Content</div>;
-export const Notifications = () => <div>Notifications Content</div>;
-export const DataExport = () => <div>Data Export Content</div>;
-export const DeleteProfile = () => <div>Delete Profile Content</div>;

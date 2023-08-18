@@ -11,11 +11,11 @@ export default function Table({ title, subtitle, viewDetailsLink, width, columns
             <TableRow key={index} onClick={() => navigate(`/pharmacies/product${item.rank}`)}>
                 {columns.map((column, colIndex) => (
                     <TableCell key={colIndex} align={column.align}>
-                        {column.field === 'profit' ? (
-                            item[column.field] >= 0 ? (
-                                <GreenBox>{`${item[column.field]}€`}</GreenBox>
+                        {column.field === 'monthlyProfit' ? (
+                            Number(item[column.field]) >= 0 ? (
+                                <GreenBox>{`${item[column.field]} €`}</GreenBox>
                             ) : (
-                                <RedBox>{`${item[column.field]}€`}</RedBox>
+                                <RedBox>{`${item[column.field]} €`}</RedBox>
                             )
                         ) : (
                             <span>{item[column.field]}</span>
@@ -115,6 +115,10 @@ export const TableCell = styled.td`
   padding: 10px;
   border-bottom: 1px solid #e0e0e0;
   text-align: ${props => (props.align === 'right' ? 'right' : props.align === 'center' ? 'center' : 'left')};
+  white-space: nowrap;   // Prevents the text from wrapping onto the next line
+  overflow: hidden;      // Hides any text that goes beyond the container width
+  text-overflow: ellipsis; // Adds ellipsis when the text overflows
+  max-width: 220px;      // or whatever width you want to set
 `;
 
 
@@ -163,7 +167,7 @@ export const GreenBox = styled.div`
   align-items: center;
   color: #0e9f6e;
   margin: 0 auto;
-  width: 70px;
+  width: 65px;
   background-color: #def7ec;
   font-size: 13px;
   font-weight: 600;

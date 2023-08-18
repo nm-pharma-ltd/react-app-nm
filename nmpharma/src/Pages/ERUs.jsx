@@ -1,13 +1,12 @@
-import React from "react";
-
+import React from 'react';
 
 
 export default function ERUs() {
-    
-    return (
-      <>
-       <h2>ERUs</h2>
-      </>
-    );
 
+  return (
+    <>
+      <h2>ERU</h2>
+      
+    </>
+  );
 }
