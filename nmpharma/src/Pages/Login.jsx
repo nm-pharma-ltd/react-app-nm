@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import LogoBlack from '../img/Logo2.png';
+import ApiService from '../api/ApiService';
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -17,7 +18,11 @@ export default function Login() {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
-  const handleLogin = () => {
+  const handleLogin = async (e) => {
+    e.preventDefault()
+    setEmailError('');
+    setPasswordError('');
+
     if (email.trim() === '') {
       setEmailError('Please enter your email');
       return;
@@ -30,24 +35,28 @@ export default function Login() {
       setPasswordError('Please enter your password');
       return;
     }
-    // Perform login logic here
-    // Assuming successful login, navigate to the dashboard
-    navigate('/pharmacies');
-  };
 
-  const handleClickOutside = (event) => {
-    if (formRef.current && !formRef.current.contains(event.target)) {
-      setEmailError('Please fill in all the required fields');
-      setPasswordError('Please fill in all the required fields');
+    // Making the actual axios request
+    try {
+      const response = await ApiService.post('auth/login', {
+        email: email.trim(),
+        password: password.trim(),
+      });
+      navigate('/pharmacies');
+      console.log(response);
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+      console.log("Attempting to navigate...");
+
+
+    } catch (error) {
+      // Handle errors from the server, like invalid credentials
+      if (error.response && error.response.data) {
+        setEmailError(error.response.data.email || '');
+        setPasswordError(error.response.data.password || '');
+      }
     }
   };
-
-  useEffect(() => {
-    document.addEventListener('click', handleClickOutside);
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
-  }, []);
 
   const validateEmail = (email) => {
     const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;

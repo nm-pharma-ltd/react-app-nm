@@ -16,5 +16,5 @@ export default function Notifications() {
        <DangerAlert/>
       </>
     );
-
 }
+

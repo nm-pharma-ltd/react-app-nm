@@ -1,23 +1,29 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { FaPen, FaUser, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { ViewDetailsLink } from '../Components/Table';
+import { Context } from '../providers/provider';
 
 export const ProfileSettings = () => {
+  const [store, dispatch] = useContext(Context);
+  console.log(store);  // Right place to log
+  // Access the global state
 
   const [isEditing, setIsEditing] = useState(false);
-  const [username, setUsername] = useState('JohnDoe');
-  const [email, setEmail] = useState('johndoe@example.com');
-  const [tel, setTel] = useState('+420 721 589 500');
+  const [username, setUsername] = useState(store.name); // Initialize with global state
+  const [email, setEmail] = useState(store.email); // Initialize with global state
   const [newPassword, setNewPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [actualPassword, setActualPassword] = useState('someVeryGoodPassword'); 
+  const [actualPassword, setActualPassword] = useState(store.password);  // Initialize with global state
+
+
 
   const togglePasswordVisibility = () => {
       setIsPasswordVisible(!isPasswordVisible);
   };
 
   const toggleEdit = () => {
+    console.log(store.user);
       if(!isEditing) {
           setNewPassword(actualPassword);
       }
@@ -27,11 +33,25 @@ export const ProfileSettings = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setActualPassword(newPassword); // Update the actualPassword with the value of newPassword
-    setNewPassword(''); // Reset the newPassword state
+    setActualPassword(newPassword);
+
+    // Dispatch an action to update the global state
+    dispatch({
+        type: "SIGNEDUSER",
+        payload: {
+            user: store.user,   
+            token: store.token,
+            name: username, 
+            email: email,
+            password: actualPassword
+        }
+    });
+
+    setNewPassword(''); 
     setIsEditing(false);
     console.log("Profile settings updated!");
-};
+  };
+
 
   return (
     <>
@@ -59,13 +79,6 @@ export const ProfileSettings = () => {
             {isEditing ?
               <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} /> :
               <InfoData>{email}</InfoData>
-            }
-          </InfoItem>
-          <InfoItem>
-            <InfoLabel>Telephone</InfoLabel>
-            {isEditing ?
-              <Input type="tel" value={tel} onChange={(e) => setTel(e.target.value)} /> :
-              <InfoData>{tel}</InfoData>
             }
           </InfoItem>
           <InfoItem>
@@ -183,7 +196,7 @@ const Input = styled.input`
 
 const Button = styled.button`
   padding: 10px 20px;
-    margin: 5px auto;
+    margin: 25px auto;
     width: 150px;
     background-color: #E16A32;
     color: white;

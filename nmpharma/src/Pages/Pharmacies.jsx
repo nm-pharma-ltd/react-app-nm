@@ -80,6 +80,10 @@ export default function Pharmacies() {
   
     fetchPharmacyData();
   }, []);
+
+  
+
+  
   
 
   return (

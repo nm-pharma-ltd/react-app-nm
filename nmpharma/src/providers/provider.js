@@ -8,16 +8,23 @@ export const NOTES = "NOTE";
 export const SIGNEDUSER = "SIGNED_USER";
 
 // Výchozí stav pro globální kontext
-const initialState = { messages: [], user: "" };
+const initialState = { messages: [], user: "", token: "", name: "", email: "", password: "" };
 
 // Reduktor pro změnu stavu dat
 const dataReducer = (state, action) => {
   switch (action.type) {
 
     case SIGNEDUSER: {
-      // Změna stavu jména uživatele na jméno z payload akce
-      return { ...state, user: action.payload.user };
-    }
+      // Update all user-related data in the state
+      return { 
+        ...state, 
+        user: action.payload.user, 
+        token: action.payload.token, 
+        name: action.payload.name, 
+        email: action.payload.email,
+        password: action.payload.password 
+      };
+    }    
     
     case NOTES: {
       // Změna stavu zpráv na nový seznam zpráv z payload akce
@@ -36,6 +43,7 @@ export const Context = createContext();
 // Komponenta Provider poskytující globální stav
 export const Provider = ({ children }) => {
   // Načtení dat z lokálního úložiště, nebo použití výchozího stavu
+// Initial data from local storage
   let storedData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_ID)) || initialState;
 
   // Použití reduktoru pro správu stavu a získání stavu a dispečera
@@ -46,8 +54,9 @@ export const Provider = ({ children }) => {
 
   // Efekt pro uložení aktuálního stavu do lokálního úložiště při změně stavu zpráv
   useEffect(() => {
-    localStorage.setItem(LOCAL_STORAGE_ID, JSON.stringify({ messages }));
-  }, [messages]);
+  localStorage.setItem(LOCAL_STORAGE_ID, JSON.stringify(store));
+}, [store]);
+
 
   // Poskytnutí stavu a dispečera komponentám v hierarchii
   return (

@@ -3,21 +3,55 @@ import { NavLink, useNavigate } from 'react-router-dom'; // Import useNavigate h
 import styled from 'styled-components';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import LogoBlack from '../img/Logo2.png';
+import ApiService from '../api/ApiService';
 
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
-  const navigate = useNavigate(); // Initialize useNavigate hook
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordAgain, setPasswordAgain] = useState('');
+  const [feedback, setFeedback] = useState("");
 
-  
+
+  const navigate = useNavigate();
+
   const togglePasswordVisibility = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
-  const handleLogin = () => {
-    // Perform login logic here
-    // Assuming successful login, navigate to the dashboard
-    navigate('/pharmacies'); // Navigate to the dashboard page
-  };
+  const handleRegister = async (e) => {
+    e.preventDefault();
+
+    if (password !== passwordAgain) {
+      setFeedback('Passwords do not match!');
+      return;
+    }
+
+    const userData = {
+      email: email,
+      username: name,
+      password: password
+    };
+
+    try {
+      const response = await ApiService.post('auth/register', userData);
+
+      // Assuming the data you need is inside response.data and that
+      // the backend sends a property named 'success' to indicate operation status.
+      if (response.data && response.data.success) { 
+        navigate('/Login');
+      } else {
+        // Use the error message provided by the backend if available, else use a default message.
+        setFeedback(response.data.message || 'Registration failed.');
+      }
+    } catch (error) {
+      console.error('Error registering the user:', error);
+      // If the error has a response and that response has a data property with a message, use that. 
+      // Otherwise, fall back to the generic error.
+      setFeedback(error.response && error.response.data && error.response.data.message ? error.response.data.message : 'An error occurred. Please try again.');
+    }
+};
 
   return (
     <Container>
@@ -27,37 +61,43 @@ export default function Register() {
         <Subtitle>Enter your credentials here.</Subtitle>
         <InputLabel>
           Name
-          <Input type="text" placeholder="Joe Doe" />
+          <Input type="text" placeholder="Joe Doe" onChange={(e) => setName(e.target.value)} />
         </InputLabel>
         <InputLabel>
           Email
-          <Input type="email" placeholder="example@wow.com" />
+          <Input type="email" placeholder="example@wow.com" onChange={(e) => setEmail(e.target.value)} />
         </InputLabel>
         <InputLabel>
           Password
-          <Input type={showPassword ? 'text' : 'password'} placeholder="Strong password" />
+          <Input type={showPassword ? 'text' : 'password'} placeholder="Strong password" onChange={(e) => setPassword(e.target.value)} />
           <EyeIcon onClick={togglePasswordVisibility}>
             {showPassword ? <FaEyeSlash /> : <FaEye />}
           </EyeIcon>
         </InputLabel>
         <InputLabel>
           Password again
-          <Input type={showPassword ? 'text' : 'password'} placeholder="Type the same password as above" />
+          <Input type={showPassword ? 'text' : 'password'} placeholder="Type the same password as above" onChange={(e) => setPasswordAgain(e.target.value)}/>
           <EyeIcon onClick={togglePasswordVisibility}>
             {showPassword ? <FaEyeSlash /> : <FaEye />}
           </EyeIcon>
         </InputLabel>
-        <Button onClick={handleLogin}>Register</Button> {/* Update onClick handler */}
+        {feedback && <FeedbackMessage>{feedback}</FeedbackMessage>}
+        <Button onClick={(e) => handleRegister(e)}>Register</Button> {/* Update onClick handler */}
         <RegisterLink to="/Login" >Already have an account Login here</RegisterLink>
       </LoginForm>
     </Container>
   );
 }
 
-// Rest of the code...
 
+const FeedbackMessage = styled.p`
+  color: red;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 12px;
+`;
 
-// Rest of the code...
 
 const Container = styled.div`
   display: flex;
