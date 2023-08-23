@@ -1,36 +1,101 @@
-import React, { useContext, useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { FaTimes } from 'react-icons/fa';
-import { FaCirclePlus } from 'react-icons/fa6';
+import { useContext, useState, useEffect } from "react";
+import styled from "styled-components";
+import { FaTimes } from "react-icons/fa";
+import { FaCirclePlus } from "react-icons/fa6";
 import { BsPersonCircle } from "react-icons/bs";
-import { IconLink } from '../Pages/Pharmacies';
-
+import { IconLink } from "../Pages/Pharmacies";
+import ApiService from "../api/ApiService";
+import { CLEAR_NOTES, Context, NOTES } from "../providers/provider";
 
 const ChatBox = () => {
+  const [store, dispatch] = useContext(Context);
+  const [inputValue, setInputValue] = useState("");
+  const [messages, setMessages] = useState([])
+
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value);
+  };
+  const fetchComms = async () => {
+      const fetchedData = await ApiService.get("comments"); // Získání aktualizovaných zpráv ze serveru
+      setMessages(fetchedData);
+  }
+
+  const handleSendMessage = async () => {
+    if (inputValue.trim() !== "") {
+      const newMessage = {
+        userId: 10,
+        content: inputValue,
+      };
+
+      try {
+        // Odeslat novou zprávu na server
+        await ApiService.post("comments", newMessage);
+
+        await fetchComms();
+
+        // Vymazat text nové zprávy
+        setInputValue("");
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSendMessage();
+    }
+  };
+
+  const handleRemoveMessage = async (id) => {
+    try {
+      // Odstranit zprávu z DB
+      await ApiService.delete(`comments/${id}`);
+
+      // Načíst aktualizované zprávy ze serveru
+      await fetchComms()
+
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
   
+  useEffect( () => {
+     fetchComms()
+  },[])
+  
+
+
   return (
     <ChatBoxWrapper>
       <BoxChat>
         <ChatInput
-          />
-        <IconLink>
+          type="text"  
+          placeholder="Leave a message here..."
+          value={inputValue}
+          onChange={(e) => handleInputChange(e)}
+          onKeyDown={(e) => handleKeyDown(e)}
+        />
+        <IconLink onClick={() => handleSendMessage()}>
           <FaCirclePlus />
         </IconLink>
       </BoxChat>
-        <MessageContainer>
+      {messages.map((message) => (
+        <MessageContainer key={message.commentId}>
           <MessageHeader>
             <AvatarDiv>
               <Avatar>
                 <UserLogo />
               </Avatar>
-              <UserName></UserName>
+              <UserName>{message.username}</UserName>
             </AvatarDiv>
-            <MessageText></MessageText>
-            <RemoveIcon>
+            <MessageText>{message.content}</MessageText>
+            <RemoveIcon onClick={() => handleRemoveMessage(message.commentId)}>
               <FaTimes />
             </RemoveIcon>
           </MessageHeader>
-        </MessageContainer>    
+        </MessageContainer>
+      ))}
     </ChatBoxWrapper>
   );
 };

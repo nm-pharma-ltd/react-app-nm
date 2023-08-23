@@ -9,6 +9,7 @@ import TeamCardDetail, { gradientColors } from "../Components/TeamCardDetails";
 import AddTeamPopup from "../Components/AddTeam";
 import { Konto } from "./ForecastSingleProduct";
 import ApiService from "../api/ApiService";
+import Skeleton from '@mui/material/Skeleton';
 
 export default function Pharmacies() {
 
@@ -30,30 +31,35 @@ export default function Pharmacies() {
     setIsAddTeamPopupOpen(false);
   };
   const [products, setProducts] = useState([]); // State pro ukládání dat
+  const [isLoadingProducts, setIsLoadingProducts] = useState(true);
+  const [isLoadingPharmacies, setIsLoadingPharmacies] = useState(true);
+
 
   useEffect(() => {
     async function fetchData() {
       try {
+        setIsLoadingProducts(true);
         const productsData = await ApiService.get("products/sales/2023/1");
-        
+
         // Ensure data is sorted by rank
         const sortedData = productsData.sort((a, b) => a.rank - b.rank);
-        
+
         const processedData = sortedData.map(product => ({
           ...product,
           soldTarget: `${product.quantitySold} / ${product.quantityTarget}`,
           monthlyProfit: parseFloat(product.monthlyProfit).toFixed(0),
         }));
-    
+
         // Set only the top 10 products
         setProducts(processedData.slice(0, 10));
         console.log(processedData.slice(0, 10));
-    
+        setIsLoadingProducts(false);
       } catch (error) {
         console.error('Error fetching data:', error);
+        setIsLoadingProducts(false);
       }
     }
-    
+
     fetchData();
   }, []);
 
@@ -62,8 +68,9 @@ export default function Pharmacies() {
   useEffect(() => {
     async function fetchPharmacyData() {
       try {
+        setIsLoadingPharmacies(true);
         const fetchedData = await ApiService.get("clients/sales/2023/1");
-        
+
         const sortedPharmacies = fetchedData.sort((a, b) => b.monthlySale - a.monthlySale);
         const processedPharmacies = sortedPharmacies.map((pharmacy, index) => ({
           rank: index + 1,
@@ -71,51 +78,108 @@ export default function Pharmacies() {
           monthlyProfit: pharmacy.monthlyProfit.toFixed(0),
           monthlySale: parseFloat(pharmacy.monthlySale).toFixed(0) + "€"
         }));
-    
+
         setPharmaciesData(processedPharmacies.slice(0, 10)); // Display top 10
+        setIsLoadingPharmacies(false);
       } catch (error) {
         console.error('Error fetching pharmacy data:', error);
+        setIsLoadingPharmacies(false);
       }
     }
-  
+
     fetchPharmacyData();
   }, []);
 
-  
 
-  
-  
+
+
+
 
   return (
     <>
       <Title>Sales activity</Title>
       <MamRadVelkyZadky>
-      <Table
-        title="Product Profit & Quantity"
-        subtitle="TOP 10"
-        viewDetailsLink="/pharmacies/productdetails"
-        width="47%"
-        columns={[
-          { label: 'RANK', field: 'rank', align: 'left' },
-          { label: 'NAME', field: 'productDescription', align: 'left' },
-          { label: 'PROFIT', field: 'monthlyProfit', align: 'center' },
-          { label: 'SOLD/TARGET', field: 'soldTarget', align: 'right' }, 
-        ]}        
-        data={products}
-      />
-        <Table
-          title="Pharmacies (Clients)"
-          subtitle="TOP 10"
-          viewDetailsLink="/pharmacies/clientdetails"
-          width="47%"
-          columns={[
-            { label: 'RANK', field: 'rank', align: 'left' },
-            { label: 'NAME', field: 'clientName', align: 'left' },
-            { label: 'PROFIT', field: 'monthlyProfit', align: 'center' },
-            { label: 'MONTHLY SALES', field: 'monthlySale', align: 'right' },
-          ]}
-          data={pharmaciesData}
+
+        {isLoadingProducts ? (
+          <SkeletonTableContainer style={{ width: "47%"}}>
+          {/* Title & Subtitle */}
+          <Skeleton variant="text" width="60%" height="24px" />
+          <Skeleton variant="text" width="30%" height="20px" marginBottom="16px" />
+        
+          {/* Table Headers */}
+          <div style={{ display: 'flex', marginBottom: "10px" }}>
+            <Skeleton variant="rectangular" width="10%" height="20px" marginRight="2%" />
+            <Skeleton variant="rectangular" width="45%" height="20px" marginRight="2%" />
+            <Skeleton variant="rectangular" width="15%" height="20px" marginRight="2%" />
+            <Skeleton variant="rectangular" width="25%" height="20px" />
+          </div>
+        
+          {/* Table Rows */}
+          {Array(10).fill().map((_, i) => (
+            <div key={i} style={{ display: 'flex', marginBottom: "10px" }}>
+              <Skeleton variant="rectangular" width="10%" height="20px" marginRight="2%" />
+              <Skeleton variant="rectangular" width="45%" height="20px" marginRight="2%" />
+              <Skeleton variant="rectangular" width="15%" height="20px" marginRight="2%" />
+              <Skeleton variant="rectangular" width="25%" height="20px" />
+            </div>
+          ))}
+        </SkeletonTableContainer>        
+        ) : (
+          <Table
+            title="Product Profit & Quantity"
+            subtitle="TOP 10"
+            viewDetailsLink="/pharmacies/productdetails"
+            width="47%"
+            columns={[
+              { label: 'RANK', field: 'rank', align: 'left' },
+              { label: 'NAME', field: 'productDescription', align: 'left' },
+              { label: 'PROFIT', field: 'monthlyProfit', align: 'center' },
+              { label: 'SOLD/TARGET', field: 'soldTarget', align: 'right' },
+            ]}
+            data={products}
           />
+        )}
+
+        {isLoadingPharmacies ? (
+          <SkeletonTableContainer style={{ width: "47%"}}>
+          {/* Title & Subtitle */}
+          <Skeleton variant="text" width="60%" height="24px" />
+          <Skeleton variant="text" width="30%" height="20px" marginBottom="16px" />
+        
+          {/* Table Headers */}
+          <div style={{ display: 'flex', marginBottom: "10px" }}>
+            <Skeleton variant="rectangular" width="10%" height="20px" marginRight="2%" />
+            <Skeleton variant="rectangular" width="45%" height="20px" marginRight="2%" />
+            <Skeleton variant="rectangular" width="15%" height="20px" marginRight="2%" />
+            <Skeleton variant="rectangular" width="25%" height="20px" />
+          </div>
+        
+          {/* Table Rows */}
+          {Array(10).fill().map((_, i) => (
+            <div key={i} style={{ display: 'flex', marginBottom: "10px" }}>
+              <Skeleton variant="rectangular" width="10%" height="20px" marginRight="2%" />
+              <Skeleton variant="rectangular" width="45%" height="20px" marginRight="2%" />
+              <Skeleton variant="rectangular" width="15%" height="20px" marginRight="2%" />
+              <Skeleton variant="rectangular" width="25%" height="20px" />
+            </div>
+          ))}
+        </SkeletonTableContainer>        
+        ) : (
+          <Table
+            title="Pharmacies (Clients)"
+            subtitle="TOP 10"
+            viewDetailsLink="/pharmacies/clientdetails"
+            width="47%"
+            columns={[
+              { label: 'RANK', field: 'rank', align: 'left' },
+              { label: 'NAME', field: 'clientName', align: 'left' },
+              { label: 'PROFIT', field: 'monthlyProfit', align: 'center' },
+              { label: 'MONTHLY SALES', field: 'monthlySale', align: 'right' },
+            ]}
+            data={pharmaciesData}
+          />
+        )}
+
       </MamRadVelkyZadky>
       <IconContainer>
         <h2>Teams</h2>
@@ -136,7 +200,7 @@ export default function Pharmacies() {
             currentAmount={team.currentAmount}
             cardwidth={'31%'}
             progressbarheight={'10px'}
-            index={index} 
+            index={index}
             backgroundgradient={gradientColors[index % gradientColors.length]}
           />
         ))}
@@ -147,8 +211,23 @@ export default function Pharmacies() {
       </Konto>
     </>
   );
-}
 
+}
+const SkeletonTableContainer = styled.div`
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-top: 20px;
+  margin-right: 25px;
+  width: ${props => props.width || '48%'};
+  min-width: 500px;
+  height: 600px;
+
+  @media (max-width: 1320px) {
+    width: 100%;
+  }
+`;
 
 const TeamsContainer = styled.div`
   margin-top: 20px;

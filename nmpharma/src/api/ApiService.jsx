@@ -24,7 +24,16 @@ const ApiService = {
     }
   },
 
-  // Další metody pro další druhy požadavků (PUT, DELETE, apod.)
+  // DELETE
+  delete: async (endpoint, headers) => {
+    try {
+      const response = await axios.delete(`${API_BASE_URL}/${endpoint}`, { headers });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  
 };
 
 export default ApiService;
