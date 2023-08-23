@@ -5,7 +5,7 @@ import { FaCirclePlus } from "react-icons/fa6";
 import { BsPersonCircle } from "react-icons/bs";
 import { IconLink } from "../Pages/Pharmacies";
 import ApiService from "../api/ApiService";
-import { CLEAR_NOTES, Context, NOTES } from "../providers/provider";
+import { Context, SIGNEDUSER} from "../providers/provider";
 
 const ChatBox = () => {
   const [store, dispatch] = useContext(Context);
@@ -23,7 +23,7 @@ const ChatBox = () => {
   const handleSendMessage = async () => {
     if (inputValue.trim() !== "") {
       const newMessage = {
-        userId: 10,
+        userId: store.user.userid,
         content: inputValue,
       };
 

@@ -62,7 +62,7 @@ export default function App() {
 
               <Route path="/stock/supplier" element={<Supplier/>} />
 
-              <Route path="/stock/forecastdetails" element={<ForecastSingleProduct/>} />
+              <Route path="/stock/:id" element={<ForecastSingleProduct/>} />
               
 
               <Route path="/eru" element={<ERUs />} />

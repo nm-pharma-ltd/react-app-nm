@@ -70,7 +70,7 @@ export default function ForecastTable({ title, subtitle, width, columns, data, s
             </TableRow>
           </TableHead>
           {data.map((item, index) => (
-            <SidebarButton to="/stock/forecastdetails" key={index}>More</SidebarButton>
+            <SidebarButton to='/stock/${id}' key={index}>More</SidebarButton>
           ))}
         </ButtonSidebar>
       </TableContainer>

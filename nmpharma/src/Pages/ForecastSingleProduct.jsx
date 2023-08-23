@@ -72,7 +72,9 @@ export default function ForecastSingleProduct() {
         data={testData}
       />
       <h2>Chat</h2>
+
       <ChatBox />
+      
     </Konto>
   );
 }

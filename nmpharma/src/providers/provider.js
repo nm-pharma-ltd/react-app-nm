@@ -6,29 +6,26 @@ const LOCAL_STORAGE_ID = "NMPHARMA_LEGENDS_BIGGEST_PENISES_IN_MALTA";
 // Konstanty pro akce v reduceru
 export const NOTES = "NOTE";
 export const SIGNEDUSER = "SIGNED_USER";
+export const USER_ID = "USER_ID"
 
 // Výchozí stav pro globální kontext
-const initialState = { messages: [], user: "", token: "", name: "", email: "", password: "" };
+const initialState = { messages: [], user: "", };
 
 // Reduktor pro změnu stavu dat
 const dataReducer = (state, action) => {
   switch (action.type) {
 
     case SIGNEDUSER: {
-      // Update all user-related data in the state
       return { 
         ...state, 
-        user: action.payload.user, 
-        token: action.payload.token, 
-        name: action.payload.name, 
-        email: action.payload.email,
-        password: action.payload.password 
+        user: action.payload.response,  
       };
     }    
     
     case NOTES: {
-      // Změna stavu zpráv na nový seznam zpráv z payload akce
-      return { ...state, messages: action.payload.messages };
+      return { 
+        ...state, 
+        messages: action.payload.messages };
     }
     default: {
       // V případě jiných akcí vrátíme nezměněný stav
@@ -48,9 +45,6 @@ export const Provider = ({ children }) => {
 
   // Použití reduktoru pro správu stavu a získání stavu a dispečera
   const [store, dispatch] = useReducer(dataReducer, storedData);
-
-  // Získání seznamu zpráv ze stavu, nebo použití prázdného pole
-  const messages = store.messages || [];
 
   // Efekt pro uložení aktuálního stavu do lokálního úložiště při změně stavu zpráv
   useEffect(() => {

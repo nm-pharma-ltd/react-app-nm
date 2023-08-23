@@ -207,7 +207,9 @@ export default function Pharmacies() {
       </TeamsContainer>
       <h2>Chat</h2>
       <Konto>
-        <ChatBox />
+
+        <ChatBox endPoint="comments"/>
+
       </Konto>
     </>
   );

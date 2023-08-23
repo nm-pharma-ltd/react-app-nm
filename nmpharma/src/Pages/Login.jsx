@@ -1,11 +1,13 @@
-import React, { useState, useRef } from 'react';
+import React, { useContext, useState, useRef } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import LogoBlack from '../img/Logo2.png';
 import ApiService from '../api/ApiService';
+import { Context, SIGNEDUSER  } from '../providers/provider'; 
 
 export default function Login() {
+  const [store, dispatch] = useContext(Context);
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -42,12 +44,15 @@ export default function Login() {
         email: email.trim(),
         password: password.trim(),
       });
-      navigate('/pharmacies');
-      console.log(response);
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
-      console.log("Attempting to navigate...");
 
+      dispatch({ type: SIGNEDUSER, payload: { response } });
+      navigate('/pharmacies');
+      console.log(store.SIGNEDUSER);
+
+      // localStorage.setItem('token', response.data.token);
+      // localStorage.setItem('user', JSON.stringify(response.data.user));
+
+      console.log("Attempting to navigate...");
 
     } catch (error) {
       // Handle errors from the server, like invalid credentials

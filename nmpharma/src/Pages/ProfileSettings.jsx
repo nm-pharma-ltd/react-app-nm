@@ -2,20 +2,18 @@ import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { FaPen, FaUser, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { ViewDetailsLink } from '../Components/Table';
-import { Context } from '../providers/provider';
+import { Context, SIGNEDUSER } from '../providers/provider';
 
 export const ProfileSettings = () => {
-  const [store, dispatch] = useContext(Context);
-  console.log(store);  // Right place to log
-  // Access the global state
 
+  const [store, dispatch] = useContext(Context);
+ 
   const [isEditing, setIsEditing] = useState(false);
-  const [username, setUsername] = useState(store.name); // Initialize with global state
-  const [email, setEmail] = useState(store.email); // Initialize with global state
+  const [username, setUsername] = useState(store.name); 
+  const [email, setEmail] = useState(store.email); 
   const [newPassword, setNewPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [actualPassword, setActualPassword] = useState(store.password);  // Initialize with global state
-
+  const [actualPassword, setActualPassword] = useState(store.password);  
 
 
   const togglePasswordVisibility = () => {
@@ -23,7 +21,7 @@ export const ProfileSettings = () => {
   };
 
   const toggleEdit = () => {
-    console.log(store.user);
+
       if(!isEditing) {
           setNewPassword(actualPassword);
       }
@@ -31,11 +29,10 @@ export const ProfileSettings = () => {
   };
   
 
+  //Dodělat
   const handleSubmit = (e) => {
     e.preventDefault();
     setActualPassword(newPassword);
-
-    // Dispatch an action to update the global state
     dispatch({
         type: "SIGNEDUSER",
         payload: {
@@ -70,27 +67,15 @@ export const ProfileSettings = () => {
           <InfoItem>
             <InfoLabel>Username</InfoLabel>
             {isEditing ?
-              <Input type="text" value={username} onChange={(e) => setUsername(e.target.value)} /> :
-              <InfoData>{username}</InfoData>
+              <Input type="text" value={store.user.username} onChange={(e) => setUsername(e.target.value)} /> :
+              <InfoData>{store.user.username}</InfoData>
             }
           </InfoItem>
           <InfoItem>
             <InfoLabel>Email</InfoLabel>
             {isEditing ?
-              <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} /> :
-              <InfoData>{email}</InfoData>
-            }
-          </InfoItem>
-          <InfoItem>
-            <InfoLabel>Password</InfoLabel>
-            {isEditing ?
-              <Input type="text" placeholder="New Password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} /> :
-              <PasswordWrapper>
-                <InfoData>{isPasswordVisible ? actualPassword : '•••••••••'}</InfoData>
-                <EyeIcon onClick={togglePasswordVisibility} >
-                  {isPasswordVisible ? <FaEye /> : <FaEyeSlash /> }
-                </EyeIcon>
-              </PasswordWrapper>
+              <Input type="email" value={store.user.email} onChange={(e) => setEmail(e.target.value)} /> :
+              <InfoData>{store.user.email}</InfoData>
             }
           </InfoItem>
         </ProfileInfo>
@@ -100,19 +85,6 @@ export const ProfileSettings = () => {
   );
 };
 
-
-const PasswordWrapper = styled.div`
-    display: flex;
-    align-items: center;
-`;
-
-const EyeIcon = styled.span`
-    margin-left: 10px;
-    cursor: pointer;
-    color: #555;
-    display: flex;
-    align-items: center;
-`;
 
 const HeadingSettings = styled.div`
     display: flex;

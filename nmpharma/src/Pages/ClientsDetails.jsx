@@ -1,18 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { styled } from "styled-components";
+import styled from "styled-components"; 
 import { NavLink } from "react-router-dom";
 import Table from "../Components/Table";
 import ApiService from "../api/ApiService";
+import { Skeleton } from "@mui/material";
+import { FiSearch } from "react-icons/fi"; 
 
 export default function ClientDetails() {
 
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState(""); 
   const [pharmaciesData, setPharmaciesData] = useState([]);
+  const [filteredPharmacies, setFilteredPharmacies] = useState([]);
+
+
 
   useEffect(() => {
     async function fetchPharmacyData() {
       try {
         const fetchedData = await ApiService.get("clients/sales/2023/1");
-        
         const sortedPharmacies = fetchedData.sort((a, b) => b.monthlySale - a.monthlySale);
         const processedPharmacies = sortedPharmacies.map((pharmacy, index) => ({
           rank: index + 1,
@@ -21,15 +27,38 @@ export default function ClientDetails() {
           monthlySale: parseFloat(pharmacy.monthlySale).toFixed(0) + "€"
         }));
     
-        setPharmaciesData(processedPharmacies.slice(0, 82)); // Display top 10
+        setPharmaciesData(processedPharmacies.slice(0, 82));
+        setFilteredPharmacies(processedPharmacies.slice(0, 82));
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching pharmacy data:', error);
+        setLoading(false);
       }
     }
-  
     fetchPharmacyData();
   }, []);
+
+
+  useEffect(() => {
+      if (searchTerm === "") {
+        setFilteredPharmacies(pharmaciesData);
+      } else {
+        const filtered = pharmaciesData.filter(pharmacy => pharmacy.clientName.toLowerCase().startsWith(searchTerm.toLowerCase()));
+        setFilteredPharmacies(filtered);
+      }
+  }, [searchTerm, pharmaciesData]);
   
+  
+  function HighlightedText({ text, highlight }) {
+    const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
+    return (
+      <span>
+        {parts.map((part, index) => 
+          part.toLowerCase() === highlight.toLowerCase() ? <Highlight0 key={index}>{part}</Highlight0> : part
+        )}
+      </span>
+    );
+  }
 
   return (
     <>
@@ -37,26 +66,113 @@ export default function ClientDetails() {
         <TitleWrapper>
           <Title>Sales activity details</Title>
           <GoBackButton to="/pharmacies">Back</GoBackButton>
+          <SearchBarWrapper>
+            <FiSearch />
+            <InputSeacrh
+              type="text"
+              placeholder="Search Clients..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </SearchBarWrapper>
         </TitleWrapper>
         <MamRadVelkyZadky>
-        <Table
-          title="Pharmacies (Clients)"
-          subtitle="TOP 82"
-          viewDetailsLink="/pharmacies/clientdetails"
-          width="98%"
-          columns={[
-            { label: 'RANK', field: 'rank', align: 'left' },
-            { label: 'NAME', field: 'clientName', align: 'left' },
-            { label: 'PROFIT', field: 'monthlyProfit', align: 'center' },
-            { label: 'MONTHLY SALES', field: 'monthlySale', align: 'right' },
-          ]}
-          data={pharmaciesData}
+        {loading ? (
+          <SkeletonTableContainer style={{ width: "98%"}}>
+            <Skeleton variant="text" width="60%" height="24px" />
+            <Skeleton variant="text" width="30%" height="20px" marginBottom="16px" />
+            <div style={{ display: 'flex', marginBottom: "10px" }}>
+              <Skeleton variant="rectangular" width="10%" height="20px" marginRight="2%" />
+              <Skeleton variant="rectangular" width="45%" height="20px" marginRight="2%" />
+              <Skeleton variant="rectangular" width="15%" height="20px" marginRight="2%" />
+              <Skeleton variant="rectangular" width="25%" height="20px" />
+            </div>
+            {Array(15).fill().map((_, i) => (
+              <div key={i} style={{ display: 'flex', marginBottom: "10px" }}>
+                <Skeleton variant="rectangular" width="10%" height="20px" marginRight="2%" />
+                <Skeleton variant="rectangular" width="45%" height="20px" marginRight="2%" />
+                <Skeleton variant="rectangular" width="15%" height="20px" marginRight="2%" />
+                <Skeleton variant="rectangular" width="25%" height="20px" />
+              </div>
+            ))}
+          </SkeletonTableContainer>
+        ) : (
+          <Table
+            title="Pharmacies (Clients)"
+            subtitle="TOP 82"
+            viewDetailsLink="/pharmacies/clientdetails"
+            width="98%"
+            columns={[
+              { label: 'RANK', field: 'rank', align: 'left' },
+              { label: 'NAME', field: 'clientName', align: 'left' },
+              { label: 'PROFIT', field: 'monthlyProfit', align: 'center' },
+              { label: 'MONTHLY SALES', field: 'monthlySale', align: 'right' },
+            ]}
+            data={filteredPharmacies.map(pharmacy => ({
+              ...pharmacy,
+              clientName: <HighlightedText text={pharmacy.clientName} highlight={searchTerm} />
+            }))}                      
           />
+        )}
         </MamRadVelkyZadky>
       </Container>
     </>
   );
 }
+
+const Highlight0 = styled.mark`
+  background-color: #d54529;  
+  color: black; 
+`;
+
+
+export const InputSeacrh = styled.input`
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  background: #f7f8ff;
+  outline: none;
+  transition: all 0.2s ease-in-out;
+
+  &:focus {
+    background: #eff0f7;
+
+  }
+`;
+
+const SearchBarWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
+  padding: 5px 10px;
+  background: #fff;
+  border-radius: 20px;
+
+  svg {
+    color: #888;
+    font-size: 18px;
+    margin-right: 4px;
+  }
+`;
+
+const SkeletonTableContainer = styled.div`
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-top: 20px;
+  margin-right: 25px;
+  width: ${props => props.width || '48%'};
+  min-width: 500px;
+  height: 800px;
+
+  @media (max-width: 1320px) {
+    width: 100%;
+  }
+`;
+
 
 const Container = styled.div`
   margin-bottom: 20px;
