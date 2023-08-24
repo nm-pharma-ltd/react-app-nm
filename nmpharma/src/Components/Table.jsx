@@ -80,7 +80,7 @@ const Title = styled.h3`
 `;
 
 const Subtitle = styled.p`
-  margin: 0 0 20px 0;
+  margin: 0 0 10px 0;
   color: #7e7e7e;
 `;
 

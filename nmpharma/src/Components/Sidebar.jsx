@@ -1,12 +1,19 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import LogoBlack from '../img/Logo2.png';
 import { FaUser, FaChartBar, FaListAlt, FaBullseye, FaBell, FaCog } from 'react-icons/fa';
 import { TiMediaRecord } from "react-icons/ti";
 import { FaAngleLeft, FaAngleRight, FaArrowRightFromBracket } from "react-icons/fa6";
 import { NavLink } from 'react-router-dom';
+import { Context, LOGOUT } from '../providers/provider';
 
 export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
+  const [, dispatch] = useContext(Context);
+
+  const handleLogout = () => {
+    dispatch({ type: LOGOUT });
+  };
+  
 
   return (
     <StyledSidebar open={isSidebarOpen}>
@@ -71,7 +78,7 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
         </MenuItemIcon>
         Settings
       </MenuItem2>
-      <MenuItem2 to="/Login" >
+      <MenuItem2 to="/Login" onClick={handleLogout} >
         <MenuItemIcon>
           <FaArrowRightFromBracket />
         </MenuItemIcon>

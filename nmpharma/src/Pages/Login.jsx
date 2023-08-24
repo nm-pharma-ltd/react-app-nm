@@ -46,8 +46,9 @@ export default function Login() {
       });
 
       dispatch({ type: SIGNEDUSER, payload: { response } });
+      console.log(store.user.token);
       navigate('/pharmacies');
-      console.log(store.SIGNEDUSER);
+      //console.log(store.SIGNEDUSER);
 
       // localStorage.setItem('token', response.data.token);
       // localStorage.setItem('user', JSON.stringify(response.data.user));
@@ -122,11 +123,10 @@ const ErrorLabel = styled.p`
 
 
 const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  overflow-x: hidden;
+ display: grid;
+  place-items: center;
+  height: 95vh;
+  overflow-y: hidden !important; 
 `;
 
 const LoginForm = styled.form`

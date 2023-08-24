@@ -104,22 +104,22 @@ export default function Pharmacies() {
           <SkeletonTableContainer style={{ width: "47%"}}>
           {/* Title & Subtitle */}
           <Skeleton variant="text" width="60%" height="24px" />
-          <Skeleton variant="text" width="30%" height="20px" marginBottom="16px" />
+          <Skeleton variant="text" width="30%" height="20px"  />
         
           {/* Table Headers */}
           <div style={{ display: 'flex', marginBottom: "10px" }}>
-            <Skeleton variant="rectangular" width="10%" height="20px" marginRight="2%" />
-            <Skeleton variant="rectangular" width="45%" height="20px" marginRight="2%" />
-            <Skeleton variant="rectangular" width="15%" height="20px" marginRight="2%" />
+            <Skeleton variant="rectangular" width="10%" height="20px" />
+            <Skeleton variant="rectangular" width="45%" height="20px"  />
+            <Skeleton variant="rectangular" width="15%" height="20px"  />
             <Skeleton variant="rectangular" width="25%" height="20px" />
           </div>
         
           {/* Table Rows */}
           {Array(10).fill().map((_, i) => (
             <div key={i} style={{ display: 'flex', marginBottom: "10px" }}>
-              <Skeleton variant="rectangular" width="10%" height="20px" marginRight="2%" />
-              <Skeleton variant="rectangular" width="45%" height="20px" marginRight="2%" />
-              <Skeleton variant="rectangular" width="15%" height="20px" marginRight="2%" />
+              <Skeleton variant="rectangular" width="10%" height="20px"  />
+              <Skeleton variant="rectangular" width="45%" height="20px"  />
+              <Skeleton variant="rectangular" width="15%" height="20px"  />
               <Skeleton variant="rectangular" width="25%" height="20px" />
             </div>
           ))}
@@ -144,22 +144,22 @@ export default function Pharmacies() {
           <SkeletonTableContainer style={{ width: "47%"}}>
           {/* Title & Subtitle */}
           <Skeleton variant="text" width="60%" height="24px" />
-          <Skeleton variant="text" width="30%" height="20px" marginBottom="16px" />
+          <Skeleton variant="text" width="30%" height="20px" />
         
           {/* Table Headers */}
           <div style={{ display: 'flex', marginBottom: "10px" }}>
-            <Skeleton variant="rectangular" width="10%" height="20px" marginRight="2%" />
-            <Skeleton variant="rectangular" width="45%" height="20px" marginRight="2%" />
-            <Skeleton variant="rectangular" width="15%" height="20px" marginRight="2%" />
+            <Skeleton variant="rectangular" width="10%" height="20px"  />
+            <Skeleton variant="rectangular" width="45%" height="20px" />
+            <Skeleton variant="rectangular" width="15%" height="20px"  />
             <Skeleton variant="rectangular" width="25%" height="20px" />
           </div>
         
           {/* Table Rows */}
           {Array(10).fill().map((_, i) => (
             <div key={i} style={{ display: 'flex', marginBottom: "10px" }}>
-              <Skeleton variant="rectangular" width="10%" height="20px" marginRight="2%" />
-              <Skeleton variant="rectangular" width="45%" height="20px" marginRight="2%" />
-              <Skeleton variant="rectangular" width="15%" height="20px" marginRight="2%" />
+              <Skeleton variant="rectangular" width="10%" height="20px"  />
+              <Skeleton variant="rectangular" width="45%" height="20px"  />
+              <Skeleton variant="rectangular" width="15%" height="20px"  />
               <Skeleton variant="rectangular" width="25%" height="20px" />
             </div>
           ))}

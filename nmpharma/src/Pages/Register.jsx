@@ -35,23 +35,14 @@ export default function Register() {
     };
 
     try {
-      const response = await ApiService.post('auth/register', userData);
-
-      // Assuming the data you need is inside response.data and that
-      // the backend sends a property named 'success' to indicate operation status.
-      if (response.data && response.data.success) { 
-        navigate('/Login');
-      } else {
-        // Use the error message provided by the backend if available, else use a default message.
-        setFeedback(response.data.message || 'Registration failed.');
-      }
-    } catch (error) {
-      console.error('Error registering the user:', error);
-      // If the error has a response and that response has a data property with a message, use that. 
-      // Otherwise, fall back to the generic error.
-      setFeedback(error.response && error.response.data && error.response.data.message ? error.response.data.message : 'An error occurred. Please try again.');
+      await ApiService.post('auth/register', userData);
+      navigate('/Login'); // if we reach this line, it means API request was successful, so navigate to Login
+    } catch {
+      setFeedback('An error occurred. Please try again.');
     }
 };
+
+
 
   return (
     <Container>
@@ -103,15 +94,15 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  overflow-x: hidden;
+  height: 95vh;
+  overflow: hidden;
 `;
 
 const LoginForm = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40px;
+  padding: 30px 40px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   background: #fff;

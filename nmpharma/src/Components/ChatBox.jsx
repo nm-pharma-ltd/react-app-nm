@@ -81,7 +81,7 @@ const ChatBox = () => {
         </IconLink>
       </BoxChat>
       {messages.map((message) => (
-        <MessageContainer key={message.commentId}>
+        <MessageContainer key={message.commentid}>
           <MessageHeader>
             <AvatarDiv>
               <Avatar>
@@ -90,7 +90,7 @@ const ChatBox = () => {
               <UserName>{message.username}</UserName>
             </AvatarDiv>
             <MessageText>{message.content}</MessageText>
-            <RemoveIcon onClick={() => handleRemoveMessage(message.commentId)}>
+            <RemoveIcon onClick={() => handleRemoveMessage(message.commentid)}>
               <FaTimes />
             </RemoveIcon>
           </MessageHeader>

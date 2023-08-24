@@ -1,4 +1,4 @@
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import './App.css';
 import Sidebar from './Components/Sidebar';
 import Pharmacies from './Pages/Pharmacies';
@@ -17,19 +17,30 @@ import { SinglePharmacyDetails } from './Pages/SinglePharmacyDetails';
 import TeamDetails from './Pages/TeamDetails';
 import ForecastSingleProduct from './Pages/ForecastSingleProduct';
 import Supplier from './Pages/Supplier';
-import { useState } from 'react';
-
+import { useContext, useState } from 'react';
+import PrivateRoute from './providers/PrivateRoute';
+import { Context } from './providers/provider';
 
 export default function App() {
   const location = useLocation();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Initialize with true
+  const [store] = useContext(Context)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-  // Determine if the current location is the login or registration page
   const isAuthPage = location.pathname === '/Login' || location.pathname === '/Register';
 
   const toggleSidebar = () => {
     setIsSidebarOpen(prevState => !prevState);
   };
+
+  // This function will check if the user is authenticated.
+  const isAuthenticated = () => {
+    const token = store.user.token;
+    return token !== null && token !== '';
+  };
+
+  if (!isAuthenticated() && !isAuthPage) {
+    return <Navigate to="/Login" replace />;
+  }
 
   return (
     <Container>
@@ -38,53 +49,32 @@ export default function App() {
       )}
       <ContentWrapper>
         <Gradient />
-        {isAuthPage ? (
-          <>
-            <Routes>
-              <Route path="/Login" element={<Login />} />
-              <Route path="/Register" element={<Register />} />
-            </Routes>
-          </>
-        ) : (
-          <Content open={isSidebarOpen}>
-            <Routes>
-              <Route path="/" element={<Pharmacies />} />
+        <Content open={isSidebarOpen && !isAuthPage}>
+          <Routes>
+          <Route path="/" element={<PrivateRoute/>}>
               <Route path="/pharmacies" element={<Pharmacies />} />
-
-
               <Route path="/pharmacies/productdetails" element={<ProductDetails/>} />
               <Route path="/pharmacies/clientdetails" element={<ClientDetails/>} />
               <Route path="/pharmacies/product1" element={<SingleProductDetails/>} />
               <Route path="/pharmacies/pharmacy1" element={<SinglePharmacyDetails/>} />
-
-
               <Route path="/stock" element={<Stock />} />
-
               <Route path="/stock/supplier" element={<Supplier/>} />
-
               <Route path="/stock/:id" element={<ForecastSingleProduct/>} />
-              
-
               <Route path="/eru" element={<ERUs />} />
-
-
               <Route path="/targets" element={<Targets />} />
               <Route path="/targets/teamdetails/:id" element={<TeamDetails />} />
-
-
-
               <Route path="/notifications" element={<Notifications />} />
               <Route path="/settings" element={<Settings />} />
-
+            </Route>
+            <Route path="/Login" element={<Login />} />
+            <Route path="/Register" element={<Register />} />
             </Routes>
           </Content>
-        )}
       </ContentWrapper>
     </Container>
   );
 }
 
-// Rest of the code...
 
 const Container = styled.div`
   display: flex;
