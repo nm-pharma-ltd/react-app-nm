@@ -101,29 +101,29 @@ export default function Pharmacies() {
       <MamRadVelkyZadky>
 
         {isLoadingProducts ? (
-          <SkeletonTableContainer style={{ width: "47%"}}>
+          <NutellaSkeletonTableContainer style={{ width: "47%"}}>
           {/* Title & Subtitle */}
-          <Skeleton variant="text" width="60%" height="24px" />
-          <Skeleton variant="text" width="30%" height="20px"  />
+          <NutellaSkeleton variant="text" width="60%" height="24px" />
+          <NutellaSkeleton variant="text" width="30%" height="20px"  />
         
           {/* Table Headers */}
           <div style={{ display: 'flex', marginBottom: "10px" }}>
-            <Skeleton variant="rectangular" width="10%" height="20px" />
-            <Skeleton variant="rectangular" width="45%" height="20px"  />
-            <Skeleton variant="rectangular" width="15%" height="20px"  />
-            <Skeleton variant="rectangular" width="25%" height="20px" />
+            <NutellaSkeleton variant="rectangular" width="10%" height="20px" />
+            <NutellaSkeleton variant="rectangular" width="45%" height="20px"  />
+            <NutellaSkeleton variant="rectangular" width="15%" height="20px"  />
+            <NutellaSkeleton variant="rectangular" width="25%" height="20px" />
           </div>
         
           {/* Table Rows */}
           {Array(10).fill().map((_, i) => (
             <div key={i} style={{ display: 'flex', marginBottom: "10px" }}>
-              <Skeleton variant="rectangular" width="10%" height="20px"  />
-              <Skeleton variant="rectangular" width="45%" height="20px"  />
-              <Skeleton variant="rectangular" width="15%" height="20px"  />
-              <Skeleton variant="rectangular" width="25%" height="20px" />
+              <NutellaSkeleton variant="rectangular" width="10%" height="20px"  />
+              <NutellaSkeleton variant="rectangular" width="45%" height="20px"  />
+              <NutellaSkeleton variant="rectangular" width="15%" height="20px"  />
+              <NutellaSkeleton variant="rectangular" width="25%" height="20px" />
             </div>
           ))}
-        </SkeletonTableContainer>        
+        </NutellaSkeletonTableContainer>        
         ) : (
           <Table
             title="Product Profit & Quantity"
@@ -141,29 +141,29 @@ export default function Pharmacies() {
         )}
 
         {isLoadingPharmacies ? (
-          <SkeletonTableContainer style={{ width: "47%"}}>
+          <NutellaSkeletonTableContainer style={{ width: "47%"}}>
           {/* Title & Subtitle */}
-          <Skeleton variant="text" width="60%" height="24px" />
-          <Skeleton variant="text" width="30%" height="20px" />
+          <NutellaSkeleton variant="text" width="60%" height="24px" />
+          <NutellaSkeleton variant="text" width="30%" height="20px" />
         
           {/* Table Headers */}
           <div style={{ display: 'flex', marginBottom: "10px" }}>
-            <Skeleton variant="rectangular" width="10%" height="20px"  />
-            <Skeleton variant="rectangular" width="45%" height="20px" />
-            <Skeleton variant="rectangular" width="15%" height="20px"  />
-            <Skeleton variant="rectangular" width="25%" height="20px" />
+            <NutellaSkeleton variant="rectangular" width="10%" height="20px"  />
+            <NutellaSkeleton variant="rectangular" width="45%" height="20px" />
+            <NutellaSkeleton variant="rectangular" width="15%" height="20px"  />
+            <NutellaSkeleton variant="rectangular" width="25%" height="20px" />
           </div>
         
           {/* Table Rows */}
           {Array(10).fill().map((_, i) => (
             <div key={i} style={{ display: 'flex', marginBottom: "10px" }}>
-              <Skeleton variant="rectangular" width="10%" height="20px"  />
-              <Skeleton variant="rectangular" width="45%" height="20px"  />
-              <Skeleton variant="rectangular" width="15%" height="20px"  />
-              <Skeleton variant="rectangular" width="25%" height="20px" />
+              <NutellaSkeleton variant="rectangular" width="10%" height="20px"  />
+              <NutellaSkeleton variant="rectangular" width="45%" height="20px"  />
+              <NutellaSkeleton variant="rectangular" width="15%" height="20px"  />
+              <NutellaSkeleton variant="rectangular" width="25%" height="20px" />
             </div>
           ))}
-        </SkeletonTableContainer>        
+        </NutellaSkeletonTableContainer>        
         ) : (
           <Table
             title="Pharmacies (Clients)"
@@ -215,8 +215,8 @@ export default function Pharmacies() {
   );
 
 }
-const SkeletonTableContainer = styled.div`
-  background-color: #ffffff;
+const NutellaSkeletonTableContainer = styled.div`
+  background-color: ${props => props.theme.componentBackground};
   border-radius: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 20px;
@@ -229,6 +229,10 @@ const SkeletonTableContainer = styled.div`
   @media (max-width: 1320px) {
     width: 100%;
   }
+`;
+
+const NutellaSkeleton = styled(Skeleton)`
+  color: ${props => props.theme.lightdark};
 `;
 
 const TeamsContainer = styled.div`

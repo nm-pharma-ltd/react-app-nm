@@ -1,45 +1,59 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { Context, TOGGLE_THEME } from '../providers/provider';
 
 export const Appearance = () => {
-    const [darkMode, setDarkMode] = useState(false);
-    const [hideTeams, setHideTeams] = useState(false);
-    const [roundedNav, setRoundedNav] = useState(false);
+  const [store, dispatch] = useContext(Context);
 
-    const toggleDarkMode = () => setDarkMode(!darkMode);
-    const toggleTeams = () => setHideTeams(!hideTeams);
-    const toggleNav = () => setRoundedNav(!roundedNav);
+  // Initialize from global state
+  const [darkMode, setDarkMode] = useState(store.theme === "dark");
+  const [hideTeams, setHideTeams] = useState(false);
+  const [roundedNav, setRoundedNav] = useState(false);
 
-    return (
-        <>
-            <HeadingSettings>
-                <h3>Appearance Settings</h3>
-            </HeadingSettings>
-            <ProfileSettingsContainer>
-                <SettingItem>
-                    <SettingLabel>Dark Mode</SettingLabel>
-                    <Switch>
-                        <Checkbox type="checkbox" checked={darkMode} onChange={toggleDarkMode} />
-                        <Slider />
-                    </Switch>
-                </SettingItem>
-                <SettingItem>
-                    <SettingLabel>Hide "TEAMS" in Sidebar</SettingLabel>
-                    <Switch>
-                        <Checkbox type="checkbox" checked={hideTeams} onChange={toggleTeams} />
-                        <Slider />
-                    </Switch>
-                </SettingItem>
-                <SettingItem>
-                    <SettingLabel>Rounded navigation</SettingLabel>
-                    <Switch>
-                        <Checkbox type="checkbox" checked={roundedNav} onChange={toggleNav} />
-                        <Slider />
-                    </Switch>
-                </SettingItem>
-            </ProfileSettingsContainer>
-        </>
-    );
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+    dispatch({ type: TOGGLE_THEME });  // Toggle theme in global context
+  };
+
+  const toggleTeams = () => setHideTeams(!hideTeams);
+  const toggleNav = () => setRoundedNav(!roundedNav);
+
+  // When the global state's theme changes, update the local darkMode state
+  useEffect(() => {
+    setDarkMode(store.theme === "dark")
+    console.log(store.theme);
+  }, [store.theme]);
+
+  return (
+    <>
+      <HeadingSettings>
+        <h3>Appearance Settings</h3>
+      </HeadingSettings>
+      <ProfileSettingsContainer>
+        <SettingItem>
+          <SettingLabel>Dark Mode</SettingLabel>
+          <Switch>
+            <Checkbox type="checkbox" checked={darkMode} onChange={toggleDarkMode} />
+            <Slider />
+          </Switch>
+        </SettingItem>
+        <SettingItem>
+          <SettingLabel>Hide "TEAMS" in Sidebar</SettingLabel>
+          <Switch>
+            <Checkbox type="checkbox" checked={hideTeams} onChange={toggleTeams} />
+            <Slider />
+          </Switch>
+        </SettingItem>
+        <SettingItem>
+          <SettingLabel>Rounded navigation</SettingLabel>
+          <Switch>
+            <Checkbox type="checkbox" checked={roundedNav} onChange={toggleNav} />
+            <Slider />
+          </Switch>
+        </SettingItem>
+      </ProfileSettingsContainer>
+    </>
+  );
 };
 
 const HeadingSettings = styled.div`

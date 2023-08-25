@@ -54,7 +54,7 @@ export default function Table({ title, subtitle, viewDetailsLink, width, columns
 
 
 const Card = styled.div`
-  background-color: #ffffff;
+  background-color: ${props => props.theme.componentBackground};
   border-radius: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 20px;
@@ -129,7 +129,7 @@ const TableRow = styled.tr`
   cursor: pointer;
 
   &:hover {
-    background-color: #f5f5f5;
+    background-color: ${props => props.theme.background};
   }
 `;
 

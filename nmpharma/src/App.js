@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import './App.css';
+import { GlobalStyles } from './GlobalStyles';
 import Sidebar from './Components/Sidebar';
 import Pharmacies from './Pages/Pharmacies';
 import Stock from './Pages/Stock';
@@ -8,7 +9,7 @@ import Targets from './Pages/Targets';
 import Notifications from './Pages/Notifications';
 import Settings from './Pages/Settings';
 import Login from './Pages/Login';
-import styled from 'styled-components';
+import styled, { ThemeProvider } from 'styled-components';
 import Register from './Pages/Register';
 import ProductDetails from './Pages/ProductDetails';
 import ClientDetails from './Pages/ClientsDetails';
@@ -20,10 +21,11 @@ import Supplier from './Pages/Supplier';
 import { useContext, useState } from 'react';
 import PrivateRoute from './providers/PrivateRoute';
 import { Context } from './providers/provider';
+import { darkTheme, lightTheme } from './providers/themes';
 
 export default function App() {
   const location = useLocation();
-  const [store] = useContext(Context)
+  const [store, dispatch] = useContext(Context)
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const isAuthPage = location.pathname === '/Login' || location.pathname === '/Register';
@@ -51,15 +53,15 @@ export default function App() {
         <Gradient />
         <Content open={isSidebarOpen && !isAuthPage}>
           <Routes>
-          <Route path="/" element={<PrivateRoute/>}>
+            <Route path="/" element={<PrivateRoute />}>
               <Route path="/pharmacies" element={<Pharmacies />} />
-              <Route path="/pharmacies/productdetails" element={<ProductDetails/>} />
-              <Route path="/pharmacies/clientdetails" element={<ClientDetails/>} />
-              <Route path="/pharmacies/product1" element={<SingleProductDetails/>} />
-              <Route path="/pharmacies/pharmacy1" element={<SinglePharmacyDetails/>} />
+              <Route path="/pharmacies/productdetails" element={<ProductDetails />} />
+              <Route path="/pharmacies/clientdetails" element={<ClientDetails />} />
+              <Route path="/pharmacies/product1" element={<SingleProductDetails />} />
+              <Route path="/pharmacies/pharmacy1" element={<SinglePharmacyDetails />} />
               <Route path="/stock" element={<Stock />} />
-              <Route path="/stock/supplier" element={<Supplier/>} />
-              <Route path="/stock/:id" element={<ForecastSingleProduct/>} />
+              <Route path="/stock/supplier" element={<Supplier />} />
+              <Route path="/stock/:id" element={<ForecastSingleProduct />} />
               <Route path="/eru" element={<ERUs />} />
               <Route path="/targets" element={<Targets />} />
               <Route path="/targets/teamdetails/:id" element={<TeamDetails />} />
@@ -68,8 +70,8 @@ export default function App() {
             </Route>
             <Route path="/Login" element={<Login />} />
             <Route path="/Register" element={<Register />} />
-            </Routes>
-          </Content>
+          </Routes>
+        </Content>
       </ContentWrapper>
     </Container>
   );
@@ -93,8 +95,9 @@ const Gradient = styled.div`
   width: 100%;
   height: 500px;
   z-index: -50;
-  background: linear-gradient(180deg, rgb(225 106 50 / 35%) 35%, rgb(229 229 229) 100%, rgb(229 229 229) 50%);
+  background: ${props => props.theme.gradient || 'linear-gradient(180deg, rgb(225 106 50 / 35%) 35%, rgb(229 229 229) 100%, rgb(229 229 229) 50%)'};
 `;
+
 
 const Content = styled.div`
   margin-left: ${props => (props.open ? '270px' : '20px')};

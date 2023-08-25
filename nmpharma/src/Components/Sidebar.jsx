@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
-import styled from 'styled-components';
+import styled, { ThemeContext } from 'styled-components';
+import LogoWhite from '../img/Logo1.png';
 import LogoBlack from '../img/Logo2.png';
 import { FaUser, FaChartBar, FaListAlt, FaBullseye, FaBell, FaCog } from 'react-icons/fa';
 import { TiMediaRecord } from "react-icons/ti";
@@ -14,11 +15,13 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
     dispatch({ type: LOGOUT });
   };
   
+  const theme = useContext(ThemeContext);
+  const logoSrc = theme.mode === 'dark' ? LogoWhite : LogoBlack;
 
   return (
     <StyledSidebar open={isSidebarOpen}>
       <LogoContainer>
-        <Logo src={LogoBlack} alt="Company Logo" />
+        <Logo src={logoSrc} alt="Company Logo" />
       </LogoContainer>
       <MenuHeading>Main Menu</MenuHeading>
       <MenuItem to="/pharmacies" >
@@ -119,7 +122,7 @@ const ToggleSidebarButton = styled.div`
 const StyledSidebar = styled.div`
   height: 100vh;
   width: 250px;
-  background-color: #ffffff;
+  background-color: ${props => props.theme.componentBackground};
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   overflow-y: auto;
   border-radius: 0 20px 20px 0 ;
@@ -143,9 +146,11 @@ const Logo = styled.img`
   height: 56px;
 `;
 
+
 const MenuHeading = styled.div`
   padding: 8px 28px;
   color: #555555;
+  color: ${props => props.theme.menuHeading};
   font-size: 13px;
   text-transform: uppercase;
 
@@ -178,15 +183,15 @@ const MenuItem = styled(NavLink)`
   text-decoration: none;
 
   &:hover {
-    background-color: #e0e0e037;
-    color: #5d5d5d;
+    background-color: ${props => props.theme.nav};
+    color: ${props => props.theme.colorNavLink};
     -webkit-transition: all 0.25s ease-in-out;
     transition: all 0.25s ease-in-out;
   }
 
   &.active {
-    background-color: #eeeff8;
-    color: #2e2e2e;
+    background-color: ${props => props.theme.nav};
+    color: ${props => props.theme.colorNavLink};
     font-weight: 500;
   }
 `;

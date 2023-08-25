@@ -117,7 +117,7 @@ const ChatBoxWrapper = styled.div`
   padding: 16px;
   margin-bottom: 40px;
   margin-top: 20px;
-  background: #fff;
+  background: ${props => props.theme.componentBackground};
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -162,7 +162,9 @@ const ChatInput = styled.input`
   border: none;
   font-size: 14px;
   width: 100%;
+  background-color: ${props => props.theme.componentBackground};
 
+  color: ${props => props.theme.text};
   &:focus {
     border-color: #fff;
     outline: none;
