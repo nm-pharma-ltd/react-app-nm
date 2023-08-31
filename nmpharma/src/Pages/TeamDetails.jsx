@@ -3,7 +3,6 @@ import { styled } from "styled-components";
 import { GoBackButton, TitleWrapper } from "./ClientsDetails";
 import TeamCardDetail from "../Components/TeamCardDetails"; // Import the gradientColors array
 import { FaUserCircle } from "react-icons/fa";
-import { GreenBox } from "../Components/Table";
 import { useParams } from "react-router";
 
 const TeamDetails = () => {

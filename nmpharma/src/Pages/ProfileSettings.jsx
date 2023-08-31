@@ -119,7 +119,7 @@ const InfoItem = styled.div`
 
 const InfoLabel = styled.span`
   font-weight: 500;
-  color: #333;
+  color: ${props => props.theme.text};
   height: 46px;
   display: flex;
   align-items: center;
@@ -127,7 +127,7 @@ const InfoLabel = styled.span`
 
 const InfoData = styled.span`
   font-weight: 300;
-  color: #555;
+  color: ${props => props.theme.text2};
 `
 
 const ProfileSettingsContainer = styled.div`
@@ -135,7 +135,7 @@ const ProfileSettingsContainer = styled.div`
   flex-direction: column;
   align-items: left;
   padding: 35px;
-  background-color: #ffffff;
+  background-color: ${props => props.theme.componentBackground};
   width: 100%;
   height: 100%;
 `;

@@ -6,6 +6,7 @@ export const lightTheme = {
     toggleBackground: "#ccc",
     toggleButton: "#E16A32",
     nav: "#eeeff8",
+    text2: "#555",
     menuHeading: "#555555;",
     colorNavLink: "#3e3e3e"
 
@@ -18,6 +19,7 @@ export const darkTheme = {
     text: "#ffffff",
     lightdark: "rgb(91, 91, 91)",
     nav: "#4d4d4dcf",
+    text2: "#a3a3a3",
     toggleBackground: "#E16A32",
     toggleButton: "#ffffff",
     gradient: "linear-gradient(180deg, rgb(225 106 50 / 35%) 35%, rgb(51 51 51) 100%, rgb(229 229 229) 50%)",

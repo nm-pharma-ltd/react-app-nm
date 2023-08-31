@@ -69,7 +69,7 @@ const ProfileSettingsContainer = styled.div`
   flex-direction: column;
   align-items: left;
   padding: 35px;
-  background-color: #ffffff;
+  background-color: ${props => props.theme.componentBackground};
   width: 100%;
   height: 100%;
 `;

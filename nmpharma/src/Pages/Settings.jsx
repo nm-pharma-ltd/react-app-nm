@@ -73,7 +73,7 @@ export default function Settings() {
 
 
 const SettingsCard = styled.div`
-  background-color: #ffffff;
+  background-color: ${props => props.theme.componentBackground};
   border-radius: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 20px;
@@ -106,21 +106,16 @@ const MenuItem = styled.div`
   text-decoration: none;
   transition: 0.15s all ease-in-out;
 
-  &:hover {
-    background-color: #e0e0e037;
-    color: #5d5d5d;
-  }
-
   ${props => props.isactive && `
-    background-color: #eeeff8;
-    color: #2e2e2e;
+    background-color: ${props.theme.nav};
+    color: ${props.theme.colorNavLink};
     font-weight: 500;
-
-    &:hover {
-      background-color: #eeeff8;
-      color: #2e2e2e;
-    }
   `}
+  
+  &:hover {
+    background-color: ${props => props.theme.nav};
+    color: ${props => props.theme.colorNavLink};
+  }
 `;
 
 const MenuItemDelete = styled.div`
@@ -128,15 +123,15 @@ const MenuItemDelete = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
-  color: #b11414;
+  color: #c94141;
   border-radius: 10px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   text-decoration: none;
   transition: 0.15s all ease-in-out;
 
   &:hover {
-    color: #480a0a;
+    color: #ad2d2d;
     padding-top: 10px;
   }
 

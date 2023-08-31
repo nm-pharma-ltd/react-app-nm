@@ -30,7 +30,7 @@ const CardContainer = styled.div`
   margin-bottom: 5px;
   width: 100%;
   height: 80px;
-  background: #fff;
+  background: ${props => props.theme.componentBackground};
   box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
 
   @media (max-width: 1024px){

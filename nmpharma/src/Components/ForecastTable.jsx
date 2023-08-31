@@ -86,7 +86,7 @@ const Kont = styled.div`
 `
 
 const Card = styled.div`
-  background-color: #ffffff;
+  background: ${props => props.theme.componentBackground};
   border-radius: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 20px;

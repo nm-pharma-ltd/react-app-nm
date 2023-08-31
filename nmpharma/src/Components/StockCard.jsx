@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { FaChevronDown } from 'react-icons/fa';
-import { TableCell, TableHeaderCell, ViewDetailsLink } from './Table';
+import { TableCell, ViewDetailsLink } from './Table';
 import { TiMediaRecord } from 'react-icons/ti';
 import { GoBackButton } from '../Pages/ClientsDetails';
 import { NavLink } from 'react-router-dom';
@@ -88,7 +88,7 @@ const StockCard = () => {
             <TableContainer>
               <TableHead>
                 <TableRow>
-                  <TableHeaderCell align='center'>STOCK CODE</TableHeaderCell>
+                  <TableHeaderCell  align='center'>STOCK CODE</TableHeaderCell>
                   <TableHeaderCell align='center'>PRODUCT NAME</TableHeaderCell>
                   <TableHeaderCell align='center'>INCOMING</TableHeaderCell>
                   <TableHeaderCell align='center'>ON ORDER</TableHeaderCell>
@@ -143,6 +143,21 @@ const StockCard = () => {
     </>
   );
 };
+
+
+const TableHeaderCell = styled.th`
+  padding: 10px;
+  text-align: ${props => (props.align === 'right' ? 'right' : props.align === 'center' ? 'center' : 'left')};
+  color: #909090;
+  font-weight: 500;
+  text-wrap: nowrap;
+  background: ${props => props.theme.componentBackground};
+  span {
+    display: block;
+    text-align: inherit;
+  }
+`;
+
 
 const RightKontainer = styled.div`
   display: flex;
@@ -205,7 +220,7 @@ export const InputStock = styled.input`
 
 const CardContainer = styled.div`
   width: 100%;
-  background-color: #fff;
+  background-color: ${props => props.theme.nav};
   border-radius: 10px;
   padding: 20px;
   margin-top: 20px;
@@ -236,7 +251,7 @@ const ExpandIcon = styled(FaChevronDown)`
 
 
 const ExpandedCard = styled.div`
-  background-color: #f5f5f5;
+  background-color: ${props => props.theme.componentBackground};
   border-radius: ${(props) => (props.notopradius ? '0' : '10px')} ${(props) => (props.notopradius ? '0' : '10px')} 10px 10px;
   padding: 20px;
   max-height: ${(props) => (props.expanded ? '1000px' : '0')};

@@ -54,7 +54,7 @@ const CardContainer = styled.div`
   margin-bottom: 10px;
   width: 290px;
   height: 150px;
-  background: #fff;
+  background: ${props => props.theme.componentBackground};
   box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
   justify-content: space-between;
 
