@@ -49,7 +49,7 @@ const TeamDetails = () => {
     <>
       <TitleWrapper>
         <h2>Team Details</h2>
-        <GoBackButton to="/targets">Back</GoBackButton>
+        <GoBackButton to="/pharmacies">Back</GoBackButton>
       </TitleWrapper>
       <TeamsContainer>
         <TeamCardDetail

@@ -21,7 +21,9 @@ const ChatBox = () => {
   }
 
   const handleSendMessage = async () => {
+
     if (inputValue.trim() !== "") {
+      
       const newMessage = {
         userId: store.user.userid,
         content: inputValue,
