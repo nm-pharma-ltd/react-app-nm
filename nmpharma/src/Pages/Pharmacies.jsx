@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import ChatBox from "../Components/ChatBox";
@@ -8,18 +8,21 @@ import Teams from "../Components/Teams";
 import { Konto } from "./ForecastSingleProduct";
 import ApiService from "../api/ApiService";
 import Skeleton from "@mui/material/Skeleton";
+import { Context, SIGNEDUSER  } from '../providers/provider';
 
 export default function Pharmacies() {
   const [products, setProducts] = useState([]); 
   const [isLoadingProducts, setIsLoadingProducts] = useState(true);
   const [isLoadingPharmacies, setIsLoadingPharmacies] = useState(true);
+  const [store, dispatch] = useContext(Context);
 
   
   useEffect(() => {
     async function fetchData() {
       try {
+        console.log(store.user.token)
         setIsLoadingProducts(true);
-        const productsData = await ApiService.get("products/sales/2023/1");
+        const productsData = await ApiService.get("products/sales/2023/8", {"Authorization": "Bearer " + store.user.token });
 
         // Ensure data is sorted by rank
         const sortedData = productsData.sort((a, b) => a.rank - b.rank);
@@ -49,7 +52,7 @@ export default function Pharmacies() {
     async function fetchPharmacyData() {
       try {
         setIsLoadingPharmacies(true);
-        const fetchedData = await ApiService.get("clients/sales/2023/1");
+        const fetchedData = await ApiService.get("clients/sales/2023/8");
 
         const sortedPharmacies = fetchedData.sort(
           (a, b) => b.monthlySale - a.monthlySale
@@ -235,44 +238,6 @@ export default function Pharmacies() {
     </>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

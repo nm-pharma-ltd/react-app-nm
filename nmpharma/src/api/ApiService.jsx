@@ -5,9 +5,9 @@ const API_BASE_URL = 'http://26.230.153.240:51050/api';
 const ApiService = {
   
  //GET
-  get: async (endpoint, headers) => {
+  get: async (endpoint, headers_data) => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/${endpoint}`, { headers });
+      const response = await axios.get(`${API_BASE_URL}/${endpoint}`, { headers: headers_data });
       return response.data;
     } catch (error) {
       throw error;

@@ -1,50 +1,50 @@
 import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
-import { FaPen, FaUser, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaPen, FaUser, FaEye, FaEyeSlash, FaUserCircle } from 'react-icons/fa';
 import { ViewDetailsLink } from '../Components/Table';
 import { Context, SIGNEDUSER } from '../providers/provider';
 
 export const ProfileSettings = () => {
 
   const [store, dispatch] = useContext(Context);
- 
+
   const [isEditing, setIsEditing] = useState(false);
-  const [username, setUsername] = useState(store.name); 
-  const [email, setEmail] = useState(store.email); 
+  const [username, setUsername] = useState(store.name);
+  const [email, setEmail] = useState(store.email);
   const [newPassword, setNewPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [actualPassword, setActualPassword] = useState(store.password);  
+  const [actualPassword, setActualPassword] = useState(store.password);
 
 
   const togglePasswordVisibility = () => {
-      setIsPasswordVisible(!isPasswordVisible);
+    setIsPasswordVisible(!isPasswordVisible);
   };
 
   const toggleEdit = () => {
 
-      if(!isEditing) {
-          setNewPassword(actualPassword);
-      }
-      setIsEditing(!isEditing);
+    if (!isEditing) {
+      setNewPassword(actualPassword);
+    }
+    setIsEditing(!isEditing);
   };
-  
+
 
   //Dodělat
   const handleSubmit = (e) => {
     e.preventDefault();
     setActualPassword(newPassword);
     dispatch({
-        type: "SIGNEDUSER",
-        payload: {
-            user: store.user,   
-            token: store.token,
-            name: username, 
-            email: email,
-            password: actualPassword
-        }
+      type: "SIGNEDUSER",
+      payload: {
+        user: store.user,
+        token: store.token,
+        name: username,
+        email: email,
+        password: actualPassword
+      }
     });
 
-    setNewPassword(''); 
+    setNewPassword('');
     setIsEditing(false);
     console.log("Profile settings updated!");
   };
@@ -60,9 +60,9 @@ export const ProfileSettings = () => {
         </ViewDetailsLink>
       </HeadingSettings>
       <ProfileSettingsContainer>
-        <ProfilePic>
-          <FaUser size="50" />
-        </ProfilePic>
+        <Avatar>
+          <ProfilePic size={85} />
+        </Avatar>
         <ProfileInfo>
           <InfoItem>
             <InfoLabel>Username</InfoLabel>
@@ -84,6 +84,20 @@ export const ProfileSettings = () => {
     </>
   );
 };
+
+export const Avatar = styled.div`
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background-color: #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ProfilePic = styled(FaUserCircle)`
+  color: ${props => props.theme.componentBackground};
+`
 
 
 const HeadingSettings = styled.div`
@@ -110,7 +124,7 @@ const InfoItem = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 15px 0;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid ${props=>props.theme.line};
 
   &:last-child {
     border-bottom: none;
@@ -140,16 +154,7 @@ const ProfileSettingsContainer = styled.div`
   height: 100%;
 `;
 
-const ProfilePic = styled.div`
-  position: relative;
-  width: 100px;
-  height: 100px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-  background-color: #e0e0e0;
-`;
+
 
 const Input = styled.input`
   padding: 10px;

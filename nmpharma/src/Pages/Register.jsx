@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom'; // Import useNavigate hook
-import styled from 'styled-components';
+import styled, { ThemeContext } from 'styled-components';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import LogoBlack from '../img/Logo2.png';
+import LogoWhite from '../img/Logo1.png';
 import ApiService from '../api/ApiService';
+import { Subtitle, Title } from './Login';
 
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
@@ -40,14 +42,16 @@ export default function Register() {
     } catch {
       setFeedback('An error occurred. Please try again.');
     }
-};
+  };
 
+  const theme = useContext(ThemeContext);
+  const logoSrc = theme.mode === 'dark' ? LogoWhite : LogoBlack;
 
 
   return (
     <Container>
       <LoginForm>
-        <Logo src={LogoBlack} alt="Company Logo" />
+        <Logo src={logoSrc} alt="Company Logo" />
         <Title>Register here</Title>
         <Subtitle>Enter your credentials here.</Subtitle>
         <InputLabel>
@@ -67,7 +71,7 @@ export default function Register() {
         </InputLabel>
         <InputLabel>
           Password again
-          <Input type={showPassword ? 'text' : 'password'} placeholder="Type the same password as above" onChange={(e) => setPasswordAgain(e.target.value)}/>
+          <Input type={showPassword ? 'text' : 'password'} placeholder="Type the same password as above" onChange={(e) => setPasswordAgain(e.target.value)} />
           <EyeIcon onClick={togglePasswordVisibility}>
             {showPassword ? <FaEyeSlash /> : <FaEye />}
           </EyeIcon>
@@ -105,7 +109,7 @@ const LoginForm = styled.form`
   padding: 30px 40px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  background: #fff;
+  background: ${props => props.theme.componentBackground};
   width: 420px;
   justify-content: center;
 `;
@@ -115,27 +119,13 @@ const Logo = styled.img`
   height: 70px;
 `;
 
-const Title = styled.h2`
-  margin-top: 0;
-  margin-bottom: 10px;
-  font-size: 24px;
-  color: #222;
-`;
-
-const Subtitle = styled.p`
-  margin: 0;
-  margin-bottom: 20px;
-  font-size: 14px;
-  color: #555;
-`;
-
 export const InputLabel = styled.label`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   margin-bottom: 20px;
   font-size: 14px;
-  color: #555;
+  color: ${props=> props.theme.text2};
   width: 100%;
   position: relative;
 `;
@@ -144,15 +134,16 @@ export const Input = styled.input`
   width: 100%;
   padding: 12px;
   margin-top: 4px;
-  border: 1px solid #e9e9e9;
+  border: 1px solid ${props => props.theme.line};
+  background: ${props => props.theme.InputText};
+  color: ${props => props.theme.text};
   border-radius: 4px;
   font-size: 14px;
-  background: #f7f8ff;
   outline: none;
   transition: border-color 0.3s ease;
 
   &:focus {
-    border-color: #949494;
+    border-color:  ${props => props.theme.line};
   }
 `;
 

@@ -76,12 +76,11 @@ const StockCard = () => {
             </OnOrderBadge>
           </CardTitle>
           <RightKontainer>
-            <ForeButton to="/stock/supplier">Forecast</ForeButton>
+            <ForeButton to="/stock/supplier">Forecast all</ForeButton>
             <ExpandIcon expanded={expanded ? 1 : 0} />
           </RightKontainer>
         </CardHeaderContainer>
       </CardContainer>
-
       {expanded && (
         <ExpandedCard expanded={expanded ? 1 : 0} notopradius={expanded.toString()} width={cardWidth}>
           <ExpandedCardContent>
@@ -166,13 +165,13 @@ const RightKontainer = styled.div`
 
 export const TableCellCode = styled.td`
   padding: 10px;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid ${props=>props.theme.line};
   font-weight: 600;
   text-align: ${props => (props.align === 'right' ? 'right' : props.align === 'center' ? 'center' : 'left')};
 `;
 export const TableCellOrder = styled.td`
   padding: 10px;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid ${props=>props.theme.line};
   color: #5b5b5b;
   font-weight: 700;
   text-align: ${props => (props.align === 'right' ? 'right' : props.align === 'center' ? 'center' : 'left')};
@@ -180,7 +179,7 @@ export const TableCellOrder = styled.td`
 export const TableCellInc = styled.td`
   padding: 10px;
   color: #284671;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid ${props=>props.theme.line};
   font-weight: 700;
   text-align: ${props => (props.align === 'right' ? 'right' : props.align === 'center' ? 'center' : 'left')};
 `;
@@ -189,7 +188,7 @@ export const TableCellInc = styled.td`
 export const TableCellTotal = styled.td`
   padding: 10px;
   font-weight: 600;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid ${props=>props.theme.line};
   text-align: ${props => (props.align === 'right' ? 'right' : props.align === 'center' ? 'center' : 'left')};
   color: ${props => props.color || ''};
 `;
@@ -202,10 +201,11 @@ const UniInput = styled.div`
   margin: 0 auto;
 `
 export const InputStock = styled.input`
-  border: 1px solid #e9e9e9;
+    border: 1px solid #e9e9e9;
     border-radius: 4px;
     font-size: 14px;
-    background: #f7f8ff;
+    color:  ${props=> props.theme.text};
+    background: ${props=> props.theme.InputText};
     outline: none;
     transition: border-color 0.3s ease;
     height: 40px;
@@ -313,8 +313,8 @@ const CalcButton = styled.button`
 `;
 
 const ForeButton = styled(NavLink)`
-  background-color: #fff;
-  color: #575757;
+  background-color: ${props=> props.theme.componentBackground};
+  color: ${props=> props.theme.text};
   padding: 5px 10px;
   border: 3px solid #575757;
   border-radius: 5px;

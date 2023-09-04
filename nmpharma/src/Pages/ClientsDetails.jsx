@@ -78,24 +78,24 @@ export default function ClientDetails() {
         </TitleWrapper>
         <MamRadVelkyZadky>
         {loading ? (
-          <SkeletonTableContainer style={{ width: "98%"}}>
-            <Skeleton variant="text" width="60%" height="24px" />
-            <Skeleton variant="text" width="30%" height="20px" marginBottom="16px" />
+          <NutellaTableContainer style={{ width: "98%"}}>
+            <NutellaSkeleton variant="text" width="60%" height="24px" />
+            <NutellaSkeleton variant="text" width="30%" height="20px" marginBottom="16px" />
             <div style={{ display: 'flex', marginBottom: "10px" }}>
-              <Skeleton variant="rectangular" width="10%" height="20px" marginRight="2%" />
-              <Skeleton variant="rectangular" width="45%" height="20px" marginRight="2%" />
-              <Skeleton variant="rectangular" width="15%" height="20px" marginRight="2%" />
-              <Skeleton variant="rectangular" width="25%" height="20px" />
+              <NutellaSkeleton variant="rectangular" width="10%" height="20px" marginRight="2%" />
+              <NutellaSkeleton variant="rectangular" width="45%" height="20px" marginRight="2%" />
+              <NutellaSkeleton variant="rectangular" width="15%" height="20px" marginRight="2%" />
+              <NutellaSkeleton variant="rectangular" width="25%" height="20px" />
             </div>
             {Array(15).fill().map((_, i) => (
               <div key={i} style={{ display: 'flex', marginBottom: "10px" }}>
-                <Skeleton variant="rectangular" width="10%" height="20px" marginRight="2%" />
-                <Skeleton variant="rectangular" width="45%" height="20px" marginRight="2%" />
-                <Skeleton variant="rectangular" width="15%" height="20px" marginRight="2%" />
-                <Skeleton variant="rectangular" width="25%" height="20px" />
+                <NutellaSkeleton variant="rectangular" width="10%" height="20px" marginRight="2%" />
+                <NutellaSkeleton variant="rectangular" width="45%" height="20px" marginRight="2%" />
+                <NutellaSkeleton variant="rectangular" width="15%" height="20px" marginRight="2%" />
+                <NutellaSkeleton variant="rectangular" width="25%" height="20px" />
               </div>
             ))}
-          </SkeletonTableContainer>
+          </NutellaTableContainer>
         ) : (
           <Table
             title="Pharmacies (Clients)"
@@ -132,22 +132,22 @@ export const InputSeacrh = styled.input`
   border: none;
   border-radius: 10px;
   font-size: 14px;
-  background: #f7f8ff;
+  background: ${props=> props.theme.nav};
   outline: none;
   transition: all 0.2s ease-in-out;
+  color: ${props=> props.theme.text};
 
   &:focus {
-    background: #eff0f7;
-
+    background: ${props=> props.theme.componentBackground};
   }
 `;
 
-const SearchBarWrapper = styled.div`
+export const SearchBarWrapper = styled.div`
   display: flex;
   align-items: center;
   margin-left: 20px;
   padding: 5px 10px;
-  background: #fff;
+  background: ${props=> props.theme.componentBackground};
   border-radius: 20px;
 
   svg {
@@ -157,22 +157,25 @@ const SearchBarWrapper = styled.div`
   }
 `;
 
-const SkeletonTableContainer = styled.div`
-  background-color: #ffffff;
+const NutellaTableContainer = styled.div`
+  background-color: ${(props) => props.theme.componentBackground};
   border-radius: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 20px;
   margin-top: 20px;
   margin-right: 25px;
-  width: ${props => props.width || '48%'};
+  width: ${(props) => props.width || "98%"};
   min-width: 500px;
-  height: 800px;
+  height: 600px;
 
   @media (max-width: 1320px) {
     width: 100%;
   }
 `;
 
+const NutellaSkeleton = styled(Skeleton)`
+  color: ${(props) => props.theme.lightdark};
+`;
 
 const Container = styled.div`
   margin-bottom: 20px;
@@ -207,7 +210,7 @@ export const GoBackButton = styled(NavLink)`
 
   &:hover {
     color: #fff;
-    background: #d54629dd;
+    background: #d54629;
 
   }
 `;

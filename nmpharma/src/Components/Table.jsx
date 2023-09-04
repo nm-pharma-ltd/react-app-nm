@@ -95,7 +95,7 @@ const TableElement = styled.table`
 `;
 
 const TableHead = styled.thead`
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid ${props=>props.theme.line};
 `;
 
 export const TableHeaderCell = styled.th`
@@ -113,7 +113,7 @@ export const TableHeaderCell = styled.th`
 
 export const TableCell = styled.td`
   padding: 10px;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid ${props=>props.theme.line};
   text-align: ${props => (props.align === 'right' ? 'right' : props.align === 'center' ? 'center' : 'left')};
   white-space: nowrap;   // Prevents the text from wrapping onto the next line
   overflow: hidden;      // Hides any text that goes beyond the container width

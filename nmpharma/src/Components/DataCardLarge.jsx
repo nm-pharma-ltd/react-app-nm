@@ -55,7 +55,7 @@ const CardTitle = styled.h3`
   margin: 0;
   margin-right: 15px;
   font-size: 16px;
-  color: ${(props) => props.textColor || '#808080'};
+  color: ${props=> props.theme.textCard};
   font-weight: 500;
 `;
 
@@ -64,7 +64,7 @@ const CardAmount = styled.p`
   font-size: 20px;
   margin-right: 18px;
   font-weight: 600;
-  color: #272424;
+  color: ${props=> props.theme.textAmount};
 `;
 
 const ProfitPriceContainer = styled.div`

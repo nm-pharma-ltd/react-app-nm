@@ -137,15 +137,19 @@ const TableElement = styled.table`
 
 
 const TableHead = styled.thead`
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid ${props=>props.theme.line};
   text-wrap: nowrap;
 
 `;
 
 const TableCell = styled.td`
   padding: 10px;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid ${props=>props.theme.line};
   text-align: ${props => (props.align === 'right' ? 'right' : props.align === 'center' ? 'center' : 'left')};
+
+  span {
+    color: ${props=> props.theme.text};
+  }
 `;
 
 const TableBody = styled.tbody`
@@ -176,15 +180,12 @@ const ButtonSidebar = styled.div`
   right: 0; 
   display: flex;
   flex-direction: column;
-  background: #ffffff;
+  background: ${props=> props.theme.componentBackground};
   box-shadow: -2px 0px 4px rgba(0, 0, 0, 0.1); 
-  border-bottom: 1px solid #e0e0e0;
-
+  border-bottom: 1px solid ${props=>props.theme.line};
 `;
 
 const SidebarButton = styled(NavLink)`
-  background-color: #fff;
-  color: #575757;
   padding: 6px 10px;
   border: 3px solid #575757;
   border-radius: 5px;
@@ -194,7 +195,8 @@ const SidebarButton = styled(NavLink)`
   font-size: 14px;
   font-weight: 500;
   transition: 0.2s ease-in-out;
-
+  background-color: ${props=> props.theme.componentBackground};
+  color: ${props=> props.theme.text};
 
   &:hover{
     background-color: #575757;
@@ -216,8 +218,9 @@ const KontDown = styled.div`
 const InputForecast = styled.input`
   border: 1px solid #e9e9e9;
   border-radius: 4px;
+  color:  ${props=> props.theme.text};
+  background: ${props=> props.theme.InputText};
   font-size: 14px;
-  background: #f7f8ff;
   outline: none;
   transition: border-color 0.3s ease;
   height: 35px;

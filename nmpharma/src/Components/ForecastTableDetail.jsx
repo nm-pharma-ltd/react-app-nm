@@ -92,14 +92,14 @@ const TableElement = styled.table`
 `;
 
 const TableHead = styled.thead`
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid ${props=>props.theme.line};
   text-wrap: nowrap;
 
 `;
 
 const TableCell = styled.td`
   padding: 10px;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid ${props=>props.theme.line};
   text-align: ${props => (props.align === 'right' ? 'right' : props.align === 'center' ? 'center' : 'left')};
 `;
 
@@ -132,14 +132,15 @@ const KontDown = styled.div`
   justify-content: space-between;
   width: 75px;
   font-weight: 600;
-  color: #313131;
+  color: ${props=> props.theme.text};
 `;
 
 const InputForecast = styled.input`
   border: 1px solid #e9e9e9;
   border-radius: 4px;
   font-size: 14px;
-  background: #f7f8ff;
+  color:  ${props=> props.theme.text};
+  background: ${props=> props.theme.InputText};
   outline: none;
   transition: border-color 0.3s ease;
   height: 35px;

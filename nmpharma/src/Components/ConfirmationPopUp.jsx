@@ -32,7 +32,7 @@ const PopupContainer = styled.div`
   `;
 
 const PopupContent = styled.div`
-    background-color: #fff;
+    background-color: ${props =>props.theme.componentBackground};
     border-radius: 20px;
     padding: 20px;
     width: 500px;

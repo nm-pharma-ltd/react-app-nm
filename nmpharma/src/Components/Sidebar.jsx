@@ -87,11 +87,9 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
         </MenuItemIcon>
         Log out
       </MenuItem2>
-      {window.innerWidth < 1024 && (
         <ToggleSidebarButton onClick={toggleSidebar}>
           {isSidebarOpen ? <FaAngleLeft color='#737373' /> : <FaAngleRight color='#737373' />}
         </ToggleSidebarButton>
-      )}
     </StyledSidebar>
   );
 }
@@ -155,7 +153,7 @@ const MenuHeading = styled.div`
   text-transform: uppercase;
 
   &.space {
-    margin-top: 20px;
+    margin-top: 15px;
   }
 `;
 

@@ -107,7 +107,7 @@ const CardContent = styled.div`
 const CardTitle = styled.h3`
   margin: 0;
   font-size: 16px;
-  color: ${(props) => props.textColor || '#808080'};
+  color: ${props=> props.theme.textCard};
   font-weight: 500;
  
   @media (max-width: 1024px){

@@ -66,7 +66,7 @@ const TeamDetails = () => {
         {teamMembers.map((member, index) => (
           <TeamMemberCard key={index}>
             <Avatar>
-              <FaUserCircle size={75} color="#fff" />
+              <ProfilePic size={75} />
             </Avatar>
             <MemberName>{member.name}</MemberName>
             <MemberRole>{member.role}</MemberRole>
@@ -87,6 +87,10 @@ const TeamDetails = () => {
   );
 };
 
+const ProfilePic = styled(FaUserCircle)`
+  color: ${props=> props.theme.componentBackground};
+`
+
 const TeamsContainerM = styled.div`
   margin-top: 20px;
   display: flex;
@@ -105,7 +109,7 @@ const TeamsContainer = styled.div`
 `;
 
 const TeamMemberCard = styled.div`
-  background-color: #fff;
+  background-color: ${props=> props.theme.componentBackground};
   border-radius: 20px;
   padding: 20px;
   width: calc(33% - 20px);

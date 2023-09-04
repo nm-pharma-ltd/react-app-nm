@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect } from "react";
 import styled from "styled-components";
-import { FaTimes } from "react-icons/fa";
+import { FaTimes, FaUserCircle } from "react-icons/fa";
 import { FaCirclePlus } from "react-icons/fa6";
 import { BsPersonCircle } from "react-icons/bs";
 import { IconLink } from "../Pages/Pharmacies";
@@ -87,7 +87,7 @@ const ChatBox = () => {
           <MessageHeader>
             <AvatarDiv>
               <Avatar>
-                <UserLogo />
+                <UserLogo size={40} />
               </Avatar>
               <UserName>{message.username}</UserName>
             </AvatarDiv>
@@ -102,8 +102,8 @@ const ChatBox = () => {
   );
 };
 
-const UserLogo = styled(BsPersonCircle)`
-  font-size: 2rem;
+const UserLogo = styled(FaUserCircle)`
+  color: ${props=> props.theme.componentBackground};
 `;
 
 const BoxChat = styled.div`
@@ -129,7 +129,7 @@ const ChatBoxWrapper = styled.div`
 const MessageContainer = styled.div`
   display: flex;
   flex-direction: column;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid ${props=>props.theme.line};
   padding: 15px 0;
 `;
 
@@ -138,15 +138,20 @@ const MessageHeader = styled.div`
   align-items: center;
 `;
 
+
 const Avatar = styled.div`
-  width: 30px;
-  height: 30px;
-  min-width: 30px;
-  min-height: 30px;
-  border-radius: 50%;
-  background-color: #fff;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+  border-radius: 100%;
+  background-color: #aaaaaa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin-right: 1em;
 `;
+
 
 const UserName = styled.span`
   font-size: 14px;
