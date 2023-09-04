@@ -14,6 +14,8 @@ export const lightTheme = {
     textAmount: "#272424",
     line: "#ddddddad",
     FormH1: "#222",
+    UnderlineH: "#5b5b5b",
+    inc: "#284671",
 };
 
 export const darkTheme = {
@@ -34,4 +36,6 @@ export const darkTheme = {
     textAmount: "#ffffff",
     line: "#454545",
     FormH1: "#e8e8e8",
+    UnderlineH: "#c9c0c0",
+    inc: "#bdd9ff",
 };

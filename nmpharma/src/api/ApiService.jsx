@@ -15,9 +15,9 @@ const ApiService = {
   },
 
   //POST
-  post: async (endpoint, data, headers) => {
+  post: async (endpoint, data, headers_data) => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/${endpoint}`, data, { headers });
+      const response = await axios.post(`${API_BASE_URL}/${endpoint}`, data, { headers: headers_data });
       return response.data;
     } catch (error) {
       throw error;
@@ -25,9 +25,9 @@ const ApiService = {
   },
 
   // DELETE
-  delete: async (endpoint, headers) => {
+  delete: async (endpoint, headers_data) => {
     try {
-      const response = await axios.delete(`${API_BASE_URL}/${endpoint}`, { headers });
+      const response = await axios.delete(`${API_BASE_URL}/${endpoint}`, { headers: headers_data });
       return response.data;
     } catch (error) {
       throw error;

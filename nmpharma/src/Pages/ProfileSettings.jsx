@@ -158,13 +158,14 @@ const ProfileSettingsContainer = styled.div`
 
 const Input = styled.input`
   padding: 10px;
-  border: 1px solid #e9e9e9;
+  border: 1px solid ${props => props.theme.nav};;
   border-radius: 4px;
   text-align: right;
   font-size: 16px;
-  background: #f7f8ff;
+  background-color: ${props => props.theme.nav};
   outline: none;
   transition: border-color 0.3s ease;
+  color: ${props=> props.theme.text};
 
   &:focus{
     border-color: #949494;

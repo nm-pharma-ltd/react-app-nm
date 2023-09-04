@@ -20,7 +20,6 @@ export default function Pharmacies() {
   useEffect(() => {
     async function fetchData() {
       try {
-        console.log(store.user.token)
         setIsLoadingProducts(true);
         const productsData = await ApiService.get("products/sales/2023/8", {"Authorization": "Bearer " + store.user.token });
 
@@ -35,7 +34,6 @@ export default function Pharmacies() {
 
         // Set only the top 10 products
         setProducts(processedData.slice(0, 10));
-        console.log(processedData.slice(0, 10));
         setIsLoadingProducts(false);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -52,7 +50,7 @@ export default function Pharmacies() {
     async function fetchPharmacyData() {
       try {
         setIsLoadingPharmacies(true);
-        const fetchedData = await ApiService.get("clients/sales/2023/8");
+        const fetchedData = await ApiService.get("clients/sales/2023/8", {"Authorization": "Bearer " + store.user.token });
 
         const sortedPharmacies = fetchedData.sort(
           (a, b) => b.monthlySale - a.monthlySale
@@ -140,6 +138,7 @@ export default function Pharmacies() {
           <Table
             title="Product Profit & Quantity"
             subtitle="TOP 10"
+            details="View details"
             viewDetailsLink="/pharmacies/productdetails"
             width="47%"
             columns={[
@@ -214,6 +213,7 @@ export default function Pharmacies() {
           <Table
             title="Pharmacies (Clients)"
             subtitle="TOP 10"
+            details="View details"
             viewDetailsLink="/pharmacies/clientdetails"
             width="47%"
             columns={[

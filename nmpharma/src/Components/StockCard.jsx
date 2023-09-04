@@ -133,6 +133,111 @@ const StockCard = () => {
                     <ForeButton to='/stock/forecastdetails'>More</ForeButton>
                   </TableCell>
                 </TableRow>
+                <TableRow>
+                  <TableCellCode align='center'>NMP019</TableCellCode>
+                  <TableCell align='center'>AMLODIPINE TEVA 10 MG</TableCell>
+                  <TableCellInc align='center' onClick={() => setIncoming(incoming + 1)}>
+                    + {incoming}
+                  </TableCellInc>
+                  <TableCellOrder align='center' onClick={() => setOnOrder(onOrder + 1)}>
+                    + {onOrder}
+                  </TableCellOrder>
+                  <TableCellTotal align='center'>
+                    {totalInStock}
+                  </TableCellTotal>
+                  <TableCellTotal
+                    color={handleColorChange()}
+                    align='center'
+                  >
+                    {monthsOfStock.toFixed(2)}
+                  </TableCellTotal>
+
+                  <TableCell align='center'>
+                    <UniInput>
+                      <InputStock
+                        placeholder='300'
+                        type="number"
+                        name='calculations'
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
+                      />
+                      <CalcButton onClick={handleCalculation}>=</CalcButton>
+                    </UniInput>
+                  </TableCell>
+                  <TableCell >
+                    <ForeButton to='/stock/forecastdetails'>More</ForeButton>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCellCode align='center'>NMP019</TableCellCode>
+                  <TableCell align='center'>AMLODIPINE TEVA 10 MG</TableCell>
+                  <TableCellInc align='center' onClick={() => setIncoming(incoming + 1)}>
+                    + {incoming}
+                  </TableCellInc>
+                  <TableCellOrder align='center' onClick={() => setOnOrder(onOrder + 1)}>
+                    + {onOrder}
+                  </TableCellOrder>
+                  <TableCellTotal align='center'>
+                    {totalInStock}
+                  </TableCellTotal>
+                  <TableCellTotal
+                    color={handleColorChange()}
+                    align='center'
+                  >
+                    {monthsOfStock.toFixed(2)}
+                  </TableCellTotal>
+
+                  <TableCell align='center'>
+                    <UniInput>
+                      <InputStock
+                        placeholder='300'
+                        type="number"
+                        name='calculations'
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
+                      />
+                      <CalcButton onClick={handleCalculation}>=</CalcButton>
+                    </UniInput>
+                  </TableCell>
+                  <TableCell >
+                    <ForeButton to='/stock/forecastdetails'>More</ForeButton>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCellCode align='center'>NMP019</TableCellCode>
+                  <TableCell align='center'>AMLODIPINE TEVA 10 MG</TableCell>
+                  <TableCellInc align='center' onClick={() => setIncoming(incoming + 1)}>
+                    + {incoming}
+                  </TableCellInc>
+                  <TableCellOrder align='center' onClick={() => setOnOrder(onOrder + 1)}>
+                    + {onOrder}
+                  </TableCellOrder>
+                  <TableCellTotal align='center'>
+                    {totalInStock}
+                  </TableCellTotal>
+                  <TableCellTotal
+                    color={handleColorChange()}
+                    align='center'
+                  >
+                    {monthsOfStock.toFixed(2)}
+                  </TableCellTotal>
+
+                  <TableCell align='center'>
+                    <UniInput>
+                      <InputStock
+                        placeholder='300'
+                        type="number"
+                        name='calculations'
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
+                      />
+                      <CalcButton onClick={handleCalculation}>=</CalcButton>
+                    </UniInput>
+                  </TableCell>
+                  <TableCell >
+                    <ForeButton to='/stock/forecastdetails'>More</ForeButton>
+                  </TableCell>
+                </TableRow>
                 {/* Add more data rows here */}
               </tbody>
             </TableContainer>
@@ -172,13 +277,13 @@ export const TableCellCode = styled.td`
 export const TableCellOrder = styled.td`
   padding: 10px;
   border-bottom: 1px solid ${props=>props.theme.line};
-  color: #5b5b5b;
+  color: ${props=>props.theme.menuHeading};
   font-weight: 700;
   text-align: ${props => (props.align === 'right' ? 'right' : props.align === 'center' ? 'center' : 'left')};
 `;
 export const TableCellInc = styled.td`
   padding: 10px;
-  color: #284671;
+  color: ${props=>props.theme.inc};
   border-bottom: 1px solid ${props=>props.theme.line};
   font-weight: 700;
   text-align: ${props => (props.align === 'right' ? 'right' : props.align === 'center' ? 'center' : 'left')};
@@ -201,7 +306,7 @@ const UniInput = styled.div`
   margin: 0 auto;
 `
 export const InputStock = styled.input`
-    border: 1px solid #e9e9e9;
+    border: 1px solid ${props=>props.theme.nav};
     border-radius: 4px;
     font-size: 14px;
     color:  ${props=> props.theme.text};
@@ -211,11 +316,7 @@ export const InputStock = styled.input`
     height: 40px;
     width: 55px;
     text-align: center;
-    onChange={(e) => setInputValue(e.target.value)}
-
-  &:focus {
-    border-color: #949494;
-  }
+    onChange={(e) => setInputValue(e.target.value)};
 `;
 
 const CardContainer = styled.div`
@@ -283,11 +384,7 @@ const TableHead = styled.thead`
 
 
 
-const TableRow = styled.tr`
-  &:nth-child(even) {
-    background-color: #f5f5f5;
-  }
-`;
+const TableRow = styled.tr``;
 
 
 

@@ -71,10 +71,10 @@ const ButtonC = styled.button`
     margin-left: 10px;
     border: 3px solid #737373;
     border-radius: 5px;
-    color: #5e5e5e;
+    color: ${props=>props.theme.text};
     cursor: pointer;
     font-weight: 500;
-    background-color: #ffffff;
+    background-color: ${props=>props.theme.componentBackground};
     transition: all 0.2s ease-in-out;
 
 &:hover {

@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import styled from "styled-components"; 
 import { NavLink } from "react-router-dom";
 import Table from "../Components/Table";
 import ApiService from "../api/ApiService";
 import { Skeleton } from "@mui/material";
 import { FiSearch } from "react-icons/fi"; 
+import { Context, SIGNEDUSER  } from '../providers/provider';
 
 export default function ClientDetails() {
 
@@ -12,13 +13,13 @@ export default function ClientDetails() {
   const [searchTerm, setSearchTerm] = useState(""); 
   const [pharmaciesData, setPharmaciesData] = useState([]);
   const [filteredPharmacies, setFilteredPharmacies] = useState([]);
-
+  const [store, dispatch] = useContext(Context);
 
 
   useEffect(() => {
     async function fetchPharmacyData() {
       try {
-        const fetchedData = await ApiService.get("clients/sales/2023/1");
+        const fetchedData = await ApiService.get("clients/sales/2023/8", {"Authorization": "Bearer " + store.user.token });
         const sortedPharmacies = fetchedData.sort((a, b) => b.monthlySale - a.monthlySale);
         const processedPharmacies = sortedPharmacies.map((pharmacy, index) => ({
           rank: index + 1,
@@ -127,28 +128,23 @@ const Highlight0 = styled.mark`
 
 
 export const InputSeacrh = styled.input`
-  width: 100%;
-  padding: 10px;
+  padding: 9px;
   border: none;
   border-radius: 10px;
   font-size: 14px;
-  background: ${props=> props.theme.nav};
+  background: ${props=> props.theme.componentBackground};
   outline: none;
   transition: all 0.2s ease-in-out;
   color: ${props=> props.theme.text};
-
-  &:focus {
-    background: ${props=> props.theme.componentBackground};
-  }
 `;
 
 export const SearchBarWrapper = styled.div`
   display: flex;
   align-items: center;
   margin-left: 20px;
-  padding: 5px 10px;
+  padding: 5px 9px;
   background: ${props=> props.theme.componentBackground};
-  border-radius: 20px;
+  border-radius: 12px;
 
   svg {
     color: #888;

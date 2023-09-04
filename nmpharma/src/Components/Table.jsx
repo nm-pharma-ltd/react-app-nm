@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { NavLink, useNavigate } from "react-router-dom";
 
-export default function Table({ title, subtitle, viewDetailsLink, width, columns, data }) {
+export default function Table({ title, subtitle, viewDetailsLink, width, columns, data, details }) {
 
     const navigate = useNavigate();
 
@@ -31,7 +31,7 @@ export default function Table({ title, subtitle, viewDetailsLink, width, columns
         <Card width={width}>
             <CardHeader>
                 <Title>{title}</Title>
-                <ViewDetailsLink to={viewDetailsLink}>View details</ViewDetailsLink>
+                <ViewDetailsLink to={viewDetailsLink}>{details}</ViewDetailsLink>
             </CardHeader>
             <Subtitle>{subtitle}</Subtitle>
             <TableContainer>

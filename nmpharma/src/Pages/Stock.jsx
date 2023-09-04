@@ -22,7 +22,7 @@ export default function Stock() {
 }
 
 const UnderlineH = styled.h3`
-  color: #5b5b5b;
+  color: ${props=> props.theme.UnderlineH};
 `
 
 export const Kontainer = styled.div`

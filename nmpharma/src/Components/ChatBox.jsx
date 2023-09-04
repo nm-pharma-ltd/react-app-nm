@@ -16,7 +16,7 @@ const ChatBox = () => {
     setInputValue(e.target.value);
   };
   const fetchComms = async () => {
-      const fetchedData = await ApiService.get("comments"); // Získání aktualizovaných zpráv ze serveru
+      const fetchedData = await ApiService.get("comments", {"Authorization": "Bearer " + store.user.token }); // Získání aktualizovaných zpráv ze serveru
       setMessages(fetchedData);
   }
 
@@ -31,7 +31,7 @@ const ChatBox = () => {
 
       try {
         // Odeslat novou zprávu na server
-        await ApiService.post("comments", newMessage);
+        await ApiService.post("comments", newMessage, {"Authorization": "Bearer " + store.user.token });
 
         await fetchComms();
 
@@ -52,7 +52,7 @@ const ChatBox = () => {
   const handleRemoveMessage = async (id) => {
     try {
       // Odstranit zprávu z DB
-      await ApiService.delete(`comments/${id}`);
+      await ApiService.delete(`comments/${id}`, {"Authorization": "Bearer " + store.user.token });
 
       // Načíst aktualizované zprávy ze serveru
       await fetchComms()

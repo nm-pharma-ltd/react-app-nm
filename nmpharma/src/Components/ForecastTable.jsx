@@ -216,7 +216,7 @@ const KontDown = styled.div`
 `;
 
 const InputForecast = styled.input`
-  border: 1px solid #e9e9e9;
+  border: 1px solid ${props=> props.theme.nav};;
   border-radius: 4px;
   color:  ${props=> props.theme.text};
   background: ${props=> props.theme.InputText};

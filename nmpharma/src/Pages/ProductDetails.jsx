@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { styled } from "styled-components";
 import Table from "../Components/Table";
 import { GoBackButton, InputSeacrh, SearchBarWrapper } from "./ClientsDetails";
@@ -6,6 +6,7 @@ import ApiService from "../api/ApiService";
 import { Skeleton } from "@mui/material";
 import { FiSearch } from 'react-icons/fi';
 import { Input } from "./Register";
+import { Context, SIGNEDUSER  } from '../providers/provider';
 
 
 export default function ProductDetails() {
@@ -13,11 +14,12 @@ export default function ProductDetails() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredProducts, setFilteredProducts] = useState([]);
+  const [store, dispatch] = useContext(Context);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const productsData = await ApiService.get("products/sales/2023/1");
+        const productsData = await ApiService.get("products/sales/2023/8", {"Authorization": "Bearer " + store.user.token });
 
         // Ensure data is sorted by rank
         const sortedData = productsData.sort((a, b) => a.rank - b.rank);
@@ -110,7 +112,7 @@ export default function ProductDetails() {
             <Table
               title="Product Profit & Quantity"
               subtitle="TOP 82"
-              viewDetailsLink="/pharmacies/productdetails"
+              viewDetailsLink={false}
               width="98%"
               columns={[
                 { label: 'RANK', field: 'rank', align: 'left' },
@@ -132,7 +134,7 @@ export default function ProductDetails() {
 }
 
 const Highlight0 = styled.mark`
-  background-color: #d54529;  
+  background-color: #edcd84;  
   color: black; 
 `;
 
