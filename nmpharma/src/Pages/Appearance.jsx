@@ -1,28 +1,36 @@
 import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Context, TOGGLE_THEME } from '../providers/provider';
+import { Context, TOGGLE_HIDE_TEAMS, TOGGLE_ROUNDED_NAV, TOGGLE_THEME } from '../providers/provider';
 
 export const Appearance = () => {
   const [store, dispatch] = useContext(Context);
 
   // Initialize from global state
   const [darkMode, setDarkMode] = useState(store.theme === "dark");
-  const [hideTeams, setHideTeams] = useState(false);
-  const [roundedNav, setRoundedNav] = useState(false);
+  const [hideTeams, setHideTeams] = useState(store.hideTeams);
+  const [roundedNav, setRoundedNav] = useState(store.roundedNav === true);
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
-    dispatch({ type: TOGGLE_THEME });  // Toggle theme in global context
+    dispatch({ type: TOGGLE_THEME }); 
   };
 
-  const toggleTeams = () => setHideTeams(!hideTeams);
-  const toggleNav = () => setRoundedNav(!roundedNav);
+  const toggleTeams = () => {
+    setHideTeams(!hideTeams);
+    dispatch({ type: TOGGLE_HIDE_TEAMS });
+  };
 
-  // When the global state's theme changes, update the local darkMode state
+  const toggleNav = () => {
+    setRoundedNav(!roundedNav);
+    dispatch({ type: TOGGLE_ROUNDED_NAV });
+  };
+
+  // When the global state's theme or other settings change, update the local states
   useEffect(() => {
-    setDarkMode(store.theme === "dark")
-    console.log(store.theme);
-  }, [store.theme]);
+    setDarkMode(store.theme === "dark");
+    setHideTeams(store.hideTeams);
+    setRoundedNav(store.roundedNav);
+  }, [store.theme, store.hideTeams, store.roundedNav]);
 
   return (
     <>
@@ -47,7 +55,7 @@ export const Appearance = () => {
         <SettingItem>
           <SettingLabel>Rounded navigation</SettingLabel>
           <Switch>
-            <Checkbox type="checkbox" checked={roundedNav} onChange={toggleNav} />
+            <Checkbox type="checkbox" checked={store.roundedNav} onChange={toggleNav} />
             <Slider />
           </Switch>
         </SettingItem>

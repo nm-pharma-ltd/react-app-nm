@@ -9,17 +9,17 @@ import { NavLink } from 'react-router-dom';
 import { Context, LOGOUT } from '../providers/provider';
 
 export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
-  const [, dispatch] = useContext(Context);
+  const [store, dispatch] = useContext(Context);
 
   const handleLogout = () => {
     dispatch({ type: LOGOUT });
   };
-  
+
   const theme = useContext(ThemeContext);
   const logoSrc = theme.mode === 'dark' ? LogoWhite : LogoBlack;
 
   return (
-    <StyledSidebar open={isSidebarOpen}>
+    <StyledSidebar open={isSidebarOpen} roundedNav={store.roundedNav}>
       <LogoContainer>
         <Logo src={logoSrc} alt="Company Logo" />
       </LogoContainer>
@@ -55,26 +55,30 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
         Notifications
         <NotificationPop>4</NotificationPop>
       </MenuItem>
-      <MenuHeading className="space">Teams</MenuHeading>
-      <MenuItem2 to="/targets/teamdetails/0">
-        <MenuItemIcon>
-          <TeamBullet1 />
-        </MenuItemIcon>
-        Private sales
-      </MenuItem2>
-      <MenuItem2 to="/targets/teamdetails/1">
-        <MenuItemIcon>
-          <TeamBullet2 />
-        </MenuItemIcon>
-        Goverment sales
-      </MenuItem2>
-      <MenuItem2 to="/targets/teamdetails/2">
-        <MenuItemIcon>
-          <TeamBullet3 />
-        </MenuItemIcon>
-        Company sales
-      </MenuItem2>
-      <MenuHeading />
+      {!store.hideTeams && (
+        <>
+          <MenuHeading className="space">Teams</MenuHeading>
+          <MenuItem2 to="/targets/teamdetails/0">
+            <MenuItemIcon>
+              <TeamBullet1 />
+            </MenuItemIcon>
+            Private sales
+          </MenuItem2>
+          <MenuItem2 to="/targets/teamdetails/1">
+            <MenuItemIcon>
+              <TeamBullet2 />
+            </MenuItemIcon>
+            Goverment sales
+          </MenuItem2>
+          <MenuItem2 to="/targets/teamdetails/2">
+            <MenuItemIcon>
+              <TeamBullet3 />
+            </MenuItemIcon>
+            Company sales
+          </MenuItem2>
+          <MenuHeading />
+        </>
+      )}
       <MenuItem2 to="/settings">
         <MenuItemIcon>
           <FaCog />
@@ -87,9 +91,9 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
         </MenuItemIcon>
         Log out
       </MenuItem2>
-        <ToggleSidebarButton onClick={toggleSidebar}>
-          {isSidebarOpen ? <FaAngleLeft color='#737373' /> : <FaAngleRight color='#737373' />}
-        </ToggleSidebarButton>
+      <ToggleSidebarButton onClick={toggleSidebar}>
+        {isSidebarOpen ? <FaAngleLeft color='#737373' /> : <FaAngleRight color='#737373' />}
+      </ToggleSidebarButton>
     </StyledSidebar>
   );
 }
@@ -123,7 +127,7 @@ const StyledSidebar = styled.div`
   background-color: ${props => props.theme.componentBackground};
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   overflow-y: auto;
-  border-radius: 0 20px 20px 0 ;
+  border-radius: 0 ${props => (props.roundedNav ? '20px' : '0')} ${props => (props.roundedNav ? '20px' : '0')} 0;
   z-index: 999;
   position: fixed;
   top: 0;
@@ -203,7 +207,7 @@ const MenuItem2 = styled(NavLink)`
   transition: background-color 0.3s;
   border-radius: 10px;
   font-size: 14px;
-  margin: 0 20px;
+  margin: 0 24px;
   text-decoration: none;
 
   &:hover {

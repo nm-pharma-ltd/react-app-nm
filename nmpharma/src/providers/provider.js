@@ -12,30 +12,28 @@ export const SIGNEDUSER = "SIGNED_USER";
 export const LOGOUT = "LOGOUT";
 export const USER_ID = "USER_ID"
 export const TOGGLE_THEME = "TOGGLE_THEME";
+export const TOGGLE_HIDE_TEAMS = "TOGGLE_HIDE_TEAMS";
+export const TOGGLE_ROUNDED_NAV = "TOGGLE_ROUNDED_NAV";
 
 // Výchozí stav pro globální kontext
-const initialState = { messages: [], user: "", theme: "light" }; // Added the theme property
-
+const initialState = { messages: [], user: "", theme: "light", hideTeams: false, roundedNav: true };
 // Reduktor pro změnu stavu dat
 const dataReducer = (state, action) => {
   switch (action.type) {
     case SIGNEDUSER: {
-      return { 
-        ...state, 
-        user: action.payload.response,  
+      return {
+        ...state,
+        user: action.payload.response,
       };
     }
     case NOTES: {
-      return { 
-        ...state, 
-        messages: action.payload.messages 
+      return {
+        ...state,
+        messages: action.payload.messages
       };
     }
     case LOGOUT: {
-      return {
-        ...state,
-        user: "", // Reset the user to its initial state.
-      };
+        return initialState;
     }
     case TOGGLE_THEME: {
       return {
@@ -43,6 +41,16 @@ const dataReducer = (state, action) => {
         theme: state.theme === "light" ? "dark" : "light", // Toggle the theme
       };
     }
+    case TOGGLE_HIDE_TEAMS:
+      return {
+        ...state,
+        hideTeams: !state.hideTeams,
+      };
+    case TOGGLE_ROUNDED_NAV:
+      return {
+        ...state,
+        roundedNav: !state.roundedNav,
+      };
     default: {
       // In the case of other actions, we return the unchanged state
       return state;
@@ -57,7 +65,7 @@ export const Context = createContext();
 // Komponenta Provider poskytující globální stav
 export const Provider = ({ children }) => {
   // Načtení dat z lokálního úložiště, nebo použití výchozího stavu
-// Initial data from local storage
+  // Initial data from local storage
   let storedData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_ID)) || initialState;
 
   // Použití reduktoru pro správu stavu a získání stavu a dispečera
@@ -68,6 +76,7 @@ export const Provider = ({ children }) => {
   // Efekt pro uložení aktuálního stavu do lokálního úložiště při změně stavu zpráv
   useEffect(() => {
     localStorage.setItem(LOCAL_STORAGE_ID, JSON.stringify(store));
+    console.log(store.roundedNav);
   }, [store]);
 
   return (
