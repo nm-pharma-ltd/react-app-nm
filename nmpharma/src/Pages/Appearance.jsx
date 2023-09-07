@@ -87,6 +87,7 @@ const SettingItem = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 20px 0;
+  text-wrap: nowrap;
   border-bottom: 1px solid ${props=>props.theme.line};
 
 
@@ -98,6 +99,7 @@ const SettingLabel = styled.span`
 `;
 
 const Switch = styled.label`
+  margin-left: 5px;
   position: relative;
   display: inline-block;
   width: 48px;      // Smaller width

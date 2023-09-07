@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FaTimes } from 'react-icons/fa';
 import { FaCircleXmark } from 'react-icons/fa6';
-
 
 const AlertWrapper = styled.div`
   display: flex;
@@ -13,11 +12,9 @@ const AlertWrapper = styled.div`
   padding: 10px;
   border-radius: 10px;
   margin: 20px 20px 20px 0;
-  opacity: ${({ dismissed }) => (dismissed ? 0 : 1)};
-  transition: opacity 0.3s ease;
   align-content: center;
+  z-index: 9999;
 `;
-
 
 const Boxik = styled.div`
   background: #dc3545;
@@ -31,7 +28,6 @@ const Boxik = styled.div`
   min-width: 33px;
   min-height: 33px;
 `;
-
 
 const DangerBadge = styled.span`
   font-weight: bold;
@@ -49,31 +45,25 @@ const CloseIcon = styled(FaTimes)`
   cursor: pointer;
 `;
 
-export default function DangerAlert() {
-    const [dismissed, setDismissed] = useState(false);
-  
-    useEffect(() => {
-      let timeout;
-      if (dismissed) {
-        timeout = setTimeout(() => {
-          setDismissed(false);
-        }, 2000); // Delay before resetting dismissed state to show the fading effect
-      }
-  
-      return () => clearTimeout(timeout);
-    }, [dismissed]);
-  
-    const dismissAlert = () => {
-      setDismissed(true);
-    };
-  
-    return (
-      <AlertWrapper dismissed={dismissed ? 'true' : undefined}>
+export default function DangerAlert({ message }) {
+  const [dismissed, setDismissed] = useState(false);
+
+  const dismissAlert = () => {
+    setDismissed(true);
+  };
+
+  // If the alert is dismissed, we don't render it at all
+  if (dismissed) {
+    return null;
+  }
+
+  return (
+    <AlertWrapper>
       <Boxik>
         <DangerIcon />
       </Boxik>
-      <DangerBadge>Danger</DangerBadge>
-      Your danger message goes here!
+      <DangerBadge>Warning</DangerBadge>
+      {message}
       <CloseIcon onClick={dismissAlert} />
     </AlertWrapper>
   );

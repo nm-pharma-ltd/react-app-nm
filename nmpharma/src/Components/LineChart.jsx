@@ -41,7 +41,7 @@ const LineChart = () => {
 };
 
 const ChartContainer = styled.div`
-  background-color: #ffffff;
+  background-color: ${props=> props.theme.componentBackground};;
   border-radius: 20px;
   padding: 20px;
   

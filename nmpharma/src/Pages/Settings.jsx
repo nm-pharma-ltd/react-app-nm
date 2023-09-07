@@ -52,9 +52,9 @@ export default function Settings() {
           <MenuItem isactive={activeLink === 'appearance'} onClick={() => setActiveLink('appearance')}>
             Appearance
           </MenuItem>
-          <MenuItem isactive={activeLink === 'notifications'} onClick={() => setActiveLink('notifications')}>
+          <MenuItemN>
             Notifications
-          </MenuItem>
+          </MenuItemN>
           <MenuItemDelete isactive={activeLink === 'delete-profile'} onClick={handleDeleteProfile}>
             Delete Profile
           </MenuItemDelete>
@@ -105,6 +105,36 @@ const MenuItem = styled.div`
   font-size: 14px;
   text-decoration: none;
   transition: 0.15s all ease-in-out;
+  text-wrap: nowrap;
+
+
+  ${props => props.isactive && `
+    background-color: ${props.theme.nav};
+    color: ${props.theme.colorNavLink};
+    font-weight: 500;
+  `}
+  
+  &:hover {
+    background-color: ${props => props.theme.nav};
+    color: ${props => props.theme.colorNavLink};
+  }
+`;
+
+
+const MenuItemN = styled.div`
+  padding: 13px 25px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: #b1b1b1;
+  border-radius: 10px;
+  border: 2px  dashed ${props => props.theme.nav}; 
+  cursor: not-allowed;
+  font-size: 14px;
+  text-decoration: none;
+  transition: 0.15s all ease-in-out;
+  text-wrap: nowrap;
+
 
   ${props => props.isactive && `
     background-color: ${props.theme.nav};
@@ -127,6 +157,7 @@ const MenuItemDelete = styled.div`
   border-radius: 10px;
   font-size: 14px;
   font-weight: 600;
+  text-wrap: nowrap;
   text-decoration: none;
   transition: 0.15s all ease-in-out;
 

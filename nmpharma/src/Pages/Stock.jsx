@@ -21,7 +21,7 @@ export default function Stock() {
 
 }
 
-const UnderlineH = styled.h3`
+export const UnderlineH = styled.h3`
   color: ${props=> props.theme.UnderlineH};
 `
 

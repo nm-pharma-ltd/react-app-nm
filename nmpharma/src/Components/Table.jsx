@@ -4,52 +4,57 @@ import { NavLink, useNavigate } from "react-router-dom";
 
 export default function Table({ title, subtitle, viewDetailsLink, width, columns, data, details }) {
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const generateRows = () => {
-        return data.map((item, index) => (
-            <TableRow key={index} onClick={() => navigate(`/pharmacies/product${item.rank}`)}>
-                {columns.map((column, colIndex) => (
-                    <TableCell key={colIndex} align={column.align}>
-                        {column.field === 'monthlyProfit' ? (
-                            Number(item[column.field]) >= 0 ? (
-                                <GreenBox>{`${item[column.field]} €`}</GreenBox>
-                            ) : (
-                                <RedBox>{`${item[column.field]} €`}</RedBox>
-                            )
-                        ) : (
-                            <span>{item[column.field]}</span>
-                        )}
-                    </TableCell>
-                ))}
+
+  const generateRows = () => {
+    return data.map((item, index) => (
+      <TableRow key={index} onClick={() => navigate(`/pharmacies/products/${item.productCode}`)}>
+        {columns.map((column, colIndex) => (
+          <TableCell key={colIndex} align={column.align}>
+            {column.field === 'productName' ? (
+              <ProductLink to={`/pharmacies/products/${item.id}`}>
+                {item[column.field]}
+              </ProductLink>
+            ) : column.field === 'monthlyProfit' ? (
+              Number(item[column.field]) >= 0 ? (
+                <GreenBox>{`${item[column.field]} €`}</GreenBox>
+              ) : (
+                <RedBox>{`${item[column.field]} €`}</RedBox>
+              )
+            ) : (
+              <span>{item[column.field]}</span>
+            )}
+          </TableCell>
+        ))}
+      </TableRow>
+    ));
+  };
+
+
+  return (
+    <Card width={width}>
+      <CardHeader>
+        <Title>{title}</Title>
+        <ViewDetailsLink to={viewDetailsLink}>{details}</ViewDetailsLink>
+      </CardHeader>
+      <Subtitle>{subtitle}</Subtitle>
+      <TableContainer>
+        <TableElement>
+          <TableHead>
+            <TableRow>
+              {columns.map((column, index) => (
+                <TableHeaderCell key={index} align={column.align}>
+                  {column.label}
+                </TableHeaderCell>
+              ))}
             </TableRow>
-        ));
-    };
-
-
-    return (
-        <Card width={width}>
-            <CardHeader>
-                <Title>{title}</Title>
-                <ViewDetailsLink to={viewDetailsLink}>{details}</ViewDetailsLink>
-            </CardHeader>
-            <Subtitle>{subtitle}</Subtitle>
-            <TableContainer>
-                <TableElement>
-                    <TableHead>
-                        <TableRow>
-                            {columns.map((column, index) => (
-                                <TableHeaderCell key={index} align={column.align}>
-                                    {column.label}
-                                </TableHeaderCell>
-                            ))}
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>{generateRows()}</TableBody>
-                </TableElement>
-            </TableContainer>
-        </Card>
-    );
+          </TableHead>
+          <TableBody>{generateRows()}</TableBody>
+        </TableElement>
+      </TableContainer>
+    </Card>
+  );
 }
 
 
@@ -95,7 +100,7 @@ const TableElement = styled.table`
 `;
 
 const TableHead = styled.thead`
-  border-bottom: 1px solid ${props=>props.theme.line};
+  border-bottom: 1px solid ${props => props.theme.line};
 `;
 
 export const TableHeaderCell = styled.th`
@@ -113,7 +118,7 @@ export const TableHeaderCell = styled.th`
 
 export const TableCell = styled.td`
   padding: 10px;
-  border-bottom: 1px solid ${props=>props.theme.line};
+  border-bottom: 1px solid ${props => props.theme.line};
   text-align: ${props => (props.align === 'right' ? 'right' : props.align === 'center' ? 'center' : 'left')};
   white-space: nowrap;   // Prevents the text from wrapping onto the next line
   overflow: hidden;      // Hides any text that goes beyond the container width

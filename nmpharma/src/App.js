@@ -57,7 +57,7 @@ export default function App() {
               <Route path="/pharmacies" element={<Pharmacies />} />
               <Route path="/pharmacies/productdetails" element={<ProductDetails />} />
               <Route path="/pharmacies/clientdetails" element={<ClientDetails />} />
-              <Route path="/pharmacies/product1" element={<SingleProductDetails />} />
+              <Route path="/pharmacies/products/:productCode" element={<SingleProductDetails />} />
               <Route path="/pharmacies/pharmacy1" element={<SinglePharmacyDetails />} />
               <Route path="/stock" element={<Stock />} />
               <Route path="/stock/supplier" element={<Supplier />} />

@@ -1,13 +1,15 @@
 import React, { useContext, useState, useRef } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import styled, { ThemeContext } from 'styled-components';
+import styled, { ThemeContext, createGlobalStyle } from 'styled-components';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import LogoBlack from '../img/Logo2.png';
 import LogoWhite from '../img/Logo1.png';
 import ApiService from '../api/ApiService';
-import { Context, SIGNEDUSER  } from '../providers/provider'; 
+import { Context, SIGNEDUSER } from '../providers/provider';
+import DangerAlert from '../Components/DangerAlert';
 
 export default function Login() {
+
   const [store, dispatch] = useContext(Context);
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
@@ -16,6 +18,9 @@ export default function Login() {
   const [passwordError, setPasswordError] = useState('');
   const navigate = useNavigate();
   const formRef = useRef(null);
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
 
   const togglePasswordVisibility = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
@@ -25,6 +30,7 @@ export default function Login() {
     e.preventDefault()
     setEmailError('');
     setPasswordError('');
+    setErrorMessage('');
 
     if (email.trim() === '') {
       setEmailError('Please enter your email');
@@ -38,6 +44,7 @@ export default function Login() {
       setPasswordError('Please enter your password');
       return;
     }
+    setLoading(true); // Start the loader
 
     // Making the actual axios request
     try {
@@ -45,7 +52,7 @@ export default function Login() {
         email: email.trim(),
         password: password.trim(),
       });
-
+      setLoading(false); // Stop the loader once done
       dispatch({ type: SIGNEDUSER, payload: { response } });
       console.log(store.user.token);
       navigate('/pharmacies');
@@ -57,10 +64,17 @@ export default function Login() {
       console.log("Attempting to navigate...");
 
     } catch (error) {
+      setLoading(false); // Stop the loader in case of an error
       // Handle errors from the server, like invalid credentials
-      if (error.response && error.response.data) {
+      if (error.message.includes('net::ERR_CONNECTION')) {
+        setErrorMessage('Failed to connect. Please check your network and try again.');
+      }
+       else if (error.response && error.response.data) {
         setEmailError(error.response.data.email || '');
         setPasswordError(error.response.data.password || '');
+      }
+      else {
+        setErrorMessage('Failed to connect. Please check your network and try again.');
       }
     }
   };
@@ -75,6 +89,10 @@ export default function Login() {
 
   return (
     <Container>
+      {errorMessage && 
+      <DangerAlert message={errorMessage} />
+}
+      <GlobalStyle />
       <LoginForm ref={formRef}>
         <Logo src={logoSrc} alt="Company Logo" />
         <Title>Login to Dashboard Kit</Title>
@@ -112,12 +130,39 @@ export default function Login() {
           </EyeIconWrapper>
           {passwordError && <ErrorLabel>{passwordError}</ErrorLabel>}
         </InputLabel>
-        <Button onClick={handleLogin}>Login</Button>
+        <Button onClick={handleLogin}>
+          {loading ? <Spinner /> : "Login"}
+        </Button>
         <RegisterLink to="/Register" >New user? Register here</RegisterLink>
       </LoginForm>
     </Container>
   );
 }
+
+const Spinner = styled.div`
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top: 4px solid #fff;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
+
+const keyframes = `
+  @keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+`;
+
+const GlobalStyle = createGlobalStyle`
+  ${keyframes}
+`;
+
 // Rest of the code...
 
 const ErrorLabel = styled.p`
@@ -155,14 +200,14 @@ export const Title = styled.h2`
   margin-top: 0;
   margin-bottom: 10px;
   font-size: 24px;
-  color: ${props=>props.theme.FormH1};
+  color: ${props => props.theme.FormH1};
 `;
 
 export const Subtitle = styled.p`
   margin: 0;
   margin-bottom: 20px;
   font-size: 14px;
-  color: ${props=> props.theme.menuHeading};
+  color: ${props => props.theme.menuHeading};
 `;
 
 const InputLabel = styled.label`
@@ -171,7 +216,7 @@ const InputLabel = styled.label`
   align-items: flex-start;
   margin-bottom: 20px;
   font-size: 14px;
-  color: ${props=> props.theme.text2};
+  color: ${props => props.theme.text2};
   width: 100%;
   position: relative;
 `;
@@ -222,6 +267,7 @@ const EyeIcon = styled.span`
 
 const Button = styled.button`
   width: 100%;
+  height: 45px;
   padding: 12px;
   background-color: #da552c;
   color: #fff;
@@ -230,6 +276,7 @@ const Button = styled.button`
   font-size: 14px;
   cursor: pointer;
   transition: 0.3s ease-in;
+  position: relative;
 
   &:hover{
     background-color: #a53f20;

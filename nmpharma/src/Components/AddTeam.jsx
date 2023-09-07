@@ -5,10 +5,14 @@ import ApiService from "../api/ApiService";
 import { Context, SIGNEDUSER } from "../providers/provider";
 import { FaCheck } from "react-icons/fa";
 
-const AddTeamPopup = ({ onClose, onSave }) => {
+const AddTeamPopup = ({ onClose, onSave, fetchData }) => {
   const [teamName, setTeamName] = useState("");
+  const [yearGoal, setYearGoal] = useState("");
   const [reps, setReps] = useState([]);
   const [store, dispatch] = useContext(Context);
+
+  const date = new Date();
+  let year = date.getFullYear();
 
   useEffect(() => {
     fetchReps();
@@ -16,12 +20,16 @@ const AddTeamPopup = ({ onClose, onSave }) => {
 
   const fetchReps = async () => {
     try {
-      const fetchedData = await ApiService.get("teams/reps", { "Authorization": "Bearer " + store.user.token });
+      const fetchedData = await ApiService.get("teams/reps", {
+        Authorization: "Bearer " + store.user.token,
+      });
 
-      // Filtrujeme zaměstnance s "teamId": null
-      const repsWithNullTeamId = fetchedData.filter((rep) => rep.teamId === null);
+      // "teamId": null filter
+      const repsWithNullTeamId = fetchedData.filter(
+        (rep) => rep.teamId === null
+      );
 
-      // Přidáme do načtených dat vlastnost pro označení členů týmu
+      // repsWithCheck property
       const repsWithCheck = repsWithNullTeamId.map((rep) => ({
         ...rep,
         checked: false,
@@ -36,8 +44,11 @@ const AddTeamPopup = ({ onClose, onSave }) => {
     setTeamName(e.target.value);
   };
 
+  const handleYearGoalChange = (e) => {
+    setYearGoal(e.target.value);
+  };
+
   const handleTeamMemberChange = (index) => {
-    // Když je označení změněno, aktualizujeme stav
     const updatedReps = reps.map((rep, i) =>
       i === index ? { ...rep, checked: !rep.checked } : rep
     );
@@ -49,16 +60,36 @@ const AddTeamPopup = ({ onClose, onSave }) => {
     const selectedMemberIds = selectedMembers.map((member) => member.id);
 
     if (teamName.trim() !== "" && selectedMemberIds.length > 0) {
+
       const newTeam = {
         name: teamName,
         representativesIds: selectedMemberIds,
       };
 
       try {
-        await ApiService.post("teams", newTeam, { "Authorization": "Bearer " + store.user.token });
+
+        const response = await ApiService.post("teams", newTeam, { Authorization: "Bearer " + store.user.token,});
+
+        if (response && response.id) {
+
+          const createdTeamId = response.id;
+          
+          const goals = {
+            year: year,
+            teamId: createdTeamId,
+            saleGoal: yearGoal,
+          };
+
+          await ApiService.post("teams/goal", goals, { Authorization: "Bearer " + store.user.token,})
+          fetchData()
+
+        } else {
+          console.log("Creating of goals failed")
+        }
+
         onClose();
       } catch (error) {
-        console.log(newTeam)
+        console.log(newTeam);
         console.error("Error:", error);
       }
     }
@@ -70,11 +101,12 @@ const AddTeamPopup = ({ onClose, onSave }) => {
         <PopTitle>Add New Team</PopTitle>
         <InputLabel>
           Team Name
-          <Input
-            type="text"
-            value={teamName}
-            onChange={handleTeamNameChange}
-          />
+          <Input type="text" value={teamName} onChange={handleTeamNameChange} />
+        </InputLabel>
+
+        <InputLabel>
+          Year goal
+          <Input type="text" value={yearGoal} onChange={handleYearGoalChange} />
         </InputLabel>
 
         <TeamMembersContainer>
@@ -106,7 +138,6 @@ const AddTeamPopup = ({ onClose, onSave }) => {
     </PopupContainer>
   );
 };
-
 
 const Peoples = styled.div`
   max-height: 200px;

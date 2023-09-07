@@ -36,25 +36,25 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
         </MenuItemIcon>
         Stock
       </MenuItem>
-      <MenuItem to="/eru" >
-        <MenuItemIcon>
-          <FaListAlt />
-        </MenuItemIcon>
-        ERUs / Tenders
-      </MenuItem>
       <MenuItem to="/targets" >
         <MenuItemIcon>
           <FaBullseye />
         </MenuItemIcon>
         Targets
       </MenuItem>
-      <MenuItem to="/notifications" >
+      <MenuItem to="/eru" >
+        <MenuItemIcon>
+          <FaListAlt />
+        </MenuItemIcon>
+        ERUs / Tenders
+      </MenuItem>
+      <MenuItemD >
         <MenuItemIcon>
           <FaBell />
         </MenuItemIcon>
-        Notifications
-        <NotificationPop>4</NotificationPop>
-      </MenuItem>
+        Notifications 
+        {/* <NotificationPop>4</NotificationPop> */}
+      </MenuItemD>
       {!store.hideTeams && (
         <>
           <MenuHeading className="space">Teams</MenuHeading>
@@ -126,7 +126,6 @@ const StyledSidebar = styled.div`
   width: 250px;
   background-color: ${props => props.theme.componentBackground};
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  overflow-y: auto;
   border-radius: 0 ${props => (props.roundedNav ? '20px' : '0')} ${props => (props.roundedNav ? '20px' : '0')} 0;
   z-index: 999;
   position: fixed;
@@ -134,6 +133,7 @@ const StyledSidebar = styled.div`
   left: ${props => (props.open ? '0' : '-250px')};
   width: ${props => (props.open ? '250px' : '0')};
   transition: 0.3s;
+  overflow: hidden;
 `;
 
 const LogoContainer = styled.div`
@@ -183,6 +183,7 @@ const MenuItem = styled(NavLink)`
   font-size: 14px;
   margin: 0 20px;
   text-decoration: none;
+  text-wrap: nowrap;
 
   &:hover {
     background-color: ${props => props.theme.nav};
@@ -197,6 +198,22 @@ const MenuItem = styled(NavLink)`
     font-weight: 500;
   }
 `;
+const MenuItemD = styled(NavLink)`
+  padding: 13px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: #b1b1b1;
+  transition: background-color 0.3s;
+  border-radius: 10px;
+  font-size: 14px;
+  margin: 0 20px;
+  border: 2px  dashed ${props => props.theme.nav}; 
+  cursor: not-allowed;
+  text-decoration: none;
+  text-wrap: nowrap;
+
+`;
 
 const MenuItem2 = styled(NavLink)`
   padding: 8px;
@@ -209,6 +226,7 @@ const MenuItem2 = styled(NavLink)`
   font-size: 14px;
   margin: 0 24px;
   text-decoration: none;
+  text-wrap: nowrap;
 
   &:hover {
     color: #5d5d5d;
@@ -222,16 +240,16 @@ const MenuItemIcon = styled.div`
   display: flex;
 `;
 
-const NotificationPop = styled.div`
-    width: 23px;
-    height: 19px;
-    border-radius: 20px;
-    background-color: #E13251;
-    margin-left: 40px;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    font-size: 12px;
-`;
+// const NotificationPop = styled.div`
+//     width: 23px;
+//     height: 19px;
+//     border-radius: 20px;
+//     background-color: #E13251;
+//     margin-left: 40px;
+//     color: #fff;
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     text-align: center;
+//     font-size: 12px;
+// `;

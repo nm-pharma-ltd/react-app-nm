@@ -1,46 +1,48 @@
-import React from 'react';
-import { useState, useEffect } from "react";
-import styled from 'styled-components';
-import TeamCardDetail, { gradientColors } from '../Components/TeamCardDetails';
-import { FaCirclePlus } from 'react-icons/fa6';
-import AddTeamPopup from '../Components/AddTeam';
+import React from "react";
+import { useState, useEffect, useContext } from "react";
+import styled from "styled-components";
+import TeamCardDetail, { gradientColors } from "../Components/TeamCardDetails";
+import { FaCirclePlus } from "react-icons/fa6";
+import AddTeamPopup from "../Components/AddTeam";
 import { NavLink } from "react-router-dom";
+import ApiService from "../api/ApiService";
+import { Context, SIGNEDUSER, TEAMS } from "../providers/provider";
 
-export default function Teams({})  {
+export default function Teams({}) {
 
-const [isAddTeamPopupOpen, setIsAddTeamPopupOpen] = useState(false);
-const [teams, setTeams] = useState([
-    {
-      name: "Private sales",
-      monthGoal: 10000,
-      yearGoal: 100000,
-      currentAmount: 8000,
-    },
-    {
-      name: "Government sales",
-      monthGoal: 20000,
-      yearGoal: 200000,
-      currentAmount: 15000,
-    },
-    {
-      name: "Company sales",
-      monthGoal: 100000,
-      yearGoal: 300000,
-      currentAmount: 12000,
-    },
-  ]);
+  const [isAddTeamPopupOpen, setIsAddTeamPopupOpen] = useState(false);
+  const [teamsData, setteamsData] = useState([]);
+  const [store, dispatch] = useContext(Context);
 
+  async function fetchData() {
+    try {
+      const response = await ApiService.get("teams", {
+        Authorization: "Bearer " + store.user.token,
+      });
+      console.log(response);
 
-const handleAddTeamClick = () => {
+      setteamsData(response);
+      dispatch({ type: TEAMS, payload: { response } });
+
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const handleAddTeamClick = () => {
     setIsAddTeamPopupOpen(true);
   };
 
   const handleClosePopup = () => {
     setIsAddTeamPopupOpen(false);
   };
-  
-  const handleSaveTeam = (newTeam) => {
-    setTeams((prevTeams) => [...prevTeams, newTeam]);
+
+  const handleSaveTeam = () => {
+    fetchData();
     setIsAddTeamPopupOpen(false);
   };
 
@@ -53,21 +55,26 @@ const handleAddTeamClick = () => {
         </IconLink>
       </IconContainer>
       {isAddTeamPopupOpen && (
-        <AddTeamPopup onClose={handleClosePopup} onSave={handleSaveTeam} />
+        <AddTeamPopup
+          onClose={handleClosePopup}
+          onSave={handleSaveTeam}
+          fetchData={fetchData}
+        />
       )}
 
       <TeamsContainer>
-        {teams.map((team, index) => (
+        {teamsData.map((team, index) => (
           <TeamCardDetail
             key={index}
+            id={team.id}
             teamName={team.name}
-            monthGoal={team.monthGoal}
-            yearGoal={team.yearGoal}
-            currentAmount={team.currentAmount}
-            cardwidth={'31%'}
-            progressbarheight={'10px'}
+            monthGoal={(team.goal?.saleGoal / 12)?.toFixed(1)} // Zaokrouhlit na 1 desetinné místo
+            yearGoal={team.goal?.saleGoal || 0}
+            currentAmount={0}
+            cardwidth={"31%"}
+            progressbarheight={"10px"}
             index={index}
-            backgroundgradient={gradientColors[index % gradientColors.length]}
+            backgroundgradient={gradientColors[team.id % gradientColors.length]}
           />
         ))}
       </TeamsContainer>

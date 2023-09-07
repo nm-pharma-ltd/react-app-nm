@@ -1,48 +1,49 @@
 import React from "react";
+import { useState, useEffect, useContext } from "react";
 import { styled } from "styled-components";
 import { GoBackButton, TitleWrapper } from "./ClientsDetails";
-import TeamCardDetail from "../Components/TeamCardDetails"; // Import the gradientColors array
+import TeamCardDetail, { gradientColors } from "../Components/TeamCardDetails";
 import { FaUserCircle } from "react-icons/fa";
 import { useParams } from "react-router";
+import ApiService from "../api/ApiService";
+import { Context, SIGNEDUSER, TEAMS } from "../providers/provider";
 
 const TeamDetails = () => {
+
+  const [store, dispatch] = useContext(Context);
   const { id } = useParams();
+  const [teamMembers, setteamMembers] = useState([]);
 
-  const teams = [
-    {
-      name: "Private sales",
-      monthGoal: 10000,
-      yearGoal: 100000,
-      currentAmount: 8000,
-    },
-    {
-      name: "Government sales",
-      monthGoal: 20000,
-      yearGoal: 200000,
-      currentAmount: 15000,
-    },
-    {
-      name: "Company sales",
-      monthGoal: 100000,
-      yearGoal: 300000,
-      currentAmount: 12000,
-    },
-  ];
+ const teams = store.teams;
 
-  const teamIndex = parseInt(id, 10);
-  const team = teams[teamIndex];
+  const team = teams.find((team) => team.id === parseInt(id, 10));
+
+
+  useEffect(() => {
+    if (team) {
+      fetchData();
+    }
+  }, [team]);
+
 
   if (!team) {
     return <div>Team not found</div>;
   }
 
-  const { name, monthGoal, yearGoal, currentAmount } = team;
+  const { name, goal, currentAmount } = team;
 
-  const teamMembers = [
-    { name: "John Doe", role: "Manager", monthAmount: 8000, yearAmount: 90000 },
-    { name: "Jane Smith", role: "Sales Representative", monthAmount: 6000, yearAmount: 75000 },
-    { name: "Mike Johnson", role: "Account Executive", monthAmount: 7000, yearAmount: 80000 },
-  ];
+  async function fetchData() {
+    try {
+      const response = await ApiService.get(`teams/${id}/members`, {
+        Authorization: "Bearer " + store.user.token,
+      });
+      setteamMembers(response);
+
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+
 
   return (
     <>
@@ -50,17 +51,20 @@ const TeamDetails = () => {
         <h2>Team Details</h2>
         <GoBackButton to="/pharmacies">Back</GoBackButton>
       </TitleWrapper>
+
       <TeamsContainer>
         <TeamCardDetail
           teamName={name}
-          monthGoal={monthGoal}
-          yearGoal={yearGoal}
-          currentAmount={currentAmount}
+          monthGoal={(goal?.saleGoal / 12)?.toFixed(1)}
+          yearGoal={goal?.saleGoal || 0}
+          currentAmount={0}
           cardwidth="100%"
-          progressBarHeight={10}
-          index={teamIndex} // Pass the teamIndex to TeamCardDetail
+          progressbarheight={10}
+          backgroundgradient={gradientColors[team.id % gradientColors.length]}
+          index={id}
         />
       </TeamsContainer>
+
       <h2>Team members</h2>
       <TeamsContainerM>
         {teamMembers.map((member, index) => (
@@ -69,17 +73,6 @@ const TeamDetails = () => {
               <ProfilePic size={75} />
             </Avatar>
             <MemberName>{member.name}</MemberName>
-            <MemberRole>{member.role}</MemberRole>
-            {/* <StatsContainer>
-              <Stat>
-                <StatLabel>Month</StatLabel>
-                <GreenBox>{member.monthAmount} €</GreenBox>
-              </Stat>
-              <Stat>
-                <StatLabel>Year</StatLabel>
-                <GreenBox>{member.yearAmount} €</GreenBox>
-              </Stat>
-            </StatsContainer> */}
           </TeamMemberCard>
         ))}
       </TeamsContainerM>

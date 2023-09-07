@@ -1,23 +1,67 @@
-import React from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { useParams } from 'react-router-dom';
 import { Bar } from 'react-chartjs-2';
 import styled from 'styled-components';
+import ApiService from '../api/ApiService';
+import { Context } from '../providers/provider';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
-const BarChart = () => {
-  const data = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-    datasets: [
-      {
-        label: 'Target',
-        data: [12, 19, 3, 5, 2, 3, 7, 9, 6, 1, 10, 22],
-        backgroundColor: '#dc3545',
-      },
-      {
-        label: 'Sold',
-        data: [9, 18, 2, 5, 2, 3, 2, 1, 5, 1, 10, 25],
-        backgroundColor: '#3ebc62',
-      },
-    ]
-  };
+const BarChart = ({ onProductNameUpdate }) => {
+
+  const [store] = useContext(Context);
+  const { productCode } = useParams();
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [chartData, setChartData] = useState({ labels: [], datasets: [] });
+
+  const months = ["January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September", 
+  "October" ,
+  "November" ,
+  "December",]
+    
+
+  useEffect(() => {
+    const fetchDataForMonth = async (year) => {
+      let monthlyDataTarget = new Array(12).fill(null);
+      let monthlyDataSold = new Array(12).fill(null);
+
+      const productData = await ApiService.get(`products/${productCode}/${year}/sales`, { "Authorization": "Bearer " + store.user.token });
+      console.log(productData)
+      productData.forEach(element => {
+        const monthIndex = element.month - 1;
+        monthlyDataTarget[monthIndex] = element.target;
+        monthlyDataSold[monthIndex] = element.quantity;
+      });
+
+      if (productData && productData[0].name) {
+        onProductNameUpdate(productData[0].name);
+      }
+      setChartData({
+        labels: months,
+        datasets: [
+          {
+            label: 'Target',
+            data: monthlyDataTarget,
+            backgroundColor: '#dc3545',
+          },
+          {
+            label: 'Sold',
+            data: monthlyDataSold,
+            backgroundColor: '#3ebc62',
+          },
+        ]
+      });
+    };
+
+    fetchDataForMonth(selectedYear);
+  }, [selectedYear, store.user.token, onProductNameUpdate]);
 
   const options = {
     scales: {
@@ -27,37 +71,96 @@ const BarChart = () => {
     }
   };
 
-  // Calculate the total sold for the year
-  const totalSold = data.datasets[1].data.reduce((acc, value) => acc + value, 0);
+  const totalSold = chartData.datasets.length > 0 ? chartData.datasets[1].data.reduce((acc, value) => acc + value, 0) : 0;
+
+  const changeYear = event => {
+    setSelectedYear(event.target.value);
+  };
+
+  const renderYearDropdown = () => {
+    let years = [];
+    for (let i = 2020; i <= 2050; i++) {
+      years.push(<option key={i} value={i}>{i}</option>);
+    }
+    return years;
+  };
+
 
   return (
     <Kontaineros>
+      <NavigationContainer>
+        
+      </NavigationContainer>
+      
       <ChartContainer>
+      
         <ResponsiveChart>
-          <Bar data={data} options={options} />
+          <Bar data={chartData} options={options} />
         </ResponsiveChart>
         <InfoContainer>
           <InfoBox>
-            <InfoLabel>Total Sold:</InfoLabel>
+          <InfoLabel>Year</InfoLabel>
+ 
+          <YearDropdown value={selectedYear} onChange={e => setSelectedYear(Number(e.target.value))}>
+          {renderYearDropdown()}
+        </YearDropdown>
+          </InfoBox>
+       
+          <InfoBox>
+            <InfoLabel>Total Sold</InfoLabel>
             <InfoValue>{totalSold}</InfoValue>
           </InfoBox>
           <InfoBox>
-            <InfoLabel>Délka pinďoura:</InfoLabel>
+            <InfoLabel>Total target</InfoLabel>
             <InfoValue>93cm</InfoValue>
           </InfoBox>
           <InfoBox>
             <InfoLabel>Kvalita grafu:</InfoLabel>
             <InfoValue>Full HD</InfoValue>
           </InfoBox>
-          <InfoBox>
-            <InfoLabel>Refresh rate:</InfoLabel>
-            <InfoValue>64 fps</InfoValue>
-          </InfoBox>
         </InfoContainer>
       </ChartContainer>
     </Kontaineros>
   )
 };
+const NavigationContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+`;
+
+const NavigationButton = styled.button`
+  background-color: #ffffff;
+  border: none;
+  cursor: pointer;
+  margin: 0 10px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background-color: #f1f1f1;
+  }
+`;
+
+const YearDropdown = styled.select`
+  background-color: ${props => props.theme.componentBackground};;
+  border: 1px solid ${props => props.theme.line};
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 16px;
+  outline: none;
+  cursor: pointer;
+  color: ${props => props.theme.text};
+
+  &:hover, &:focus {
+    border-color: ${props => props.theme.line};;
+  }
+`;
 
 const Kontaineros = styled.div`
   width: 100%;
@@ -65,7 +168,7 @@ const Kontaineros = styled.div`
 `;
 
 const ChartContainer = styled.div`
-  background-color: #ffffff;
+  background-color: ${props => props.theme.componentBackground};
   border-radius: 20px;
   padding: 20px;
   margin-top: 20px;
@@ -95,7 +198,7 @@ const InfoContainer = styled.div`
 `;
 
 const InfoBox = styled.div`
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid ${props => props.theme.line};;
   padding: 10px;
   margin: 10px;
   width: 100%;

@@ -34,7 +34,7 @@ const ChatBox = () => {
         await ApiService.post("comments", newMessage, {"Authorization": "Bearer " + store.user.token });
 
         await fetchComms();
-
+        console.log(store.user.token)
         // Vymazat text nové zprávy
         setInputValue("");
       } catch (error) {

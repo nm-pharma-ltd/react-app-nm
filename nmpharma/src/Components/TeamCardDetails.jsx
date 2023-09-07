@@ -6,18 +6,16 @@ import { NavLink } from 'react-router-dom';
 import { GreenBox } from '../Components/Table';
 import { TiMediaRecord } from 'react-icons/ti';
 
-export default function TeamCardDetail({ teamName, monthGoal, yearGoal, currentAmount, cardwidth, progressbarheight, index, backgroundgradient }) {
+export default function TeamCardDetail({id, teamName, monthGoal, yearGoal, currentAmount, cardwidth, progressbarheight, index, backgroundgradient }) {
   const monthProgress = (currentAmount / monthGoal) * 100;
   const yearProgress = (currentAmount / yearGoal) * 100;
-
-  
 
   return (
     <>
       <TeamBox
-        to={`/targets/teamdetails/${index}`}
+        to={`/targets/teamdetails/${id}`}
         cardwidth={cardwidth}
-        backgroundgradient={gradientColors[index % gradientColors.length]}
+        backgroundgradient={backgroundgradient}
       >
         <TeamName>
           {teamName}
@@ -26,7 +24,6 @@ export default function TeamCardDetail({ teamName, monthGoal, yearGoal, currentA
             Team
           </TeamBadge>
         </TeamName>
-
         <Goal>
           <GoalLabel>Month goal</GoalLabel>
           <GoalAmount>{monthGoal} €</GoalAmount>
@@ -58,9 +55,9 @@ export const gradientColors = [
   'linear-gradient(to bottom right, #742700, #ff7f50, #cc6849)', // Bronze
   'linear-gradient(to bottom right,  #646464,#c0c0c0 , #868585)', // Silver
   'linear-gradient(to bottom right, #a48300, #ffcf40, #9f7700)', // Gold
-  'linear-gradient(to bottom right,#0510b5, #4462a7, #062367)',
-  'linear-gradient(to bottom right,#7ce47c, #1c603d, #1a9459)',
+  'linear-gradient(to bottom right, #366784,#305451, #35576d)', // Red-Green-Blue
 ];
+
 
 export const TeamBulletO = styled(TiMediaRecord)`
   color: #e7f0ff;
