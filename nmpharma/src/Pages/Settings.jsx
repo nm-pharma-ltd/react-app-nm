@@ -5,6 +5,7 @@ import { ProfileSettings } from './ProfileSettings';
 import { Appearance } from './Appearance';
 import { NotificationsSettings } from './NotificationsSettings';
 import ConfirmationPopup from '../Components/ConfirmationPopUp';
+import isPropValid from "@emotion/is-prop-valid";
 
 export default function Settings() {
 
@@ -46,7 +47,7 @@ export default function Settings() {
       <h2>Settings</h2>
       <SettingsCard>
         <NavLinks>
-          <MenuItem isactive={activeLink === 'profile'} onClick={() => setActiveLink('profile')}>
+        <MenuItem isActive={activeLink === 'profile'} onClick={() => setActiveLink('profile')}>
             Profile
           </MenuItem>
           <MenuItem isactive={activeLink === 'appearance'} onClick={() => setActiveLink('appearance')}>
@@ -55,9 +56,9 @@ export default function Settings() {
           <MenuItemN>
             Notifications
           </MenuItemN>
-          <MenuItemDelete isactive={activeLink === 'delete-profile'} onClick={handleDeleteProfile}>
+          <MenuItem isdelete={activeLink === 'delete-profile'} onClick={handleDeleteProfile}>
             Delete Profile
-          </MenuItemDelete>
+          </MenuItem>
         </NavLinks>
         <Content>{renderContent()}</Content>
         {showConfirmPopup && (
@@ -95,28 +96,33 @@ const Content = styled.div`
   padding: 9px;
 `;
 
+
 const MenuItem = styled.div`
   padding: 13px 25px;
   display: flex;
   align-items: center;
   cursor: pointer;
-  color: #b1b1b1;
+  color: ${props => props.isdelete ? "#c94141" : "#b1b1b1"};
   border-radius: 10px;
   font-size: 14px;
   text-decoration: none;
   transition: 0.15s all ease-in-out;
   text-wrap: nowrap;
 
-
   ${props => props.isactive && `
     background-color: ${props.theme.nav};
     color: ${props.theme.colorNavLink};
     font-weight: 500;
   `}
-  
+
+  ${props => props.isdisabled && `
+    cursor: not-allowed;
+    border: 2px dashed ${props.theme.nav};
+  `}
+
   &:hover {
     background-color: ${props => props.theme.nav};
-    color: ${props => props.theme.colorNavLink};
+    color: ${props => props.isdelete ? "#ad2d2d" : props.theme.colorNavLink};
   }
 `;
 
@@ -148,24 +154,5 @@ const MenuItemN = styled.div`
   }
 `;
 
-const MenuItemDelete = styled.div`
-  padding: 13px 25px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  color: #c94141;
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: 600;
-  text-wrap: nowrap;
-  text-decoration: none;
-  transition: 0.15s all ease-in-out;
-
-  &:hover {
-    color: #ad2d2d;
-    padding-top: 10px;
-  }
-
-`;
 
 

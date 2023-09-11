@@ -8,7 +8,7 @@ export const Appearance = () => {
   // Initialize from global state
   const [darkMode, setDarkMode] = useState(store.theme === "dark");
   const [hideTeams, setHideTeams] = useState(store.hideTeams);
-  const [roundedNav, setRoundedNav] = useState(store.roundedNav === true);
+  const [roundednav, setroundednav] = useState(store.roundednav === true);
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -21,7 +21,7 @@ export const Appearance = () => {
   };
 
   const toggleNav = () => {
-    setRoundedNav(!roundedNav);
+    setroundednav(!roundednav);
     dispatch({ type: TOGGLE_ROUNDED_NAV });
   };
 
@@ -29,8 +29,8 @@ export const Appearance = () => {
   useEffect(() => {
     setDarkMode(store.theme === "dark");
     setHideTeams(store.hideTeams);
-    setRoundedNav(store.roundedNav);
-  }, [store.theme, store.hideTeams, store.roundedNav]);
+    setroundednav(store.roundednav);
+  }, [store.theme, store.hideTeams, store.roundednav]);
 
   return (
     <>
@@ -55,7 +55,7 @@ export const Appearance = () => {
         <SettingItem>
           <SettingLabel>Rounded navigation</SettingLabel>
           <Switch>
-            <Checkbox type="checkbox" checked={store.roundedNav} onChange={toggleNav} />
+            <Checkbox type="checkbox" checked={store.roundednav} onChange={toggleNav} />
             <Slider />
           </Switch>
         </SettingItem>

@@ -23,7 +23,7 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
   const logoSrc = theme.mode === 'dark' ? LogoWhite : LogoBlack;
 
   return (
-    <StyledSidebar open={isSidebarOpen} roundedNav={store.roundedNav}>
+    <StyledSidebar open={isSidebarOpen} roundednav={store.roundednav.toString()}>
       <LogoContainer>
         <Logo src={logoSrc} alt="Company Logo" />
       </LogoContainer>
@@ -63,7 +63,7 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
         <>
           <MenuHeading className="space">Teams</MenuHeading>
           {store.teams.map((team, index) => (
-            <MenuItem2 to={`/targets/teamdetails/${team.team.id}`}>
+            <MenuItem2 to={`/targets/teamdetails/${team.team.id}`} key={team.team.id}>
               <MenuItemIcon>
                 <TeamBullet />
               </MenuItemIcon>
@@ -119,7 +119,7 @@ const StyledSidebar = styled.div`
   width: 250px;
   background-color: ${props => props.theme.componentBackground};
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  border-radius: 0 ${props => (props.roundedNav ? '20px' : '0')} ${props => (props.roundedNav ? '20px' : '0')} 0;
+  border-radius: 0 ${props => (props.roundednav ? '20px' : '0')} ${props => (props.roundednav ? '20px' : '0')} 0;
   z-index: 999;
   position: fixed;
   top: 0;

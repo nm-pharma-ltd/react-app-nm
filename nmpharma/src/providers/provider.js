@@ -13,7 +13,7 @@ export const TOGGLE_HIDE_TEAMS = "TOGGLE_HIDE_TEAMS";
 export const TOGGLE_ROUNDED_NAV = "TOGGLE_ROUNDED_NAV";
 export const TEAMS = "TEAMS";
 
-const initialState = { messages: [], user: "", theme: "light", hideTeams: false, roundedNav: true, teams: [], };
+const initialState = { messages: [], user: "", theme: "light", hideTeams: false, roundednav: true, teams: [], };
 
 const dataReducer = (state, action) => {
   switch (action.type) {
@@ -23,12 +23,12 @@ const dataReducer = (state, action) => {
         user: action.payload.response,
       };
     case LOGOUT:
-      const { theme, hideTeams, roundedNav } = state;
+      const { theme, hideTeams, roundednav } = state;
       return {
         ...initialState,
         theme,
         hideTeams,
-        roundedNav
+        roundednav
       };
     case NOTES:
       return {
@@ -56,7 +56,7 @@ const dataReducer = (state, action) => {
     case TOGGLE_ROUNDED_NAV:
       return {
         ...state,
-        roundedNav: !state.roundedNav,
+        roundednav: !state.roundednav,
       };
 
     default:

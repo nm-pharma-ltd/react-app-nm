@@ -7,40 +7,62 @@ import { GoBackButton } from '../Pages/ClientsDetails';
 import { NavLink } from 'react-router-dom';
 import { CardTitle } from './DataCardLarge';
 
-const StockCard = ({data}) => {
-  useEffect(() =>{
-    console.log(data)
-  },[data]);
+const StockCard = ({ data }) => {
   const cardRef = useRef(null);
   const [expanded, setExpanded] = useState(false);
   const [cardWidth, setCardWidth] = useState(null);
+  const [inputsValue, setInputsValue] = useState({});
 
-  const [inputValue, setInputValue] = useState('');
-  const [monthsOfStock, setMonthsOfStock] = useState(0);
-  const [onOrder, setOnOrder] = useState(80);
-  const [incoming, setIncoming] = useState(100);
-  const totalInStock = 120;
-  const sixmonth = data.averageQuantitySold; 
+  const [onOrder, setOnOrder] = useState(0);
+  const [incoming, setIncoming] = useState(0);
+  const [totalInStock, setTotalInStock] = useState({});
+  const [inputValues, setInputValues] = useState({});
+  const [monthsOfStock, setMonthsOfStock] = useState({});
 
-  const handleCalculation = () => {
 
-    const toOrder = inputValue ? parseInt(inputValue, 10) : 0; 
- 
+  const calculateToOrder = (productCode) => {
+    const productData = data.productsForecast.find(prod => prod.productCode === productCode);
 
-    // Perform the calculation
-    const result = (onOrder + incoming + totalInStock + toOrder) / sixmonth;
-    setMonthsOfStock(result);
-    console.log(sixmonth);
+    if (!productData) return 0;  // exit the function if the product data is not found
 
+    const sixmonth = productData.averageQuantitySold;
+
+    // Using product-specific values
+    const currentOnOrder = productData.quantityOrdered;
+    const currentIncoming = productData.incoming;
+    const currentTotalInStock = productData.inStock;
+
+    const requiredForSixMonths = sixmonth * 6;
+    const currentTotal = currentOnOrder + currentIncoming + currentTotalInStock;
+
+    return requiredForSixMonths - currentTotal > 0 ? requiredForSixMonths - currentTotal : 0;
   };
 
+  const handleCalculation = (productCode) => {
+    const toOrder = inputValues[productCode] ? parseInt(inputValues[productCode], 10) : 0;
+    const productData = data.productsForecast.find(prod => prod.productCode === productCode);
+
+    if (!productData) return;  // exit the function if the product data is not found
+
+    const sixmonth = productData.averageQuantitySold;
+
+    // Using product-specific values
+    const currentOnOrder = productData.quantityOrdered;
+    const currentIncoming = productData.incoming;
+    const currentTotalInStock = productData.inStock;
+
+    const months = (sixmonth !== 0) ?
+      (currentOnOrder + currentIncoming + currentTotalInStock + toOrder) / sixmonth : 0;
+
+    setMonthsOfStock(prevState => ({ ...prevState, [productCode]: months }));
+  };
 
   const handleExpand = () => {
     setExpanded((prevExpanded) => !prevExpanded);
-
-    // Perform the calculation when the card is expanded
     if (!expanded) {
-      handleCalculation();
+      data.productsForecast.forEach(product => {
+        handleCalculation(product.productCode);
+      });
     }
   };
 
@@ -55,17 +77,20 @@ const StockCard = ({data}) => {
       }
     };
 
-
     window.addEventListener('resize', handleResize);
     return () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
 
-  const handleColorChange = () => {
-    return monthsOfStock < 6 ? 'red' : 'green';
+
+  const handleInputChange = (productCode, value) => {
+    setInputValues(prevValues => ({ ...prevValues, [productCode]: value }));
   };
 
+  const handleColorChange = (productCode) => {
+    return monthsOfStock[productCode] && monthsOfStock[productCode] < 6 ? 'red' : 'green';
+  };
 
 
   return (
@@ -74,7 +99,7 @@ const StockCard = ({data}) => {
         <CardHeaderContainer onClick={handleExpand}>
           <CardTitlee>
             <CodeTitle>
-            {data.supplierCode}
+              {data.supplierCode}
             </CodeTitle>
             {data.supplierName}
             <IncomingBadge>
@@ -98,7 +123,7 @@ const StockCard = ({data}) => {
             <TableContainer>
               <TableHead>
                 <TableRow>
-                  <TableHeaderCell  align='center'>STOCK CODE</TableHeaderCell>
+                  <TableHeaderCell align='center'>STOCK CODE</TableHeaderCell>
                   <TableHeaderCell align='center'>PRODUCT NAME</TableHeaderCell>
                   <TableHeaderCell align='center'>INCOMING</TableHeaderCell>
                   <TableHeaderCell align='center'>ON ORDER</TableHeaderCell>
@@ -109,43 +134,44 @@ const StockCard = ({data}) => {
                 </TableRow>
               </TableHead>
               <tbody>
-                {data.productsForecast && data.productsForecast.map((product, index) =>{
-                  return(
+                {data.productsForecast && data.productsForecast.map((product, index) => {
+                  return (
                     <TableRow key={index}>
-                  <TableCellCode align='center'>{product.productCode}</TableCellCode>
-                  <TableCell align='center'>{product.productDescription}</TableCell>
-                  <TableCellInc align='center' onClick={() => setIncoming(product.incoming + 1)}>
-                    + {product.incoming}
-                  </TableCellInc>
-                  <TableCellOrder align='center' onClick={() => setOnOrder(onOrder + 1)}>
-                    + {product.quantityOrdered}
-                  </TableCellOrder>
-                  <TableCellTotal align='center'>
-                    {product.inStock}
-                  </TableCellTotal>
-                  <TableCellTotal
-                    color={handleColorChange()}
-                    align='center'
-                  >
-                    {monthsOfStock.toFixed(2)}
-                  </TableCellTotal>
+                      <TableCellCode align='center'>{product.productCode}</TableCellCode>
+                      <TableCell align='center'>{product.productDescription}</TableCell>
+                      <TableCellInc align='center'>
+                        + {product.incoming}
+                      </TableCellInc>
+                      <TableCellOrder align='center'>
+                        + {product.quantityOrdered}
+                      </TableCellOrder>
+                      <TableCellTotal align='center'>
+                        {product.inStock}
+                      </TableCellTotal>
 
-                  <TableCell align='center'>
-                    <UniInput>
-                      <InputStock
-                        placeholder='300'
-                        type="number"
-                        name='calculations'
-                        value={inputValue}
-                        onChange={(e) => setInputValue(e.target.value)}
-                      />
-                      <CalcButton onClick={handleCalculation}>=</CalcButton>
-                    </UniInput>
-                  </TableCell>
-                  <TableCell >
-                    <ForeButton to='/stock/forecastdetails'>More</ForeButton>
-                  </TableCell>
-                </TableRow>  
+                      <TableCellTotal
+                        color={handleColorChange(product.productCode)}
+                        align='center'
+                      >
+                        {monthsOfStock[product.productCode] ? monthsOfStock[product.productCode].toFixed(2) : 0}
+                      </TableCellTotal>
+
+                      <TableCell align='center'>
+                        <UniInput>
+                          <InputStock
+                            placeholder={calculateToOrder(product.productCode).toString()}
+                            type="number"
+                            value={inputValues[product.productCode] || ''}
+                            onChange={(e) => handleInputChange(product.productCode, e.target.value)}
+                          />
+                          <CalcButton onClick={() => handleCalculation(product.productCode)}>=</CalcButton>
+                        </UniInput>
+
+                      </TableCell>
+                      <TableCell >
+                        <ForeButton to='/stock/forecastdetails'>More</ForeButton>
+                      </TableCell>
+                    </TableRow>
                   )
                 })}
               </tbody>
@@ -179,21 +205,21 @@ const RightKontainer = styled.div`
 
 export const TableCellCode = styled.td`
   padding: 10px;
-  border-bottom: 1px solid ${props=>props.theme.line};
+  border-bottom: 1px solid ${props => props.theme.line};
   font-weight: 600;
   text-align: ${props => (props.align === 'right' ? 'right' : props.align === 'center' ? 'center' : 'left')};
 `;
 export const TableCellOrder = styled.td`
   padding: 10px;
-  border-bottom: 1px solid ${props=>props.theme.line};
-  color: ${props=>props.theme.menuHeading};
+  border-bottom: 1px solid ${props => props.theme.line};
+  color: ${props => props.theme.menuHeading};
   font-weight: 700;
   text-align: ${props => (props.align === 'right' ? 'right' : props.align === 'center' ? 'center' : 'left')};
 `;
 export const TableCellInc = styled.td`
   padding: 10px;
-  color: ${props=>props.theme.inc};
-  border-bottom: 1px solid ${props=>props.theme.line};
+  color: ${props => props.theme.inc};
+  border-bottom: 1px solid ${props => props.theme.line};
   font-weight: 700;
   text-align: ${props => (props.align === 'right' ? 'right' : props.align === 'center' ? 'center' : 'left')};
 `;
@@ -202,7 +228,7 @@ export const TableCellInc = styled.td`
 export const TableCellTotal = styled.td`
   padding: 10px;
   font-weight: 600;
-  border-bottom: 1px solid ${props=>props.theme.line};
+  border-bottom: 1px solid ${props => props.theme.line};
   text-align: ${props => (props.align === 'right' ? 'right' : props.align === 'center' ? 'center' : 'left')};
   color: ${props => props.color || ''};
 `;
@@ -215,11 +241,11 @@ const UniInput = styled.div`
   margin: 0 auto;
 `
 export const InputStock = styled.input`
-    border: 1px solid ${props=>props.theme.nav};
+    border: 1px solid ${props => props.theme.nav};
     border-radius: 4px;
     font-size: 14px;
-    color:  ${props=> props.theme.text};
-    background: ${props=> props.theme.InputText};
+    color:  ${props => props.theme.text};
+    background: ${props => props.theme.InputText};
     outline: none;
     transition: border-color 0.3s ease;
     height: 40px;
@@ -258,7 +284,7 @@ const CodeTitle = styled.h3`
   margin-left: 5px;
   margin-right: 15px;
   font-size: 16px;
-  color: ${props=> props.theme.textCard};
+  color: ${props => props.theme.textCard};
   font-weight: 500;
 `;
 
@@ -328,8 +354,8 @@ const CalcButton = styled.button`
 `;
 
 const ForeButton = styled(NavLink)`
-  background-color: ${props=> props.theme.componentBackground};
-  color: ${props=> props.theme.text};
+  background-color: ${props => props.theme.componentBackground};
+  color: ${props => props.theme.text};
   padding: 5px 10px;
   border: 3px solid #575757;
   border-radius: 5px;
