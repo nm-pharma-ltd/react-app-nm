@@ -64,7 +64,7 @@ export default function App() {
               <Route path="/stock/:id" element={<ForecastSingleProduct />} />
               <Route path="/eru" element={<ERUs />} />
               <Route path="/targets" element={<Targets />} />
-              <Route path="/targets/teamdetails/:id" element={<TeamDetails />} />
+              <Route path="/targets/teamdetails/:id" element={<TeamDetails/>} />
               <Route path="/notifications" element={<Notifications />} />
               <Route path="/settings" element={<Settings />} />
             </Route>

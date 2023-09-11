@@ -1,13 +1,33 @@
-import React, { useEffect } from "react";
-import { useDvdScreensaver, DvdScreensaver } from "react-dvd-screensaver";
+import React from "react";
+import { DvdScreensaver } from "react-dvd-screensaver";
 import styled from 'styled-components';
 
-export const COLORS = [
-  "#ff0000",
-  "#ff4000",
-  "#ff0040",
-  "#ff0000",
-];
+const LoadingStevan = () => {
+  
+  const [componentImpactCount, setComponentImpactCount] = React.useState(0);
+  
+
+  const handleComponentImpactCount = () => {
+    const randomCount = Math.floor(Math.random() * 4) + 1;
+    setComponentImpactCount(randomCount);
+  };
+
+
+  return (
+    <StyledContents>
+      <StyledDvdScreensaver speed={3} height="100vh" impactCallback={handleComponentImpactCount}>
+        <StyledImage
+          src={require(`../img/Stevan${componentImpactCount}.png`)}
+          alt=""
+        />
+      </StyledDvdScreensaver>
+    </StyledContents>
+  );
+};
+
+export default LoadingStevan;
+
+
 
 const StyledContents = styled.div`
   height: 100vh;
@@ -25,35 +45,3 @@ const StyledImage = styled.img`
   width: 100px;
   transform: rotate(90deg);
 `;
-
-const LoadingStevan = () => {
-  const { containerRef, elementRef, hovered, impactCount } = useDvdScreensaver({
-    freezeOnHover: true,
-    speed: 5,
-  });
-  const [componentImpactCount, setComponentImpactCount] = React.useState(0);
-  const [logoColor, setLogoColor] = React.useState(COLORS[0]);
-
-  useEffect(() => {
-    if (hovered) {
-      console.log("* FROZEN");
-    }
-  }, [hovered]);
-
-  useEffect(() => {
-    setLogoColor(COLORS[Math.floor(Math.random() * COLORS.length)]);
-  }, [impactCount]);
-
-  return (
-    <StyledContents>
-      <StyledDvdScreensaver speed={1} height="100vh">
-        <StyledImage
-          src={require("../img/Stevan1.png")}
-          alt=""
-        />
-      </StyledDvdScreensaver>
-    </StyledContents>
-  );
-};
-
-export default LoadingStevan;

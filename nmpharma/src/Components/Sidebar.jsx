@@ -22,8 +22,11 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
   const theme = useContext(ThemeContext);
   const logoSrc = theme.mode === 'dark' ? LogoWhite : LogoBlack;
 
+
+
+
   return (
-    <StyledSidebar open={isSidebarOpen} roundednav={store.roundednav.toString()}>
+    <StyledSidebar open={isSidebarOpen} roundednav={store.roundednav}>
       <LogoContainer>
         <Logo src={logoSrc} alt="Company Logo" />
       </LogoContainer>
@@ -69,6 +72,7 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
               </MenuItemIcon>
               {team.team.name}
             </MenuItem2>
+
           ))}
         </>
       )}

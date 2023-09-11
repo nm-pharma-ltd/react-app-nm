@@ -20,34 +20,49 @@ const ChatBox = () => {
       setMessages(fetchedData);
   }
 
+  const handleTokenCommand = () => {
+    if (inputValue.trim() === "/token") {
+      console.log(store.user.token);
+      setInputValue("");
+    }
+  };
+  
   const handleSendMessage = async () => {
-
     if (inputValue.trim() !== "") {
-      
-      const newMessage = {
-        userId: store.user.userid,
-        content: inputValue,
-      };
+      if (inputValue.trim() !== "/token") {
 
-      try {
-        // Odeslat novou zprávu na server
-        await ApiService.post("comments", newMessage, {"Authorization": "Bearer " + store.user.token });
-
-        await fetchComms();
-        console.log(store.user.token)
-        // Vymazat text nové zprávy
-        setInputValue("");
-      } catch (error) {
-        console.error("Error:", error);
+        const newMessage = {
+          userId: store.user.userid,
+          content: inputValue,
+        };
+  
+        try {
+          // Odeslat novou zprávu na server
+          await ApiService.post("comments", newMessage, {
+            "Authorization": "Bearer " + store.user.token,
+          });
+  
+          await fetchComms();
+          
+          // Vymazat text nové zprávy
+          setInputValue("");
+        } catch (error) {
+          console.error("Error:", error);
+        }
       }
     }
   };
+  
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-      handleSendMessage();
+      if (inputValue.trim() !== "/token") {
+        handleSendMessage();
+      }
+      handleTokenCommand();
     }
   };
+  
 
   const handleRemoveMessage = async (id) => {
     try {

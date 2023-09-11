@@ -19,6 +19,8 @@ const StockCard = ({ data }) => {
   const [inputValues, setInputValues] = useState({});
   const [monthsOfStock, setMonthsOfStock] = useState({});
 
+  const hasOnOrder = data.productsForecast.some(product => product.quantityOrdered > 0);
+  const hasIncoming = data.productsForecast.some(product => product.incoming > 0);
 
   const calculateToOrder = (productCode) => {
     const productData = data.productsForecast.find(prod => prod.productCode === productCode);
@@ -102,16 +104,20 @@ const StockCard = ({ data }) => {
               {data.supplierCode}
             </CodeTitle>
             {data.supplierName}
-            <IncomingBadge>
-              <TeamBulletI />
-              Incoming
-            </IncomingBadge>
-            <OnOrderBadge>
-              <TeamBulletO />
-              On-Order
-            </OnOrderBadge>
           </CardTitlee>
           <RightKontainer>
+            {hasIncoming && (
+              <IncomingBadge>
+                <TeamBulletI />
+                Incoming
+              </IncomingBadge>
+            )}
+            {hasOnOrder && (
+              <OnOrderBadge>
+                <TeamBulletO />
+                On-Order
+              </OnOrderBadge>
+            )}
             <ForeButton to="/stock/supplier">Forecast all</ForeButton>
             <ExpandIcon expanded={expanded ? 1 : 0} />
           </RightKontainer>
@@ -125,10 +131,11 @@ const StockCard = ({ data }) => {
                 <TableRow>
                   <TableHeaderCell align='center'>STOCK CODE</TableHeaderCell>
                   <TableHeaderCell align='center'>PRODUCT NAME</TableHeaderCell>
-                  <TableHeaderCell align='center'>INCOMING</TableHeaderCell>
                   <TableHeaderCell align='center'>ON ORDER</TableHeaderCell>
+                  <TableHeaderCell align='center'>INCOMING</TableHeaderCell>
                   <TableHeaderCell align='center'>TOTAL IN STOCK</TableHeaderCell>
                   <TableHeaderCell align='center'>MONTHS OF STOCK</TableHeaderCell>
+                  <TableHeaderCell align='center'>EXPIRY</TableHeaderCell>
                   <TableHeaderCell align='center'>TO ORDER</TableHeaderCell>
                   <TableHeaderCell align='center'>ACTIONS</TableHeaderCell>
                 </TableRow>
@@ -139,12 +146,13 @@ const StockCard = ({ data }) => {
                     <TableRow key={index}>
                       <TableCellCode align='center'>{product.productCode}</TableCellCode>
                       <TableCell align='center'>{product.productDescription}</TableCell>
-                      <TableCellInc align='center'>
-                        + {product.incoming}
-                      </TableCellInc>
                       <TableCellOrder align='center'>
                         + {product.quantityOrdered}
                       </TableCellOrder>
+                      <TableCellInc align='center'>
+                        {product.incoming && product.incoming !== 0 ? `+ ${product.incoming}` : '--'}
+                      </TableCellInc>
+
                       <TableCellTotal align='center'>
                         {product.inStock}
                       </TableCellTotal>
@@ -153,9 +161,11 @@ const StockCard = ({ data }) => {
                         color={handleColorChange(product.productCode)}
                         align='center'
                       >
-                        {monthsOfStock[product.productCode] ? monthsOfStock[product.productCode].toFixed(2) : 0}
+                        {monthsOfStock[product.productCode] ? monthsOfStock[product.productCode].toFixed(2) : "--"}
                       </TableCellTotal>
-
+                      <TableCellTotal>
+                        TO-DO
+                      </TableCellTotal>
                       <TableCell align='center'>
                         <UniInput>
                           <InputStock
@@ -254,7 +264,7 @@ export const InputStock = styled.input`
     onChange={(e) => setInputValue(e.target.value)};
 `;
 
-const CardContainer = styled.div`
+export const CardContainer = styled.div`
   width: 100%;
   background-color: ${props => props.theme.nav};
   border-radius: 10px;
@@ -278,6 +288,9 @@ const CardTitlee = styled.h3`
   margin: 0;
   display: flex;
   align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const CodeTitle = styled.h3`
@@ -365,6 +378,7 @@ const ForeButton = styled(NavLink)`
   font-size: 14px;
   font-weight: 500;
   transition: 0.2s ease-in-out;
+  text-wrap: nowrap;
 
   &:hover{
     background-color: #575757;

@@ -12,8 +12,18 @@ export const TOGGLE_THEME = "TOGGLE_THEME";
 export const TOGGLE_HIDE_TEAMS = "TOGGLE_HIDE_TEAMS";
 export const TOGGLE_ROUNDED_NAV = "TOGGLE_ROUNDED_NAV";
 export const TEAMS = "TEAMS";
+export const TEAM_COLORS = "TEAM_COLORS";
+export const CLEAR_USER = "CLEAR_USER";
 
-const initialState = { messages: [], user: "", theme: "light", hideTeams: false, roundednav: true, teams: [], };
+const initialState = { messages: [], user: "", token: "", theme: "light", hideTeams: false, roundednav: true, teams: [], team_colors : [
+  "linear-gradient(to bottom right, #a48300, #ffcf40, #9f7700)", //Gold
+  "linear-gradient(to bottom right,  #646464,#c0c0c0 , #868585)",//Silver
+  "linear-gradient(to bottom right, #742700, #ff7f50, #cc6849)", //Bronze
+  'linear-gradient(to bottom right, #366784, #305451, #35576d)', // Red-Green-Blue
+  'linear-gradient(to bottom right, #ff5733, #ff33fc, #3366ff)', // Pink-Purple-Blue
+  'linear-gradient(to bottom right, #ff9900, #ffff33, #66ff66)', // Orange-Yellow-Green
+  'linear-gradient(to bottom right, #9966ff, #ff66cc, #ff6666)', // Purple-Pink-Red
+], };
 
 const dataReducer = (state, action) => {
   switch (action.type) {
@@ -22,14 +32,16 @@ const dataReducer = (state, action) => {
         ...state,
         user: action.payload.response,
       };
-    case LOGOUT:
-      const { theme, hideTeams, roundednav } = state;
-      return {
-        ...initialState,
-        theme,
-        hideTeams,
-        roundednav
-      };
+      case LOGOUT:
+        const { theme, hideTeams, roundednav } = state;
+        return {
+          ...initialState,
+          theme,
+          hideTeams,
+          roundednav,
+          user: "",
+          token: ""
+        };      
     case NOTES:
       return {
         ...state,
@@ -49,7 +61,16 @@ const dataReducer = (state, action) => {
       case TEAMS: {
         return {
           ...state,
-          teams: action.payload.response,
+          teams: action.payload.response.sort(
+            (a, b) => b.salesThisYear - a.salesThisYear
+          ),
+        };
+      }
+
+      case TEAM_COLORS: {
+        return {
+          ...state,
+          team_colors: action.payload.response,
         };
       }
 
@@ -58,6 +79,9 @@ const dataReducer = (state, action) => {
         ...state,
         roundednav: !state.roundednav,
       };
+    case CLEAR_USER:
+      return{ ...state, user: ""}
+    
 
     default:
       return state;
@@ -72,9 +96,9 @@ export const Provider = ({ children }) => {
   const theme = store.theme === "light" ? lightTheme : darkTheme;
 
   useEffect(() => {
-    if (!store.user) return;
     localStorage.setItem(LOCAL_STORAGE_ID, JSON.stringify(store));
   }, [store]);
+  
 
   return (
     <ThemeProvider theme={theme}>

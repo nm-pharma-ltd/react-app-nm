@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState, useEffect, useContext } from "react";
 import LinearProgress from '@mui/material/LinearProgress';
 import Typography from '@mui/material/Typography';
 import styled from 'styled-components';
@@ -6,11 +7,11 @@ import { NavLink } from 'react-router-dom';
 import { GreenBox } from '../Components/Table';
 import { TiMediaRecord } from 'react-icons/ti';
 
-export default function TeamCardDetail({id, teamName, monthGoal, yearGoal, currentAmount, currentAmountMonth, cardwidth, progressbarheight, index, backgroundgradient }) {
+export default function TeamCardDetail({id, teamName, monthGoal, yearGoal, currentAmount, currentAmountMonth, cardwidth, progressbarheight, index, backgroundgradient, }) {
   
   const monthProgress = (currentAmount / monthGoal) * 100;
   const yearProgress = (currentAmount / yearGoal) * 100;
-
+  
   return (
     <>
       <TeamBox
@@ -58,12 +59,8 @@ export default function TeamCardDetail({id, teamName, monthGoal, yearGoal, curre
   );
 };
 
-export const gradientColors = [
-  'linear-gradient(to bottom right, #742700, #ff7f50, #cc6849)', // Bronze
-  'linear-gradient(to bottom right,  #646464,#c0c0c0 , #868585)', // Silver
-  'linear-gradient(to bottom right, #a48300, #ffcf40, #9f7700)', // Gold
-  'linear-gradient(to bottom right, #366784,#305451, #35576d)', // Red-Green-Blue
-];
+
+
 
 
 export const TeamBulletO = styled(TiMediaRecord)`
@@ -99,7 +96,7 @@ const TeamBox = styled(NavLink)`
   padding: 20px;
   margin-right: 16px;
   margin-bottom: 16px;
-  background: ${props => props.backgroundgradient}; // Use the provided background gradient
+  background: ${(props) => props.backgroundgradient}; // Use the provided background gradient
   background-color: ${(props) => props.teamColor};
   height: 370px;
   display: flex;

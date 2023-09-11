@@ -6,22 +6,22 @@ import TeamCardDetail, { gradientColors } from "../Components/TeamCardDetails";
 import { FaUserCircle } from "react-icons/fa";
 import { useParams } from "react-router";
 import ApiService from "../api/ApiService";
-import { Context, SIGNEDUSER, TEAMS } from "../providers/provider";
+import { Context, SIGNEDUSER, TEAMS, TEAM_COLORS } from "../providers/provider";
 
-const TeamDetails = () => {
-
+const TeamDetails = ({ }) => {
   const [store, dispatch] = useContext(Context);
   const { id } = useParams();
-  const [teamMembers, setteamMembers] = useState([]);
-  const [team, ] = useState(store.teams.find((item) => item.team.id === parseInt(id)));
+  const [teamMembers, setTeamMembers] = useState([]);
+
+  const teamIndex = store.teams.findIndex((item) => item.team.id === parseInt(id));
+  const team = store.teams[teamIndex];
 
   async function fetchData() {
     try {
       const response = await ApiService.get(`teams/earned/${id}`, {
         Authorization: "Bearer " + store.user.token,
       });
-      setteamMembers(response);
-
+      setTeamMembers(response);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -31,8 +31,7 @@ const TeamDetails = () => {
     if (team) {
       fetchData();
     }
-  }, [team]);
-
+  }, [id, team]);
 
   if (!team) {
     return <div>Team not found</div>;
@@ -49,14 +48,14 @@ const TeamDetails = () => {
       <TeamsContainer>
         <TeamCardDetail
           teamName={team.team.name}
-          monthGoal={(team.team.goal?.saleGoal / 12)?.toFixed(1)}
+          monthGoal={(team.team.goal?.saleGoal / 12)?.toFixed(0)}
           yearGoal={team.team.goal?.saleGoal || 0}
           currentAmount={team.salesThisYear.toFixed(0)}
           currentAmountMonth={team.salesLastMonth.toFixed(0)}
           cardwidth="100%"
           progressbarheight={10}
-          backgroundgradient={gradientColors[team.team.id % gradientColors.length]}
-          index={id}
+          backgroundgradient={store.team_colors[teamIndex]}
+          index={id} 
         />
       </TeamsContainer>
 

@@ -6,12 +6,13 @@ import { FaCirclePlus } from "react-icons/fa6";
 import AddTeamPopup from "../Components/AddTeam";
 import { NavLink } from "react-router-dom";
 import ApiService from "../api/ApiService";
-import { Context, SIGNEDUSER, TEAMS } from "../providers/provider";
+import { Context, SIGNEDUSER, TEAMS, TEAM_COLORS } from "../providers/provider";
 
 export default function Teams({}) {
   const [isAddTeamPopupOpen, setIsAddTeamPopupOpen] = useState(false);
   const [teamsData, setteamsData] = useState([]);
   const [store, dispatch] = useContext(Context);
+  
 
   async function fetchData() {
     try {
@@ -19,7 +20,6 @@ export default function Teams({}) {
         Authorization: "Bearer " + store.user.token,
       });
 
-      console.log(response);
       setteamsData(response);
       dispatch({ type: TEAMS, payload: { response } });
     } catch (error) {
@@ -44,6 +44,7 @@ export default function Teams({}) {
     setIsAddTeamPopupOpen(false);
   };
 
+
   return (
     <>
       <IconContainer>
@@ -61,28 +62,27 @@ export default function Teams({}) {
       )}
 
       <TeamsContainer>
-        {teamsData.map((item, index) => (
-          <TeamCardDetail
-            key={index}
-            id={item.team.id}
-            teamName={item.team.name}
-            monthGoal={(item.team.goal?.saleGoal / 12)?.toFixed(0)} 
-            yearGoal={item.team.goal?.saleGoal || 0}
-            currentAmount={item.salesThisYear?.toFixed(0) || 0} // Use ?. to handle possible undefined values
-            currentAmountMonth={item.salesLastMonth?.toFixed(0) || 0} // Use ?. to handle possible undefined values
-            cardwidth={"31%"}
-            progressbarheight={"10px"}
-            index={index}
-            backgroundgradient={
-              gradientColors[item.team.id % gradientColors.length]
-            }
-          />
-        ))}
+        {teamsData.map((item, index) => {
+          return (
+            <TeamCardDetail
+              key={item.team.id}
+              id={item.team.id}
+              teamName={item.team.name}
+              monthGoal={(item.team.goal?.saleGoal / 12)?.toFixed(0)}
+              yearGoal={item.team.goal?.saleGoal || 0}
+              currentAmount={item.salesThisYear?.toFixed(0) || 0}
+              currentAmountMonth={item.salesLastMonth?.toFixed(0) || 0}
+              cardwidth={"31%"}
+              progressbarheight={"10px"}  
+              index={index}
+              backgroundgradient={store.team_colors[index]}
+            />
+          );
+        })}
       </TeamsContainer>
     </>
   );
 }
-
 const TeamsContainer = styled.div`
   margin-top: 20px;
   margin-right: 10px;
