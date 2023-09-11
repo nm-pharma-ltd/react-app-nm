@@ -13,11 +13,19 @@ const TeamDetails = () => {
   const [store, dispatch] = useContext(Context);
   const { id } = useParams();
   const [teamMembers, setteamMembers] = useState([]);
+  const [team, ] = useState(store.teams.find((item) => item.team.id === parseInt(id)));
 
- const teams = store.teams;
+  async function fetchData() {
+    try {
+      const response = await ApiService.get(`teams/earned/${id}`, {
+        Authorization: "Bearer " + store.user.token,
+      });
+      setteamMembers(response);
 
-  const team = teams.find((team) => team.id === parseInt(id, 10));
-
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
 
   useEffect(() => {
     if (team) {
@@ -29,21 +37,7 @@ const TeamDetails = () => {
   if (!team) {
     return <div>Team not found</div>;
   }
-
-  const { name, goal, currentAmount } = team;
-
-  async function fetchData() {
-    try {
-      const response = await ApiService.get(`teams/${id}/members`, {
-        Authorization: "Bearer " + store.user.token,
-      });
-      setteamMembers(response);
-
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  }
-
+  
 
   return (
     <>
@@ -54,13 +48,14 @@ const TeamDetails = () => {
 
       <TeamsContainer>
         <TeamCardDetail
-          teamName={name}
-          monthGoal={(goal?.saleGoal / 12)?.toFixed(1)}
-          yearGoal={goal?.saleGoal || 0}
-          currentAmount={0}
+          teamName={team.team.name}
+          monthGoal={(team.team.goal?.saleGoal / 12)?.toFixed(1)}
+          yearGoal={team.team.goal?.saleGoal || 0}
+          currentAmount={team.salesThisYear.toFixed(0)}
+          currentAmountMonth={team.salesLastMonth.toFixed(0)}
           cardwidth="100%"
           progressbarheight={10}
-          backgroundgradient={gradientColors[team.id % gradientColors.length]}
+          backgroundgradient={gradientColors[team.team.id % gradientColors.length]}
           index={id}
         />
       </TeamsContainer>
@@ -73,6 +68,8 @@ const TeamDetails = () => {
               <ProfilePic size={75} />
             </Avatar>
             <MemberName>{member.name}</MemberName>
+            <StatLabel>Sales last month: {member.salesLastMonth.toFixed(0)} €</StatLabel>
+            <StatLabel>Sales this year: {member.salesThisYear.toFixed(0)} €</StatLabel>
           </TeamMemberCard>
         ))}
       </TeamsContainerM>

@@ -9,7 +9,6 @@ import ApiService from "../api/ApiService";
 import { Context, SIGNEDUSER, TEAMS } from "../providers/provider";
 
 export default function Teams({}) {
-
   const [isAddTeamPopupOpen, setIsAddTeamPopupOpen] = useState(false);
   const [teamsData, setteamsData] = useState([]);
   const [store, dispatch] = useContext(Context);
@@ -19,11 +18,10 @@ export default function Teams({}) {
       const response = await ApiService.get("teams", {
         Authorization: "Bearer " + store.user.token,
       });
-      console.log(response);
 
+      console.log(response);
       setteamsData(response);
       dispatch({ type: TEAMS, payload: { response } });
-
     } catch (error) {
       console.error("Error:", error);
     }
@@ -63,18 +61,21 @@ export default function Teams({}) {
       )}
 
       <TeamsContainer>
-        {teamsData.map((team, index) => (
+        {teamsData.map((item, index) => (
           <TeamCardDetail
             key={index}
-            id={team.id}
-            teamName={team.name}
-            monthGoal={(team.goal?.saleGoal / 12)?.toFixed(1)} // Zaokrouhlit na 1 desetinné místo
-            yearGoal={team.goal?.saleGoal || 0}
-            currentAmount={0}
+            id={item.team.id}
+            teamName={item.team.name}
+            monthGoal={(item.team.goal?.saleGoal / 12)?.toFixed(0)} 
+            yearGoal={item.team.goal?.saleGoal || 0}
+            currentAmount={item.salesThisYear?.toFixed(0) || 0} // Use ?. to handle possible undefined values
+            currentAmountMonth={item.salesLastMonth?.toFixed(0) || 0} // Use ?. to handle possible undefined values
             cardwidth={"31%"}
             progressbarheight={"10px"}
             index={index}
-            backgroundgradient={gradientColors[team.id % gradientColors.length]}
+            backgroundgradient={
+              gradientColors[item.team.id % gradientColors.length]
+            }
           />
         ))}
       </TeamsContainer>

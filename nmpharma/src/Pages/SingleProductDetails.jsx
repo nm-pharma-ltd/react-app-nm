@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-import LineChart from "../Components/LineChart";
 import BarChart from "../Components/BarChart";
 import { GoBackButton, Title, TitleWrapper } from "./ClientsDetails";
 import styled from "styled-components";  // Corrected this line
@@ -37,7 +36,6 @@ export default function SingleProductDetails() {
       </TitleWrapper>
 
       <BarChart productCode={productCode} onProductNameUpdate={handleProductNameUpdate} />
-      <LineChart />
     </Kontaineros>
   );
 }

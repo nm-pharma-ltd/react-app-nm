@@ -12,25 +12,28 @@ const BarChart = ({ onProductNameUpdate }) => {
   const { productCode } = useParams();
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [chartData, setChartData] = useState({ labels: [], datasets: [] });
+  const [productName, setProductName] = useState(''); // Add this to store product name
 
   const months = ["January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September", 
-  "October" ,
-  "November" ,
-  "December",]
-    
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",]
+
 
   useEffect(() => {
     const fetchDataForMonth = async (year) => {
       let monthlyDataTarget = new Array(12).fill(null);
       let monthlyDataSold = new Array(12).fill(null);
+      let monthlyDataProfit = new Array(12).fill(null);
+
 
       const productData = await ApiService.get(`products/${productCode}/${year}/sales`, { "Authorization": "Bearer " + store.user.token });
       console.log(productData)
@@ -38,10 +41,14 @@ const BarChart = ({ onProductNameUpdate }) => {
         const monthIndex = element.month - 1;
         monthlyDataTarget[monthIndex] = element.target;
         monthlyDataSold[monthIndex] = element.quantity;
+        monthlyDataProfit[monthIndex] = element.profit;
+
       });
 
       if (productData && productData[0].name) {
         onProductNameUpdate(productData[0].name);
+        setProductName(productData[0].name);  // Set the product name to state
+
       }
       setChartData({
         labels: months,
@@ -54,6 +61,11 @@ const BarChart = ({ onProductNameUpdate }) => {
           {
             label: 'Sold',
             data: monthlyDataSold,
+            backgroundColor: '#4a679d',
+          },
+          {
+            label: 'Profit',
+            data: monthlyDataProfit,
             backgroundColor: '#3ebc62',
           },
         ]
@@ -72,6 +84,9 @@ const BarChart = ({ onProductNameUpdate }) => {
   };
 
   const totalSold = chartData.datasets.length > 0 ? chartData.datasets[1].data.reduce((acc, value) => acc + value, 0) : 0;
+  const totalTarget = chartData.datasets.length > 0 ? chartData.datasets[0].data.reduce((acc, value) => acc + value, 0) : 0;
+  const totalProfit = chartData.datasets.length > 0 ? chartData.datasets[2].data.reduce((acc, value) => acc + value, 0) : 0;
+
 
   const changeYear = event => {
     setSelectedYear(event.target.value);
@@ -89,35 +104,38 @@ const BarChart = ({ onProductNameUpdate }) => {
   return (
     <Kontaineros>
       <NavigationContainer>
-        
+
       </NavigationContainer>
-      
+
       <ChartContainer>
-      
+
         <ResponsiveChart>
           <Bar data={chartData} options={options} />
         </ResponsiveChart>
         <InfoContainer>
-          <InfoBox>
-          <InfoLabel>Year</InfoLabel>
- 
-          <YearDropdown value={selectedYear} onChange={e => setSelectedYear(Number(e.target.value))}>
-          {renderYearDropdown()}
-        </YearDropdown>
+
+        <InfoBox>
+            <InfoLabel>Year</InfoLabel>
+            <YearDropdown value={selectedYear} onChange={e => setSelectedYear(Number(e.target.value))}>
+              {renderYearDropdown()}
+            </YearDropdown>
           </InfoBox>
-       
+
+          <InfoBox>
+            <InfoLabel>Total Profit</InfoLabel>
+            <InfoValue>{totalProfit} €</InfoValue>
+          </InfoBox>
+
           <InfoBox>
             <InfoLabel>Total Sold</InfoLabel>
-            <InfoValue>{totalSold}</InfoValue>
+            <InfoValue>{totalSold} pk</InfoValue>
           </InfoBox>
+
           <InfoBox>
-            <InfoLabel>Total target</InfoLabel>
-            <InfoValue>93cm</InfoValue>
+            <InfoLabel>Total Target</InfoLabel>
+            <InfoValue>{totalTarget} pk</InfoValue>
           </InfoBox>
-          <InfoBox>
-            <InfoLabel>Kvalita grafu:</InfoLabel>
-            <InfoValue>Full HD</InfoValue>
-          </InfoBox>
+
         </InfoContainer>
       </ChartContainer>
     </Kontaineros>
@@ -156,6 +174,7 @@ const YearDropdown = styled.select`
   outline: none;
   cursor: pointer;
   color: ${props => props.theme.text};
+  max-width: 100px;
 
   &:hover, &:focus {
     border-color: ${props => props.theme.line};;
@@ -202,6 +221,11 @@ const InfoBox = styled.div`
   padding: 10px;
   margin: 10px;
   width: 100%;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 const InfoLabel = styled.p`

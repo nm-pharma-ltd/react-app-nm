@@ -1,12 +1,12 @@
 import React from 'react';
+import Stevan from "../Components/LoadingStevan";
 
 
 export default function ERUs() {
 
   return (
     <>
-      <h2>ERU</h2>
-      
+      <Stevan/>
     </>
   );
 }

@@ -1,22 +1,34 @@
-import React from "react";
+import React, { useEffect, useState, useContext } from "react";
 import StockCard from "../Components/StockCard";
 import { styled } from "styled-components";
+import ApiService from "../api/ApiService";
+import { Context } from "../providers/provider";
+
+
 
 
 export default function Stock() {
+  const[pharmacies, setPharmacies] = useState();
+  const[store, dispatch] = useContext(Context);
+  useEffect(() => {
+    const year = new Date().getFullYear();
+    const month = new Date().getMonth();
+    console.log(month);
+    ApiService.get(`suppliers/forecast/${year}/${month}`, { "Authorization": "Bearer " + store.user.token }).then(response => {
+      setPharmacies(response);
+    });
+  },[])
 
   return (
-    <>
       <Kontainer>
         <h2>Stock</h2>
         <UnderlineH>Sorted by Suppliers</UnderlineH>
-        <StockCard />
-        <StockCard />
-        <StockCard />
-        <StockCard />
-
+        {pharmacies && pharmacies.map((item, index) =>{
+          return(
+          <StockCard key={index} data={item} />
+          );
+        })}
       </Kontainer>
-    </>
   );
 
 }

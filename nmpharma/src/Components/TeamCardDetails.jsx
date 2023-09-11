@@ -6,7 +6,8 @@ import { NavLink } from 'react-router-dom';
 import { GreenBox } from '../Components/Table';
 import { TiMediaRecord } from 'react-icons/ti';
 
-export default function TeamCardDetail({id, teamName, monthGoal, yearGoal, currentAmount, cardwidth, progressbarheight, index, backgroundgradient }) {
+export default function TeamCardDetail({id, teamName, monthGoal, yearGoal, currentAmount, currentAmountMonth, cardwidth, progressbarheight, index, backgroundgradient }) {
+  
   const monthProgress = (currentAmount / monthGoal) * 100;
   const yearProgress = (currentAmount / yearGoal) * 100;
 
@@ -43,9 +44,15 @@ export default function TeamCardDetail({id, teamName, monthGoal, yearGoal, curre
         </ProgressBarWrapper>
 
         <Earned>
-          <EarnedLabel>Earned now</EarnedLabel>
+          <EarnedLabel>Earned last month</EarnedLabel>
+          <GreenBox>{currentAmountMonth} €</GreenBox>
+        </Earned>
+
+        <Earned>
+          <EarnedLabel>Earned this year</EarnedLabel>
           <GreenBox>{currentAmount} €</GreenBox>
         </Earned>
+
       </TeamBox>
     </>
   );

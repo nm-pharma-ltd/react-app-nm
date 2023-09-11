@@ -24,7 +24,7 @@ export default function ClientDetails() {
         const processedPharmacies = sortedPharmacies.map((pharmacy, index) => ({
           rank: index + 1,
           clientName: pharmacy.clientName,
-          monthlyProfit: pharmacy.monthlyProfit.toFixed(1),
+          monthlyProfit: pharmacy.monthlyProfit.toFixed(0),
           monthlySale: parseFloat(pharmacy.monthlySale).toFixed(0) + "€"
         }));
     

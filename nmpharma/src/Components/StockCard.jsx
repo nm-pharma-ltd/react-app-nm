@@ -5,9 +5,12 @@ import { TableCell, ViewDetailsLink } from './Table';
 import { TiMediaRecord } from 'react-icons/ti';
 import { GoBackButton } from '../Pages/ClientsDetails';
 import { NavLink } from 'react-router-dom';
+import { CardTitle } from './DataCardLarge';
 
-const StockCard = () => {
-
+const StockCard = ({data}) => {
+  useEffect(() =>{
+    console.log(data)
+  },[data]);
   const cardRef = useRef(null);
   const [expanded, setExpanded] = useState(false);
   const [cardWidth, setCardWidth] = useState(null);
@@ -17,15 +20,20 @@ const StockCard = () => {
   const [onOrder, setOnOrder] = useState(80);
   const [incoming, setIncoming] = useState(100);
   const totalInStock = 120;
+  const sixmonth = data.averageQuantitySold; 
 
   const handleCalculation = () => {
-    const testData = 100; // Use the value entered in the input box
-    const toOrder = inputValue ? parseInt(inputValue, 10) : 0; // Use the value entered in the input box
+
+    const toOrder = inputValue ? parseInt(inputValue, 10) : 0; 
+ 
 
     // Perform the calculation
-    const result = (onOrder + incoming + totalInStock + toOrder) / testData;
+    const result = (onOrder + incoming + totalInStock + toOrder) / sixmonth;
     setMonthsOfStock(result);
+    console.log(sixmonth);
+
   };
+
 
   const handleExpand = () => {
     setExpanded((prevExpanded) => !prevExpanded);
@@ -64,8 +72,11 @@ const StockCard = () => {
     <>
       <CardContainer ref={cardRef} expanded={expanded ? 1 : 0}>
         <CardHeaderContainer onClick={handleExpand}>
-          <CardTitle>
-            THE001
+          <CardTitlee>
+            <CodeTitle>
+            {data.supplierCode}
+            </CodeTitle>
+            {data.supplierName}
             <IncomingBadge>
               <TeamBulletI />
               Incoming
@@ -74,7 +85,7 @@ const StockCard = () => {
               <TeamBulletO />
               On-Order
             </OnOrderBadge>
-          </CardTitle>
+          </CardTitlee>
           <RightKontainer>
             <ForeButton to="/stock/supplier">Forecast all</ForeButton>
             <ExpandIcon expanded={expanded ? 1 : 0} />
@@ -98,17 +109,19 @@ const StockCard = () => {
                 </TableRow>
               </TableHead>
               <tbody>
-                <TableRow>
-                  <TableCellCode align='center'>NMP019</TableCellCode>
-                  <TableCell align='center'>AMLODIPINE TEVA 10 MG</TableCell>
-                  <TableCellInc align='center' onClick={() => setIncoming(incoming + 1)}>
-                    + {incoming}
+                {data.productsForecast && data.productsForecast.map((product, index) =>{
+                  return(
+                    <TableRow key={index}>
+                  <TableCellCode align='center'>{product.productCode}</TableCellCode>
+                  <TableCell align='center'>{product.productDescription}</TableCell>
+                  <TableCellInc align='center' onClick={() => setIncoming(product.incoming + 1)}>
+                    + {product.incoming}
                   </TableCellInc>
                   <TableCellOrder align='center' onClick={() => setOnOrder(onOrder + 1)}>
-                    + {onOrder}
+                    + {product.quantityOrdered}
                   </TableCellOrder>
                   <TableCellTotal align='center'>
-                    {totalInStock}
+                    {product.inStock}
                   </TableCellTotal>
                   <TableCellTotal
                     color={handleColorChange()}
@@ -132,113 +145,9 @@ const StockCard = () => {
                   <TableCell >
                     <ForeButton to='/stock/forecastdetails'>More</ForeButton>
                   </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCellCode align='center'>NMP019</TableCellCode>
-                  <TableCell align='center'>AMLODIPINE TEVA 10 MG</TableCell>
-                  <TableCellInc align='center' onClick={() => setIncoming(incoming + 1)}>
-                    + {incoming}
-                  </TableCellInc>
-                  <TableCellOrder align='center' onClick={() => setOnOrder(onOrder + 1)}>
-                    + {onOrder}
-                  </TableCellOrder>
-                  <TableCellTotal align='center'>
-                    {totalInStock}
-                  </TableCellTotal>
-                  <TableCellTotal
-                    color={handleColorChange()}
-                    align='center'
-                  >
-                    {monthsOfStock.toFixed(2)}
-                  </TableCellTotal>
-
-                  <TableCell align='center'>
-                    <UniInput>
-                      <InputStock
-                        placeholder='300'
-                        type="number"
-                        name='calculations'
-                        value={inputValue}
-                        onChange={(e) => setInputValue(e.target.value)}
-                      />
-                      <CalcButton onClick={handleCalculation}>=</CalcButton>
-                    </UniInput>
-                  </TableCell>
-                  <TableCell >
-                    <ForeButton to='/stock/forecastdetails'>More</ForeButton>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCellCode align='center'>NMP019</TableCellCode>
-                  <TableCell align='center'>AMLODIPINE TEVA 10 MG</TableCell>
-                  <TableCellInc align='center' onClick={() => setIncoming(incoming + 1)}>
-                    + {incoming}
-                  </TableCellInc>
-                  <TableCellOrder align='center' onClick={() => setOnOrder(onOrder + 1)}>
-                    + {onOrder}
-                  </TableCellOrder>
-                  <TableCellTotal align='center'>
-                    {totalInStock}
-                  </TableCellTotal>
-                  <TableCellTotal
-                    color={handleColorChange()}
-                    align='center'
-                  >
-                    {monthsOfStock.toFixed(2)}
-                  </TableCellTotal>
-
-                  <TableCell align='center'>
-                    <UniInput>
-                      <InputStock
-                        placeholder='300'
-                        type="number"
-                        name='calculations'
-                        value={inputValue}
-                        onChange={(e) => setInputValue(e.target.value)}
-                      />
-                      <CalcButton onClick={handleCalculation}>=</CalcButton>
-                    </UniInput>
-                  </TableCell>
-                  <TableCell >
-                    <ForeButton to='/stock/forecastdetails'>More</ForeButton>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCellCode align='center'>NMP019</TableCellCode>
-                  <TableCell align='center'>AMLODIPINE TEVA 10 MG</TableCell>
-                  <TableCellInc align='center' onClick={() => setIncoming(incoming + 1)}>
-                    + {incoming}
-                  </TableCellInc>
-                  <TableCellOrder align='center' onClick={() => setOnOrder(onOrder + 1)}>
-                    + {onOrder}
-                  </TableCellOrder>
-                  <TableCellTotal align='center'>
-                    {totalInStock}
-                  </TableCellTotal>
-                  <TableCellTotal
-                    color={handleColorChange()}
-                    align='center'
-                  >
-                    {monthsOfStock.toFixed(2)}
-                  </TableCellTotal>
-
-                  <TableCell align='center'>
-                    <UniInput>
-                      <InputStock
-                        placeholder='300'
-                        type="number"
-                        name='calculations'
-                        value={inputValue}
-                        onChange={(e) => setInputValue(e.target.value)}
-                      />
-                      <CalcButton onClick={handleCalculation}>=</CalcButton>
-                    </UniInput>
-                  </TableCell>
-                  <TableCell >
-                    <ForeButton to='/stock/forecastdetails'>More</ForeButton>
-                  </TableCell>
-                </TableRow>
-                {/* Add more data rows here */}
+                </TableRow>  
+                  )
+                })}
               </tbody>
             </TableContainer>
           </ExpandedCardContent>
@@ -339,11 +248,20 @@ const CardHeaderContainer = styled.div`
   cursor: pointer;
 `;
 
-const CardTitle = styled.h3`
+const CardTitlee = styled.h3`
   margin: 0;
   display: flex;
   align-items: center;
 `;
+
+const CodeTitle = styled.h3`
+  margin-left: 5px;
+  margin-right: 15px;
+  font-size: 16px;
+  color: ${props=> props.theme.textCard};
+  font-weight: 500;
+`;
+
 
 const ExpandIcon = styled(FaChevronDown)`
   transition: transform 0.3s ease-in-out;
@@ -355,7 +273,7 @@ const ExpandedCard = styled.div`
   background-color: ${props => props.theme.componentBackground};
   border-radius: ${(props) => (props.notopradius ? '0' : '10px')} ${(props) => (props.notopradius ? '0' : '10px')} 10px 10px;
   padding: 20px;
-  max-height: ${(props) => (props.expanded ? '1000px' : '0')};
+  //max-height: ${(props) => (props.expanded ? '1000px' : '0')};
   overflow: hidden;
   animation: ${(props) => (props.expanded ? slideDown : slideUp)} 0.3s ease-in-out;
   overflow-x: auto;

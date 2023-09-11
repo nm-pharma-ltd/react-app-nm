@@ -7,9 +7,13 @@ import { TiMediaRecord } from "react-icons/ti";
 import { FaAngleLeft, FaAngleRight, FaArrowRightFromBracket } from "react-icons/fa6";
 import { NavLink } from 'react-router-dom';
 import { Context, LOGOUT } from '../providers/provider';
+import { gradientColors } from './TeamCardDetails';
 
 export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
+
   const [store, dispatch] = useContext(Context);
+  const teams = store.teams;
+
 
   const handleLogout = () => {
     dispatch({ type: LOGOUT });
@@ -48,35 +52,24 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
         </MenuItemIcon>
         ERUs / Tenders
       </MenuItem>
-      <MenuItemD >
+      {/* <MenuItemD >
         <MenuItemIcon>
           <FaBell />
         </MenuItemIcon>
-        Notifications 
-        {/* <NotificationPop>4</NotificationPop> */}
-      </MenuItemD>
+        Notifications
+        <NotificationPop>4</NotificationPop>
+      </MenuItemD> */}
       {!store.hideTeams && (
         <>
           <MenuHeading className="space">Teams</MenuHeading>
-          <MenuItem2 to="/targets/teamdetails/0">
-            <MenuItemIcon>
-              <TeamBullet1 />
-            </MenuItemIcon>
-            Private sales
-          </MenuItem2>
-          <MenuItem2 to="/targets/teamdetails/1">
-            <MenuItemIcon>
-              <TeamBullet2 />
-            </MenuItemIcon>
-            Goverment sales
-          </MenuItem2>
-          <MenuItem2 to="/targets/teamdetails/2">
-            <MenuItemIcon>
-              <TeamBullet3 />
-            </MenuItemIcon>
-            Company sales
-          </MenuItem2>
-          <MenuHeading />
+          {store.teams.map((team, index) => (
+            <MenuItem2 to={`/targets/teamdetails/${team.team.id}`}>
+              <MenuItemIcon>
+                <TeamBullet />
+              </MenuItemIcon>
+              {team.team.name}
+            </MenuItem2>
+          ))}
         </>
       )}
       <MenuItem2 to="/settings">
@@ -170,7 +163,9 @@ const TeamBullet2 = styled(TiMediaRecord)`
 const TeamBullet3 = styled(TiMediaRecord)`
     color: #af8e12;
 `
-
+const TeamBullet = styled(TiMediaRecord)`
+    color: gradientColors[team.team.id % gradientColors.length];
+`
 
 const MenuItem = styled(NavLink)`
   padding: 13px;

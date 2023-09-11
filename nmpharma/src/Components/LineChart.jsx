@@ -14,14 +14,7 @@ const LineChart = () => {
         fill: false,
         borderColor: 'rgb(75, 192, 192)',
         tension: 0.1,
-      },
-      {
-        label: 'Quantity',
-        data: [4, 8, 15, 15, 2, 2, 1, 17, 6, 11, 18, 30],
-        fill: false,
-        borderColor: 'rgb(198, 113, 29)',
-        tension: 0.1,
-      },
+      }
     ],
   };
 
