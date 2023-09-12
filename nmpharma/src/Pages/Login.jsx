@@ -54,14 +54,11 @@ export default function Login() {
       });
       setLoading(false); // Stop the loader once done
       dispatch({ type: SIGNEDUSER, payload: { response } });
-      console.log(store.user.token);
+      
       navigate('/pharmacies');
-      //console.log(store.SIGNEDUSER);
+      
 
-      // localStorage.setItem('token', response.data.token);
-      // localStorage.setItem('user', JSON.stringify(response.data.user));
-
-      console.log("Attempting to navigate...");
+    
 
     } catch (error) {
       setLoading(false); // Stop the loader in case of an error

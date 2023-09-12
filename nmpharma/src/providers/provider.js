@@ -7,6 +7,8 @@ const LOCAL_STORAGE_ID = "NMPHARMA_LEGENDS_BIGGEST_PENISES_IN_MALTA";
 
 export const NOTES = "NOTE";
 export const SIGNEDUSER = "SIGNED_USER";
+export const PRODUCTS = "PRODUCTS";
+export const CLIENTS = "CLIENTS";
 export const LOGOUT = "LOGOUT";
 export const TOGGLE_THEME = "TOGGLE_THEME";
 export const TOGGLE_HIDE_TEAMS = "TOGGLE_HIDE_TEAMS";
@@ -15,7 +17,8 @@ export const TEAMS = "TEAMS";
 export const TEAM_COLORS = "TEAM_COLORS";
 export const CLEAR_USER = "CLEAR_USER";
 
-const initialState = { messages: [], user: "", token: "", theme: "light", hideTeams: false, roundednav: true, teams: [], team_colors : [
+
+const initialState = { messages: [], products: [], clients: [], user: "", token: "", theme: "light", hideTeams: false, roundednav: true, teams: [], team_colors : [
   "linear-gradient(to bottom right, #a48300, #ffcf40, #9f7700)", //Gold
   "linear-gradient(to bottom right,  #646464,#c0c0c0 , #868585)",//Silver
   "linear-gradient(to bottom right, #742700, #ff7f50, #cc6849)", //Bronze
@@ -41,7 +44,17 @@ const dataReducer = (state, action) => {
           roundednav,
           user: "",
           token: ""
-        };      
+        };  
+      case PRODUCTS:
+        return{
+          ...state, 
+          products: action.payload.processedData
+        };
+        case CLIENTS:
+        return{
+          ...state, 
+          clients: action.payload.processedPharmacies
+        };
     case NOTES:
       return {
         ...state,

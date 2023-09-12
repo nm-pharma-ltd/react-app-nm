@@ -5,48 +5,23 @@ import Table from "../Components/Table";
 import ApiService from "../api/ApiService";
 import { Skeleton } from "@mui/material";
 import { FiSearch } from "react-icons/fi"; 
-import { Context, SIGNEDUSER  } from '../providers/provider';
+import { Context, SIGNEDUSER, CLIENTS  } from '../providers/provider';
 
-export default function ClientDetails() {
-
-  const [loading, setLoading] = useState(true);
+export default function ClientDetails({loading}) {
   const [searchTerm, setSearchTerm] = useState(""); 
-  const [pharmaciesData, setPharmaciesData] = useState([]);
-  const [filteredPharmacies, setFilteredPharmacies] = useState([]);
-  const [store, dispatch] = useContext(Context);
+  const [store, dispatch] = useContext(Context); 
 
+  
+  const [pharmaciesData, setPharmaciesData] = useState([...store.clients.slice(0, 82)]);
+  const [filteredPharmacies, setFilteredPharmacies] = useState([...store.clients.slice(0, 82)]);
 
   useEffect(() => {
-    async function fetchPharmacyData() {
-      try {
-        const fetchedData = await ApiService.get("clients/sales/2023/8", {"Authorization": "Bearer " + store.user.token });
-        const sortedPharmacies = fetchedData.sort((a, b) => b.monthlySale - a.monthlySale);
-        const processedPharmacies = sortedPharmacies.map((pharmacy, index) => ({
-          rank: index + 1,
-          clientName: pharmacy.clientName,
-          monthlyProfit: pharmacy.monthlyProfit.toFixed(0),
-          monthlySale: parseFloat(pharmacy.monthlySale).toFixed(0) + "€"
-        }));
-    
-        setPharmaciesData(processedPharmacies.slice(0, 82));
-        setFilteredPharmacies(processedPharmacies.slice(0, 82));
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching pharmacy data:', error);
-        setLoading(false);
-      }
+    if (searchTerm === "") {
+      setFilteredPharmacies(pharmaciesData);
+    } else {
+      const filtered = pharmaciesData.filter(pharmacy => pharmacy.clientName.toLowerCase().startsWith(searchTerm.toLowerCase()));
+      setFilteredPharmacies(filtered);
     }
-    fetchPharmacyData();
-  }, []);
-
-
-  useEffect(() => {
-      if (searchTerm === "") {
-        setFilteredPharmacies(pharmaciesData);
-      } else {
-        const filtered = pharmaciesData.filter(pharmacy => pharmacy.clientName.toLowerCase().startsWith(searchTerm.toLowerCase()));
-        setFilteredPharmacies(filtered);
-      }
   }, [searchTerm, pharmaciesData]);
   
   

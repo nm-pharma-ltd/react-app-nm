@@ -11,10 +11,10 @@ export default function Stock() {
   useEffect(() => {
     const year = new Date().getFullYear();
     const month = new Date().getMonth();
-    console.log(month);
+    
     ApiService.get(`suppliers/forecast/${year}/${month}`, { "Authorization": "Bearer " + store.user.token }).then(response => {
       setPharmacies(response);
-      console.log(response);
+      
 
     });
   }, [])
