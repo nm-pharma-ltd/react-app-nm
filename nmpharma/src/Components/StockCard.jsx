@@ -3,20 +3,13 @@ import styled, { keyframes } from 'styled-components';
 import { FaChevronDown } from 'react-icons/fa';
 import { TableCell, ViewDetailsLink } from './Table';
 import { TiMediaRecord } from 'react-icons/ti';
-import { GoBackButton } from '../Pages/ClientsDetails';
 import { NavLink } from 'react-router-dom';
-import { CardTitle } from './DataCardLarge';
 import { FaInfinity } from 'react-icons/fa6';
 
 const StockCard = ({ data }) => {
   const cardRef = useRef(null);
   const [expanded, setExpanded] = useState(false);
   const [cardWidth, setCardWidth] = useState(null);
-  const [inputsValue, setInputsValue] = useState({});
-
-  const [onOrder, setOnOrder] = useState(0);
-  const [incoming, setIncoming] = useState(0);
-  const [totalInStock, setTotalInStock] = useState({});
   const [inputValues, setInputValues] = useState({});
   const [monthsOfStock, setMonthsOfStock] = useState({});
 
@@ -26,11 +19,11 @@ const StockCard = ({ data }) => {
   const calculateToOrder = (productCode) => {
     const productData = data.productsForecast.find(prod => prod.productCode === productCode);
 
-    if (!productData) return 0;  // exit the function if the product data is not found
+    if (!productData) return 0;
 
     const sixmonth = productData.averageQuantitySold;
 
-    // Using product-specific values
+
     const currentOnOrder = productData.quantityOrdered;
     const currentIncoming = productData.incoming;
     const currentTotalInStock = productData.inStock;
@@ -93,6 +86,8 @@ const StockCard = ({ data }) => {
     const differenceInMonths = (expiry.getFullYear() - currentDate.getFullYear()) * 12 + (expiry.getMonth() - currentDate.getMonth());
     return differenceInMonths < 6;
   };
+  const hasExpiry = data.productsForecast.some(product => isExpiryInSixMonths(product.productExpire));
+
 
   const handleExpiryColorChange = (productExpire) => {
     if (!productExpire) return <TableCellTotal />;
@@ -126,6 +121,12 @@ const StockCard = ({ data }) => {
             {data.supplierName}
           </CardTitlee>
           <RightKontainer>
+            {hasExpiry && (
+              <ExpiryBadge>
+                <TiMediaRecord />
+                Expiry
+              </ExpiryBadge>
+            )}
             {hasIncoming && (
               <IncomingBadge>
                 <TeamBulletI />
@@ -453,6 +454,26 @@ export const OnOrderBadge = styled.div`
     font-size: 12px;
   }
 `;
+export const ExpiryBadge = styled.div`
+  height: 22px;
+  text-align: center;
+  border-radius: 100px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  color:  #796300; 
+  margin: 0 0 0 20px;
+  background-color:  #e1c770; 
+  min-width: fit-content;
+  width: 90px;
+  font-size: 13px;
+  font-weight: 600;
+
+  @media (max-width: 768px) {
+    font-size: 12px;
+  }
+`;
+
 
 const slideDown = keyframes`
   from {
