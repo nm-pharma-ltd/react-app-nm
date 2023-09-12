@@ -6,6 +6,7 @@ import { TiMediaRecord } from 'react-icons/ti';
 import { GoBackButton } from '../Pages/ClientsDetails';
 import { NavLink } from 'react-router-dom';
 import { CardTitle } from './DataCardLarge';
+import { FaInfinity } from 'react-icons/fa6';
 
 const StockCard = ({ data }) => {
   const cardRef = useRef(null);
@@ -53,8 +54,9 @@ const StockCard = ({ data }) => {
     const currentIncoming = productData.incoming;
     const currentTotalInStock = productData.inStock;
 
-    const months = (sixmonth !== 0) ?
-      (currentOnOrder + currentIncoming + currentTotalInStock + toOrder) / sixmonth : 0;
+    const calculatedMonths = (currentOnOrder + currentIncoming + currentTotalInStock + toOrder) / sixmonth;
+    const months = sixmonth !== 0 && Number.isFinite(calculatedMonths) ? calculatedMonths : "--";
+
 
     setMonthsOfStock(prevState => ({ ...prevState, [productCode]: months }));
   };
@@ -85,14 +87,32 @@ const StockCard = ({ data }) => {
     };
   }, []);
 
+  const isExpiryInSixMonths = (expiryDate) => {
+    const currentDate = new Date();
+    const expiry = new Date(expiryDate);
+    const differenceInMonths = (expiry.getFullYear() - currentDate.getFullYear()) * 12 + (expiry.getMonth() - currentDate.getMonth());
+    return differenceInMonths < 6;
+  };
+
+  const handleExpiryColorChange = (productExpire) => {
+    if (!productExpire) return <TableCellTotal />;
+    return isExpiryInSixMonths(productExpire) ? 'red' : <TableCellTotal />;
+  };
 
   const handleInputChange = (productCode, value) => {
     setInputValues(prevValues => ({ ...prevValues, [productCode]: value }));
   };
 
   const handleColorChange = (productCode) => {
-    return monthsOfStock[productCode] && monthsOfStock[productCode] < 6 ? 'red' : 'green';
+    if (monthsOfStock[productCode] < 6) {
+      return 'red';
+    } else if (monthsOfStock[productCode] >= 18) {
+      return '#b89d00';
+    } else {
+      return 'green';
+    }
   };
+
 
 
   return (
@@ -152,31 +172,26 @@ const StockCard = ({ data }) => {
                       <TableCellInc align='center'>
                         {product.incoming && product.incoming !== 0 ? `+ ${product.incoming}` : '--'}
                       </TableCellInc>
-
                       <TableCellTotal align='center'>
                         {product.inStock}
                       </TableCellTotal>
-
-                      <TableCellTotal
-                        color={handleColorChange(product.productCode)}
-                        align='center'
-                      >
-                        {monthsOfStock[product.productCode] ? monthsOfStock[product.productCode].toFixed(2) : "--"}
+                      <TableCellTotal color={handleColorChange(product.productCode)} align='center'>
+                        {typeof monthsOfStock[product.productCode] === "number" ? monthsOfStock[product.productCode].toFixed(2) : monthsOfStock[product.productCode] || "--"}
                       </TableCellTotal>
-                      <TableCellTotal>
-                        TO-DO
+                      <TableCellTotal color={handleExpiryColorChange(product.productExpire)} align='center'>
+                        {product.productExpire === "" ? "--" : (!product.productExpire ? <FaInfinity /> : product.productExpire)}
                       </TableCellTotal>
                       <TableCell align='center'>
                         <UniInput>
                           <InputStock
                             placeholder={calculateToOrder(product.productCode).toString()}
                             type="number"
+                            name='productsInput'
                             value={inputValues[product.productCode] || ''}
                             onChange={(e) => handleInputChange(product.productCode, e.target.value)}
                           />
                           <CalcButton onClick={() => handleCalculation(product.productCode)}>=</CalcButton>
                         </UniInput>
-
                       </TableCell>
                       <TableCell >
                         <ForeButton to='/stock/forecastdetails'>More</ForeButton>

@@ -7,22 +7,26 @@ import Table from "../Components/Table";
 import Teams from "../Components/Teams";
 import { Konto } from "./ForecastSingleProduct";
 import Skeleton from "@mui/material/Skeleton";
+import DangerAlert from "../Components/DangerAlert";
 import { Context, SIGNEDUSER, PRODUCTS, CLIENTS  } from '../providers/provider';
 
 export default function Pharmacies({ IsLoadingPharmacies, IsLoadingProducts  }) {
 
   const [store, dispatch] = useContext(Context);
+  const [errorMessage, setErrorMessage] = useState('');
 
   return (
     <>
       <Title>Sales activity</Title>
+      {errorMessage && 
+      <DangerAlert message={errorMessage} />}
       <MamRadVelkyZadky>
         {IsLoadingProducts ? (
           <NutellaSkeletonTableContainer style={{ width: "47%" }}>
-           
+
             <NutellaSkeleton variant="text" width="60%" height="24px" />
             <NutellaSkeleton variant="text" width="30%" height="20px" />
-          
+
             <div style={{ display: "flex", marginBottom: "10px" }}>
               <NutellaSkeleton
                 variant="rectangular"
@@ -166,11 +170,11 @@ export default function Pharmacies({ IsLoadingPharmacies, IsLoadingProducts  }) 
           />
         )}
       </MamRadVelkyZadky>
-  
-  {/* TÝMY */}
-      <Teams/>
-    
-    {/* CHAT */}
+
+      {/* TÝMY */}
+      <Teams />
+
+      {/* CHAT */}
       <h2>Chat</h2>
       <Konto>
         <ChatBox endPoint="comments" />
