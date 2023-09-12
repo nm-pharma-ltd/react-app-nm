@@ -24,8 +24,9 @@ export default function ProductDetails() {
         // Ensure data is sorted by rank
         const sortedData = productsData.sort((a, b) => a.rank - b.rank);
 
-        const processedData = sortedData.map(product => ({
+        const processedData = sortedData.map((product, index) => ({
           ...product,
+          rank: index + 1,
           soldTarget: `${product.quantitySold} / ${product.quantityTarget}`,
           monthlyProfit: parseFloat(product.monthlyProfit).toFixed(0),
         }));

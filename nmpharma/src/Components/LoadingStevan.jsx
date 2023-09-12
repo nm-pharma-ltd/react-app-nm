@@ -15,7 +15,7 @@ const LoadingStevan = () => {
 
   return (
     <StyledContents>
-      <StyledDvdScreensaver speed={3} height="100vh" impactCallback={handleComponentImpactCount}>
+      <StyledDvdScreensaver speed={0.5} height="100vh" impactCallback={handleComponentImpactCount}>
         <StyledImage
           src={require(`../img/Stevan${componentImpactCount}.png`)}
           alt=""

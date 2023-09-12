@@ -27,73 +27,83 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
 
   return (
     <StyledSidebar open={isSidebarOpen} roundednav={store.roundednav}>
+      <TopLinks>
       <LogoContainer>
         <Logo src={logoSrc} alt="Company Logo" />
       </LogoContainer>
-      <MenuHeading>Main Menu</MenuHeading>
-      <MenuItem to="/pharmacies" >
-        <MenuItemIcon>
-          <FaUser />
-        </MenuItemIcon>
-        Pharmacies / Clients
-      </MenuItem>
-      <MenuItem to="/stock" >
-        <MenuItemIcon>
-          <FaChartBar />
-        </MenuItemIcon>
-        Stock
-      </MenuItem>
-      <MenuItem to="/targets" >
-        <MenuItemIcon>
-          <FaBullseye />
-        </MenuItemIcon>
-        Targets
-      </MenuItem>
-      <MenuItem to="/eru" >
-        <MenuItemIcon>
-          <FaListAlt />
-        </MenuItemIcon>
-        ERUs / Tenders
-      </MenuItem>
-      {/* <MenuItemD >
+        <MenuHeading>Main Menu</MenuHeading>
+        <MenuItem to="/pharmacies" >
+          <MenuItemIcon>
+            <FaUser />
+          </MenuItemIcon>
+          Pharmacies / Clients
+        </MenuItem>
+        <MenuItem to="/stock" >
+          <MenuItemIcon>
+            <FaChartBar />
+          </MenuItemIcon>
+          Stock
+        </MenuItem>
+        <MenuItem to="/targets" >
+          <MenuItemIcon>
+            <FaBullseye />
+          </MenuItemIcon>
+          Targets
+        </MenuItem>
+        <MenuItem to="/eru" >
+          <MenuItemIcon>
+            <FaListAlt />
+          </MenuItemIcon>
+          ERUs / Tenders
+        </MenuItem>
+        {/* <MenuItemD >
         <MenuItemIcon>
           <FaBell />
         </MenuItemIcon>
         Notifications
         <NotificationPop>4</NotificationPop>
       </MenuItemD> */}
-      {!store.hideTeams && (
-        <>
-          <MenuHeading className="space">Teams</MenuHeading>
-          {store.teams.map((team, index) => (
-            <MenuItem2 to={`/targets/teamdetails/${team.team.id}`} key={team.team.id}>
-              <MenuItemIcon>
-                <TeamBullet />
-              </MenuItemIcon>
-              {team.team.name}
-            </MenuItem2>
+        {!store.hideTeams && (
+          <>
+            <MenuHeading className="space">Teams</MenuHeading>
+            {store.teams.map((team, index) => (
+              <MenuItem2 to={`/targets/teamdetails/${team.team.id}`} key={team.team.id}>
+                <MenuItemIcon>
+                  <TeamBullet />
+                </MenuItemIcon>
+                {team.team.name}
+              </MenuItem2>
 
-          ))}
-        </>
-      )}
-      <MenuItem2 to="/settings">
-        <MenuItemIcon>
-          <FaCog />
-        </MenuItemIcon>
-        Settings
-      </MenuItem2>
-      <MenuItem2 to="/Login" onClick={handleLogout} >
-        <MenuItemIcon>
-          <FaArrowRightFromBracket />
-        </MenuItemIcon>
-        Log out
-      </MenuItem2>
+            ))}
+          </>
+        )}
+      </TopLinks>
+      <BottomLinks>
+        <MenuItem2 to="/settings">
+          <MenuItemIcon>
+            <FaCog />
+          </MenuItemIcon>
+          Settings
+        </MenuItem2>
+        <MenuItem2 to="/Login" onClick={handleLogout} >
+          <MenuItemIcon>
+            <FaArrowRightFromBracket />
+          </MenuItemIcon>
+          Log out
+        </MenuItem2>
+      </BottomLinks>
       <ToggleSidebarButton onClick={toggleSidebar}>
         {isSidebarOpen ? <FaAngleLeft color='#737373' /> : <FaAngleRight color='#737373' />}
       </ToggleSidebarButton>
     </StyledSidebar>
   );
 }
+
+const TopLinks = styled.div``
+const BottomLinks = styled.div`
+  margin-bottom: 70px;
+`
+
 
 const ToggleSidebarButton = styled.div`
   position: fixed;
@@ -117,7 +127,6 @@ const ToggleSidebarButton = styled.div`
   }
 `;
 
-
 const StyledSidebar = styled.div`
   height: 100vh;
   width: 250px;
@@ -131,6 +140,9 @@ const StyledSidebar = styled.div`
   width: ${props => (props.open ? '250px' : '0')};
   transition: 0.3s;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `;
 
 const LogoContainer = styled.div`
@@ -145,7 +157,6 @@ const Logo = styled.img`
   height: 56px;
 `;
 
-
 const MenuHeading = styled.div`
   padding: 8px 28px;
   color: #555555;
@@ -157,19 +168,6 @@ const MenuHeading = styled.div`
     margin-top: 15px;
   }
 `;
-
-const TeamBullet1 = styled(TiMediaRecord)`
-    color: #E16A32;
-`
-const TeamBullet2 = styled(TiMediaRecord)`
-    color: #8d8d8d;
-`
-const TeamBullet3 = styled(TiMediaRecord)`
-    color: #af8e12;
-`
-const TeamBullet = styled(TiMediaRecord)`
-    color: gradientColors[team.team.id % gradientColors.length];
-`
 
 const MenuItem = styled(NavLink)`
   padding: 13px;
@@ -197,22 +195,6 @@ const MenuItem = styled(NavLink)`
     font-weight: 500;
   }
 `;
-const MenuItemD = styled(NavLink)`
-  padding: 13px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  color: #b1b1b1;
-  transition: background-color 0.3s;
-  border-radius: 10px;
-  font-size: 14px;
-  margin: 0 20px;
-  border: 2px  dashed ${props => props.theme.nav}; 
-  cursor: not-allowed;
-  text-decoration: none;
-  text-wrap: nowrap;
-
-`;
 
 const MenuItem2 = styled(NavLink)`
   padding: 8px;
@@ -239,6 +221,26 @@ const MenuItemIcon = styled.div`
   display: flex;
 `;
 
+const TeamBullet = styled(TiMediaRecord)`
+    color: gradientColors[team.team.id % gradientColors.length];
+`
+
+//const MenuItemD = styled(NavLink)`
+//   padding: 13px;
+//   display: flex;
+//   align-items: center;
+//   cursor: pointer;
+//   color: #b1b1b1;
+//   transition: background-color 0.3s;
+//   border-radius: 10px;
+//   font-size: 14px;
+//   margin: 0 20px;
+//   border: 2px  dashed ${props => props.theme.nav}; 
+//   cursor: not-allowed;
+//   text-decoration: none;
+//   text-wrap: nowrap;
+// `;
+
 // const NotificationPop = styled.div`
 //     width: 23px;
 //     height: 19px;
@@ -252,3 +254,14 @@ const MenuItemIcon = styled.div`
 //     text-align: center;
 //     font-size: 12px;
 // `;
+
+
+// const TeamBullet1 = styled(TiMediaRecord)`
+//     color: #E16A32;
+// `
+// const TeamBullet2 = styled(TiMediaRecord)`
+//     color: #8d8d8d;
+// `
+// const TeamBullet3 = styled(TiMediaRecord)`
+//     color: #af8e12;
+// `

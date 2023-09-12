@@ -48,7 +48,6 @@ export default function TeamCardDetail({id, teamName, monthGoal, yearGoal, curre
           <EarnedLabel>Earned last month</EarnedLabel>
           <GreenBox>{currentAmountMonth} €</GreenBox>
         </Earned>
-
         <Earned>
           <EarnedLabel>Earned this year</EarnedLabel>
           <GreenBox>{currentAmount} €</GreenBox>

@@ -8,26 +8,29 @@ import Teams from "../Components/Teams";
 import { Konto } from "./ForecastSingleProduct";
 import ApiService from "../api/ApiService";
 import Skeleton from "@mui/material/Skeleton";
-import { Context, SIGNEDUSER  } from '../providers/provider';
+import { Context, SIGNEDUSER } from '../providers/provider';
+import DangerAlert from "../Components/DangerAlert";
 
 export default function Pharmacies() {
-  const [products, setProducts] = useState([]); 
+  const [products, setProducts] = useState([]);
   const [isLoadingProducts, setIsLoadingProducts] = useState(true);
   const [isLoadingPharmacies, setIsLoadingPharmacies] = useState(true);
   const [store, dispatch] = useContext(Context);
 
-  
+  const [errorMessage, setErrorMessage] = useState('');
+
   useEffect(() => {
     async function fetchData() {
       try {
         setIsLoadingProducts(true);
-        const productsData = await ApiService.get("products/sales/2023/8", {"Authorization": "Bearer " + store.user.token });
+        const productsData = await ApiService.get("products/sales/2023/8", { "Authorization": "Bearer " + store.user.token });
 
         // Ensure data is sorted by rank
         const sortedData = productsData.sort((a, b) => a.rank - b.rank);
 
-        const processedData = sortedData.map((product) => ({
+        const processedData = sortedData.map((product, index) => ({
           ...product,
+          rank: index + 1,  // Add 1 to the index for human-readable ranking
           soldTarget: `${product.quantitySold} / ${product.quantityTarget}`,
           monthlyProfit: parseFloat(product.monthlyProfit).toFixed(0),
         }));
@@ -50,7 +53,7 @@ export default function Pharmacies() {
     async function fetchPharmacyData() {
       try {
         setIsLoadingPharmacies(true);
-        const fetchedData = await ApiService.get("clients/sales/2023/8", {"Authorization": "Bearer " + store.user.token });
+        const fetchedData = await ApiService.get("clients/sales/2023/8", { "Authorization": "Bearer " + store.user.token });
 
         const sortedPharmacies = fetchedData.sort(
           (a, b) => b.monthlySale - a.monthlySale
@@ -65,9 +68,15 @@ export default function Pharmacies() {
         setPharmaciesData(processedPharmacies.slice(0, 10)); // Display top 10
         setIsLoadingPharmacies(false);
       } catch (error) {
-        console.error("Error fetching pharmacy data:", error);
-        setIsLoadingPharmacies(false);
-      }
+        if (error.message.includes('net::ERR_CONNECTION')) {
+          setErrorMessage('Failed to connect. Please check your network and try again.');
+        }
+        else {
+          setErrorMessage('Failed to connect. Please check your network and try again.');
+          console.error("Error fetching pharmacy data:", error);
+          setIsLoadingPharmacies(false);
+        }
+        }
     }
 
     fetchPharmacyData();
@@ -76,13 +85,15 @@ export default function Pharmacies() {
   return (
     <>
       <Title>Sales activity</Title>
+      {errorMessage && 
+      <DangerAlert message={errorMessage} />}
       <MamRadVelkyZadky>
         {isLoadingProducts ? (
           <NutellaSkeletonTableContainer style={{ width: "47%" }}>
-           
+
             <NutellaSkeleton variant="text" width="60%" height="24px" />
             <NutellaSkeleton variant="text" width="30%" height="20px" />
-          
+
             <div style={{ display: "flex", marginBottom: "10px" }}>
               <NutellaSkeleton
                 variant="rectangular"
@@ -226,11 +237,11 @@ export default function Pharmacies() {
           />
         )}
       </MamRadVelkyZadky>
-  
-  {/* TÝMY */}
-      <Teams/>
-    
-    {/* CHAT */}
+
+      {/* TÝMY */}
+      <Teams />
+
+      {/* CHAT */}
       <h2>Chat</h2>
       <Konto>
         <ChatBox endPoint="comments" />
