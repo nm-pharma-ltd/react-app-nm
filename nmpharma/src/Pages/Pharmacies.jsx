@@ -6,81 +6,14 @@ import { Title } from "./ClientsDetails";
 import Table from "../Components/Table";
 import Teams from "../Components/Teams";
 import { Konto } from "./ForecastSingleProduct";
-import ApiService from "../api/ApiService";
 import Skeleton from "@mui/material/Skeleton";
-import { Context, SIGNEDUSER } from '../providers/provider';
 import DangerAlert from "../Components/DangerAlert";
+import { Context, SIGNEDUSER, PRODUCTS, CLIENTS  } from '../providers/provider';
 
-export default function Pharmacies() {
-  const [products, setProducts] = useState([]);
-  const [isLoadingProducts, setIsLoadingProducts] = useState(true);
-  const [isLoadingPharmacies, setIsLoadingPharmacies] = useState(true);
+export default function Pharmacies({ IsLoadingPharmacies, IsLoadingProducts  }) {
+
   const [store, dispatch] = useContext(Context);
-
   const [errorMessage, setErrorMessage] = useState('');
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        setIsLoadingProducts(true);
-        const productsData = await ApiService.get("products/sales/2023/8", { "Authorization": "Bearer " + store.user.token });
-
-        // Ensure data is sorted by rank
-        const sortedData = productsData.sort((a, b) => a.rank - b.rank);
-
-        const processedData = sortedData.map((product, index) => ({
-          ...product,
-          rank: index + 1,  // Add 1 to the index for human-readable ranking
-          soldTarget: `${product.quantitySold} / ${product.quantityTarget}`,
-          monthlyProfit: parseFloat(product.monthlyProfit).toFixed(0),
-        }));
-
-        // Set only the top 10 products
-        setProducts(processedData.slice(0, 10));
-        setIsLoadingProducts(false);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setIsLoadingProducts(false);
-      }
-    }
-
-    fetchData();
-  }, []);
-
-  const [pharmaciesData, setPharmaciesData] = useState([]);
-
-  useEffect(() => {
-    async function fetchPharmacyData() {
-      try {
-        setIsLoadingPharmacies(true);
-        const fetchedData = await ApiService.get("clients/sales/2023/8", { "Authorization": "Bearer " + store.user.token });
-
-        const sortedPharmacies = fetchedData.sort(
-          (a, b) => b.monthlySale - a.monthlySale
-        );
-        const processedPharmacies = sortedPharmacies.map((pharmacy, index) => ({
-          rank: index + 1,
-          clientName: pharmacy.clientName,
-          monthlyProfit: pharmacy.monthlyProfit.toFixed(0),
-          monthlySale: parseFloat(pharmacy.monthlySale).toFixed(0) + "€",
-        }));
-
-        setPharmaciesData(processedPharmacies.slice(0, 10)); // Display top 10
-        setIsLoadingPharmacies(false);
-      } catch (error) {
-        if (error.message.includes('net::ERR_CONNECTION')) {
-          setErrorMessage('Failed to connect. Please check your network and try again.');
-        }
-        else {
-          setErrorMessage('Failed to connect. Please check your network and try again.');
-          console.error("Error fetching pharmacy data:", error);
-          setIsLoadingPharmacies(false);
-        }
-        }
-    }
-
-    fetchPharmacyData();
-  }, []);
 
   return (
     <>
@@ -88,7 +21,7 @@ export default function Pharmacies() {
       {errorMessage && 
       <DangerAlert message={errorMessage} />}
       <MamRadVelkyZadky>
-        {isLoadingProducts ? (
+        {IsLoadingProducts ? (
           <NutellaSkeletonTableContainer style={{ width: "47%" }}>
 
             <NutellaSkeleton variant="text" width="60%" height="24px" />
@@ -158,11 +91,11 @@ export default function Pharmacies() {
               { label: "PROFIT", field: "monthlyProfit", align: "center" },
               { label: "SOLD/TARGET", field: "soldTarget", align: "right" },
             ]}
-            data={products}
+            data={store.products.slice(0, 10)}
           />
         )}
 
-        {isLoadingPharmacies ? (
+        {IsLoadingPharmacies ? (
           <NutellaSkeletonTableContainer style={{ width: "47%" }}>
             {/* Title & Subtitle */}
             <NutellaSkeleton variant="text" width="60%" height="24px" />
@@ -233,7 +166,7 @@ export default function Pharmacies() {
               { label: "PROFIT", field: "monthlyProfit", align: "center" },
               { label: "MONTHLY SALES", field: "monthlySale", align: "right" },
             ]}
-            data={pharmaciesData}
+            data={store.clients.slice(0, 10)}
           />
         )}
       </MamRadVelkyZadky>

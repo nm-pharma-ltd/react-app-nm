@@ -18,15 +18,80 @@ import { SinglePharmacyDetails } from './Pages/SinglePharmacyDetails';
 import TeamDetails from './Pages/TeamDetails';
 import ForecastSingleProduct from './Pages/ForecastSingleProduct';
 import Supplier from './Pages/Supplier';
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import PrivateRoute from './providers/PrivateRoute';
-import { Context } from './providers/provider';
+import { Context, SIGNEDUSER, PRODUCTS, CLIENTS } from './providers/provider';
 import { darkTheme, lightTheme } from './providers/themes';
+import ApiService from "./api/ApiService";
 
 export default function App() {
   const location = useLocation();
   const [store, dispatch] = useContext(Context)
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  const [isLoadingProducts, setIsLoadingProducts] = useState(true);
+  const [isLoadingPharmacies, setIsLoadingPharmacies] = useState(true);
+
+  // PRODUCTS DATA FETCHING
+  async function fetchData() {
+    try {
+      setIsLoadingProducts(true);
+      const productsData = await ApiService.get("products/sales/2023/8", {"Authorization": "Bearer " + store.user.token });
+
+      // Ensure data is sorted by rank
+      const sortedData = productsData.sort((a, b) => a.rank - b.rank);
+
+      const processedData = sortedData.map((product) => ({
+        ...product,
+        soldTarget: `${product.quantitySold} / ${product.quantityTarget}`,
+        monthlyProfit: parseFloat(product.monthlyProfit).toFixed(0),
+      }));
+
+      dispatch({ type: PRODUCTS, payload: { processedData } });
+          
+      setIsLoadingProducts(false);
+
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setIsLoadingProducts(false);
+    }
+  }
+
+
+  //CLIENTS DATA FETCHING
+  async function fetchPharmacyData() {
+    try {
+      setIsLoadingPharmacies(true);
+      const fetchedData = await ApiService.get("clients/sales/2023/8", {"Authorization": "Bearer " + store.user.token });
+
+      const sortedPharmacies = fetchedData.sort(
+        (a, b) => b.monthlySale - a.monthlySale
+      );
+
+      const processedPharmacies = sortedPharmacies.map((pharmacy, index) => ({
+        rank: index + 1,
+        clientName: pharmacy.clientName,
+        monthlyProfit: pharmacy.monthlyProfit.toFixed(0),
+        monthlySale: parseFloat(pharmacy.monthlySale).toFixed(0) + "€",
+      }));
+
+      dispatch({ type: CLIENTS, payload: { processedPharmacies } });
+    
+      setIsLoadingPharmacies(false);
+      
+    } catch (error) {
+      console.error("Error fetching pharmacy data:", error);
+      setIsLoadingPharmacies(false);
+    }
+  }
+
+
+
+
+  useEffect(() => {
+    fetchData();
+    fetchPharmacyData();
+  }, [])
 
   const isAuthPage = location.pathname === '/Login' || location.pathname === '/Register';
 
@@ -44,6 +109,8 @@ export default function App() {
     return <Navigate to="/Login" replace />;
   }
 
+ 
+
   return (
     <Container>
       {!isAuthPage && (
@@ -54,9 +121,9 @@ export default function App() {
         <Content open={isSidebarOpen && !isAuthPage}>
           <Routes>
             <Route path="/" element={<PrivateRoute />}>
-              <Route path="/pharmacies" element={<Pharmacies />} />
-              <Route path="/pharmacies/productdetails" element={<ProductDetails />} />
-              <Route path="/pharmacies/clientdetails" element={<ClientDetails />} />
+              <Route path="/pharmacies" element={<Pharmacies IsLoadingPharmacies={isLoadingPharmacies} IsLoadingProducts={isLoadingProducts} />} />
+              <Route path="/pharmacies/productdetails" element={<ProductDetails loading={isLoadingProducts} />} />
+              <Route path="/pharmacies/clientdetails" element={<ClientDetails loading={isLoadingPharmacies} />} />
               <Route path="/pharmacies/products/:productCode" element={<SingleProductDetails />} />
               <Route path="/pharmacies/pharmacy1" element={<SinglePharmacyDetails />} />
               <Route path="/stock" element={<Stock />} />

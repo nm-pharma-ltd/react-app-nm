@@ -6,46 +6,16 @@ import ApiService from "../api/ApiService";
 import { Skeleton } from "@mui/material";
 import { FiSearch } from 'react-icons/fi';
 import { Input } from "./Register";
-import { Context, SIGNEDUSER  } from '../providers/provider';
+import { Context, SIGNEDUSER, PRODUCTS,  } from '../providers/provider';
 
 
-export default function ProductDetails() {
-  const [products, setProducts] = useState([]); // State pro ukládání dat
-  const [loading, setLoading] = useState(true);
+export default function ProductDetails({ loading }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [store, dispatch] = useContext(Context);
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const productsData = await ApiService.get("products/sales/2023/8", {"Authorization": "Bearer " + store.user.token });
-
-        // Ensure data is sorted by rank
-        const sortedData = productsData.sort((a, b) => a.rank - b.rank);
-
-        const processedData = sortedData.map((product, index) => ({
-          ...product,
-          rank: index + 1,
-          soldTarget: `${product.quantitySold} / ${product.quantityTarget}`,
-          monthlyProfit: parseFloat(product.monthlyProfit).toFixed(0),
-        }));
-
-        // Set only the top 10 products
-        setProducts(processedData.slice(0, 82));
-        setFilteredProducts(processedData.slice(0, 82));
-        setLoading(false);  // Set loading to false once data is fetched
-
-
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        setLoading(false);  // Set loading to false once data is fetched
-
-      }
-    }
-
-    fetchData();
-  }, []);
+  // Initialize products state after store is defined
+  const [products, setProducts] = useState(store.products.slice(0, 82));
 
   useEffect(() => {
     if (searchTerm === "") {
@@ -60,13 +30,12 @@ export default function ProductDetails() {
     const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
     return (
       <span>
-        {parts.map((part, index) => 
+        {parts.map((part, index) =>
           part.toLowerCase() === highlight.toLowerCase() ? <Highlight0 key={index}>{part}</Highlight0> : part
         )}
       </span>
     );
   }
-  
 
   return (
     <>
@@ -125,7 +94,6 @@ export default function ProductDetails() {
                 ...product,
                 productDescription: <HighlightedText text={product.productDescription} highlight={searchTerm} />
               }))}
-              
             />
           )}
         </MamRadVelkyZadky>
