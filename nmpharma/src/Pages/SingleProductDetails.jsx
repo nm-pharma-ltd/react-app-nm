@@ -12,16 +12,7 @@ export default function SingleProductDetails() {
   const { productCode } = useParams();
   const [productName, setProductName] = useState('');
 
-  useEffect(() => {
-    // Just fetch the product's name
-    ApiService.get(`products/${productCode}`, { "Authorization": "Bearer " + store.user.token })
-      .then(data => {
-        if (data && data[0]) {
-          setProductName(data[0].name);
-        }
-      })
-      .catch(error => console.error("Error fetching product name:", error));
-  }, [productCode, store.user.token]);
+  
 
   const handleProductNameUpdate = (name) => {
     setProductName(name);

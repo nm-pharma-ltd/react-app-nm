@@ -21,7 +21,6 @@ import Supplier from './Pages/Supplier';
 import { useContext, useState, useEffect } from 'react';
 import PrivateRoute from './providers/PrivateRoute';
 import { Context, SIGNEDUSER, PRODUCTS, CLIENTS } from './providers/provider';
-import { darkTheme, lightTheme } from './providers/themes';
 import ApiService from "./api/ApiService";
 
 export default function App() {
@@ -32,6 +31,7 @@ export default function App() {
   const [isLoadingProducts, setIsLoadingProducts] = useState(true);
   const [isLoadingPharmacies, setIsLoadingPharmacies] = useState(true);
 
+
   // PRODUCTS DATA FETCHING
   async function fetchData() {
     try {
@@ -41,8 +41,9 @@ export default function App() {
       // Ensure data is sorted by rank
       const sortedData = productsData.sort((a, b) => a.rank - b.rank);
 
-      const processedData = sortedData.map((product) => ({
+      const processedData = sortedData.map((product, index) => ({
         ...product,
+        rank: index + 1,
         soldTarget: `${product.quantitySold} / ${product.quantityTarget}`,
         monthlyProfit: parseFloat(product.monthlyProfit).toFixed(0),
       }));
@@ -125,7 +126,7 @@ export default function App() {
               <Route path="/pharmacies/productdetails" element={<ProductDetails loading={isLoadingProducts} />} />
               <Route path="/pharmacies/clientdetails" element={<ClientDetails loading={isLoadingPharmacies} />} />
               <Route path="/pharmacies/products/:productCode" element={<SingleProductDetails />} />
-              <Route path="/pharmacies/pharmacy1" element={<SinglePharmacyDetails />} />
+              <Route path="/pharmacies/clients/:clientCode" element={<SinglePharmacyDetails />} />
               <Route path="/stock" element={<Stock />} />
               <Route path="/stock/supplier" element={<Supplier />} />
               <Route path="/stock/:id" element={<ForecastSingleProduct />} />

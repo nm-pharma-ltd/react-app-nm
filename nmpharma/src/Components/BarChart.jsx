@@ -14,7 +14,8 @@ const BarChart = ({ onProductNameUpdate }) => {
   const [chartData, setChartData] = useState({ labels: [], datasets: [] });
   const [productName, setProductName] = useState(''); // Add this to store product name
 
-  const months = ["January",
+  const months = [
+    "January",
     "February",
     "March",
     "April",
@@ -73,7 +74,7 @@ const BarChart = ({ onProductNameUpdate }) => {
     };
 
     fetchDataForMonth(selectedYear);
-  }, [selectedYear, store.user.token, onProductNameUpdate]);
+  }, [selectedYear, store.user.token]);
 
   const options = {
     scales: {

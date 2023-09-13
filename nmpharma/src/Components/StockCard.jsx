@@ -81,17 +81,20 @@ const StockCard = ({ data }) => {
   }, []);
 
   const isExpiryInSixMonths = (expiryDate) => {
+    if (!expiryDate || expiryDate === "") return false; // Exclude no expiry and infinity products
+  
     const currentDate = new Date();
     const expiry = new Date(expiryDate);
     const differenceInMonths = (expiry.getFullYear() - currentDate.getFullYear()) * 12 + (expiry.getMonth() - currentDate.getMonth());
     return differenceInMonths < 6;
   };
-  const hasExpiry = data.productsForecast.some(product => isExpiryInSixMonths(product.productExpire));
+  
+  const hasExpiry = data.productsForecast.some(product => isExpiryInSixMonths(product.productExpire) && product.productExpire !== "" && !!product.productExpire);
 
 
   const handleExpiryColorChange = (productExpire) => {
-    if (!productExpire) return <TableCellTotal />;
-    return isExpiryInSixMonths(productExpire) ? 'red' : <TableCellTotal />;
+    if (!productExpire) return 'green';
+    return isExpiryInSixMonths(productExpire) ? 'red' : 'green';
   };
 
   const handleInputChange = (productCode, value) => {
@@ -180,7 +183,7 @@ const StockCard = ({ data }) => {
                         {typeof monthsOfStock[product.productCode] === "number" ? monthsOfStock[product.productCode].toFixed(2) : monthsOfStock[product.productCode] || "--"}
                       </TableCellTotal>
                       <TableCellTotal color={handleExpiryColorChange(product.productExpire)} align='center'>
-                        {product.productExpire === "" ? "--" : (!product.productExpire ? <FaInfinity /> : product.productExpire)}
+                        {product.productExpire === "" ? <FaInfinity /> : (!product.productExpire ? "--" : product.productExpire)}
                       </TableCellTotal>
                       <TableCell align='center'>
                         <UniInput>
@@ -382,7 +385,7 @@ const CalcButton = styled.button`
 
 `;
 
-const ForeButton = styled(NavLink)`
+export const ForeButton = styled(NavLink)`
   background-color: ${props => props.theme.componentBackground};
   color: ${props => props.theme.text};
   padding: 5px 10px;

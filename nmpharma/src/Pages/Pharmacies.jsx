@@ -92,6 +92,7 @@ export default function Pharmacies({ IsLoadingPharmacies, IsLoadingProducts  }) 
               { label: "SOLD/TARGET", field: "soldTarget", align: "right" },
             ]}
             data={store.products.slice(0, 10)}
+            content={"products"}
           />
         )}
 
@@ -167,6 +168,7 @@ export default function Pharmacies({ IsLoadingPharmacies, IsLoadingProducts  }) 
               { label: "MONTHLY SALES", field: "monthlySale", align: "right" },
             ]}
             data={store.clients.slice(0, 10)}
+            content={"clients"}
           />
         )}
       </MamRadVelkyZadky>

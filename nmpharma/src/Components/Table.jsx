@@ -2,18 +2,18 @@ import React from 'react';
 import styled from 'styled-components';
 import { NavLink, useNavigate } from "react-router-dom";
 
-export default function Table({ title, subtitle, viewDetailsLink, width, columns, data, details }) {
+export default function Table({ title, subtitle, viewDetailsLink, width, columns, data, details, content }) {
 
   const navigate = useNavigate();
 
 
   const generateRows = () => {
     return data.map((item, index) => (
-      <TableRow key={index} onClick={() => navigate(`/pharmacies/products/${item.productCode}`)}>
+      <TableRow key={index} onClick={() => navigate(`/pharmacies/${content}/${item.productCode}`)}>
         {columns.map((column, colIndex) => (
           <TableCell key={colIndex} align={column.align}>
             {column.field === 'productName' ? (
-              <ProductLink to={`/pharmacies/products/${item.id}`}>
+              <ProductLink>
                 {item[column.field]}
               </ProductLink>
             ) : column.field === 'monthlyProfit' ? (
