@@ -139,21 +139,6 @@ export const UnderlineH = styled.h3`
   color: ${props => props.theme.UnderlineH};
   margin-bottom: 10px;
 `
-// const NutellaSkeletonTableContainer = styled.div`
-//   background-color: ${(props) => props.theme.componentBackground};
-//   border-radius: 20px;
-//   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-//   padding: 20px;
-//   margin-top: 20px;
-//   margin-right: 25px;
-//   width: ${(props) => props.width || "48%"};
-//   min-width: 500px;
-//   height: 600px;
-
-//   @media (max-width: 1320px) {
-//     width: 100%;
-//   }
-// `;
 
 const NutellaSkeleton = styled(Skeleton)`
   color: ${(props) => props.theme.lightdark};

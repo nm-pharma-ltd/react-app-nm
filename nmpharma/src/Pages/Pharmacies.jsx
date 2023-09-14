@@ -10,10 +10,13 @@ import Skeleton from "@mui/material/Skeleton";
 import DangerAlert from "../Components/DangerAlert";
 import { Context, SIGNEDUSER, PRODUCTS, CLIENTS  } from '../providers/provider';
 
-export default function Pharmacies({ IsLoadingPharmacies, IsLoadingProducts  }) {
+export default function Pharmacies({ IsLoadingPharmacies, IsLoadingProducts, selectedMonth, onMonthChange }) {
 
   const [store, dispatch] = useContext(Context);
   const [errorMessage, setErrorMessage] = useState('');
+
+
+
 
   return (
     <>
@@ -93,7 +96,9 @@ export default function Pharmacies({ IsLoadingPharmacies, IsLoadingProducts  }) 
             ]}
             data={store.products.slice(0, 10)}
             content={"products"}
-          />
+            selectedMonth={selectedMonth}
+            onMonthChange={onMonthChange}
+            />
         )}
 
         {IsLoadingPharmacies ? (
@@ -169,6 +174,8 @@ export default function Pharmacies({ IsLoadingPharmacies, IsLoadingProducts  }) 
             ]}
             data={store.clients.slice(0, 10)}
             content={"clients"}
+            selectedMonth={selectedMonth}
+            onMonthChange={onMonthChange}
           />
         )}
       </MamRadVelkyZadky>
@@ -187,7 +194,7 @@ export default function Pharmacies({ IsLoadingPharmacies, IsLoadingProducts  }) 
 
 
 
-const NutellaSkeletonTableContainer = styled.div`
+export const NutellaSkeletonTableContainer = styled.div`
   background-color: ${(props) => props.theme.componentBackground};
   border-radius: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -203,7 +210,7 @@ const NutellaSkeletonTableContainer = styled.div`
   }
 `;
 
-const NutellaSkeleton = styled(Skeleton)`
+export const NutellaSkeleton = styled(Skeleton)`
   color: ${(props) => props.theme.lightdark};
 `;
 

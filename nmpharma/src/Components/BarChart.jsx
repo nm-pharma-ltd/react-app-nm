@@ -12,6 +12,7 @@ const BarChart = ({ onProductNameUpdate }) => {
   const { productCode } = useParams();
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [chartData, setChartData] = useState({ labels: [], datasets: [] });
+  const [totalTarget, setTotalTarget] = useState(0);
   const [productName, setProductName] = useState(''); // Add this to store product name
 
   const months = [
@@ -38,17 +39,18 @@ const BarChart = ({ onProductNameUpdate }) => {
 
       const productData = await ApiService.get(`products/${productCode}/${year}/sales`, { "Authorization": "Bearer " + store.user.token });
       console.log(productData)
-      productData.forEach(element => {
+      setTotalTarget(productData.yearlyTarget)
+      productData.monthlySales.forEach(element => {
         const monthIndex = element.month - 1;
-        monthlyDataTarget[monthIndex] = element.target;
-        monthlyDataSold[monthIndex] = element.quantity;
+        monthlyDataTarget[monthIndex] =(productData.yearlyTarget/12).toFixed(0);
+        monthlyDataSold[monthIndex] = element.quantitySold;
         monthlyDataProfit[monthIndex] = element.profit;
 
       });
 
-      if (productData && productData[0].name) {
-        onProductNameUpdate(productData[0].name);
-        setProductName(productData[0].name);  // Set the product name to state
+      if (productData && productData.productDescription) {
+        onProductNameUpdate(productData.productDescription);
+        setProductName(productData.productDescription);  // Set the product name to state
 
       }
       setChartData({
@@ -85,7 +87,7 @@ const BarChart = ({ onProductNameUpdate }) => {
   };
 
   const totalSold = chartData.datasets.length > 0 ? chartData.datasets[1].data.reduce((acc, value) => acc + value, 0) : 0;
-  const totalTarget = chartData.datasets.length > 0 ? chartData.datasets[0].data.reduce((acc, value) => acc + value, 0) : 0;
+  // const totalTarget = chartData.datasets.length > 0 ? chartData.datasets[0].data.reduce((acc, value) => acc + value, 0) : 0;
   const totalProfit = chartData.datasets.length > 0 ? chartData.datasets[2].data.reduce((acc, value) => acc + value, 0) : 0;
 
 
@@ -117,14 +119,14 @@ const BarChart = ({ onProductNameUpdate }) => {
 
         <InfoBox>
             <InfoLabel>Year</InfoLabel>
-            <YearDropdown value={selectedYear} onChange={e => setSelectedYear(Number(e.target.value))}>
+            <Dropdownos value={selectedYear} onChange={e => setSelectedYear(Number(e.target.value))}>
               {renderYearDropdown()}
-            </YearDropdown>
+            </Dropdownos>
           </InfoBox>
 
           <InfoBox>
             <InfoLabel>Total Profit</InfoLabel>
-            <InfoValue>{totalProfit} €</InfoValue>
+            <InfoValue>{totalProfit.toFixed(0)} €</InfoValue>
           </InfoBox>
 
           <InfoBox>
@@ -166,7 +168,7 @@ const NavigationButton = styled.button`
   }
 `;
 
-const YearDropdown = styled.select`
+export const Dropdownos = styled.select`
   background-color: ${props => props.theme.componentBackground};;
   border: 1px solid ${props => props.theme.line};
   padding: 5px 10px;
@@ -175,7 +177,7 @@ const YearDropdown = styled.select`
   outline: none;
   cursor: pointer;
   color: ${props => props.theme.text};
-  max-width: 100px;
+  max-width: 120px;
 
   &:hover, &:focus {
     border-color: ${props => props.theme.line};;

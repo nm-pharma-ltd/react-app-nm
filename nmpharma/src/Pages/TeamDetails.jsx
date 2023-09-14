@@ -56,6 +56,7 @@ const TeamDetails = ({ }) => {
           progressbarheight={10}
           backgroundgradient={store.team_colors[teamIndex]}
           index={id} 
+          isDetailPage={true}
         />
       </TeamsContainer>
 

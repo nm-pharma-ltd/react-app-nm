@@ -28,9 +28,9 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
   return (
     <StyledSidebar open={isSidebarOpen} roundednav={store.roundednav}>
       <TopLinks>
-      <LogoContainer>
-        <Logo src={logoSrc} alt="Company Logo" />
-      </LogoContainer>
+        <LogoContainer>
+          <Logo src={logoSrc} alt="Company Logo" />
+        </LogoContainer>
         <MenuHeading>Main Menu</MenuHeading>
         <MenuItem to="/pharmacies" >
           <MenuItemIcon>
@@ -69,11 +69,10 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
             {store.teams.map((team, index) => (
               <MenuItem2 to={`/targets/teamdetails/${team.team.id}`} key={team.team.id}>
                 <MenuItemIcon>
-                  <TeamBullet />
+                  <TeamBullet color={store.team_colors[index % store.team_colors.length]} />
                 </MenuItemIcon>
                 {team.team.name}
               </MenuItem2>
-
             ))}
           </>
         )}
@@ -221,9 +220,12 @@ const MenuItemIcon = styled.div`
   display: flex;
 `;
 
-const TeamBullet = styled(TiMediaRecord)`
-    color: gradientColors[team.team.id % gradientColors.length];
-`
+const TeamBullet = styled.div`
+  width: 8px;  // or whatever size you desire
+  height: 8px;
+  border-radius: 50%;  // to make it circular
+  background: ${props => props.color};
+`;
 
 //const MenuItemD = styled(NavLink)`
 //   padding: 13px;
@@ -235,7 +237,7 @@ const TeamBullet = styled(TiMediaRecord)`
 //   border-radius: 10px;
 //   font-size: 14px;
 //   margin: 0 20px;
-//   border: 2px  dashed ${props => props.theme.nav}; 
+//   border: 2px  dashed ${props => props.theme.nav};
 //   cursor: not-allowed;
 //   text-decoration: none;
 //   text-wrap: nowrap;

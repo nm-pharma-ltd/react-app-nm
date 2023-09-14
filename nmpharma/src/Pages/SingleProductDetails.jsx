@@ -8,9 +8,10 @@ import { Context } from "../providers/provider";
 import { UnderlineH } from "./Stock";
 
 export default function SingleProductDetails() {
+  
   const [store] = useContext(Context);  
   const { productCode } = useParams();
-  const [productName, setProductName] = useState('');
+  const [productName, setProductName] = useState();
 
   
 
@@ -22,10 +23,9 @@ export default function SingleProductDetails() {
   return (
     <Kontaineros>
       <TitleWrapper>
-        <Title>{productName}</Title>
+        <Title>{productName ? productName : "Loading..."}</Title>
         <GoBackButton to="/pharmacies">Back</GoBackButton>
       </TitleWrapper>
-
       <BarChart productCode={productCode} onProductNameUpdate={handleProductNameUpdate} />
     </Kontaineros>
   );

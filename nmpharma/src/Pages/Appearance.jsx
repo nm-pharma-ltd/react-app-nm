@@ -98,7 +98,7 @@ const SettingLabel = styled.span`
   font-weight: 500;
 `;
 
-const Switch = styled.label`
+export const Switch = styled.label`
   margin-left: 5px;
   position: relative;
   display: inline-block;
@@ -106,7 +106,7 @@ const Switch = styled.label`
   height: 24px;     // Smaller height
 `;
 
-const Slider = styled.span`
+export const Slider = styled.span`
   position: absolute;
   cursor: pointer;
   top: 0;
@@ -130,7 +130,7 @@ const Slider = styled.span`
   }
 `;
 
-const Checkbox = styled.input`
+export const Checkbox = styled.input`
   opacity: 0;
   width: 0;
   height: 0;

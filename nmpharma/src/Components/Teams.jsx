@@ -7,6 +7,7 @@ import AddTeamPopup from "../Components/AddTeam";
 import { NavLink } from "react-router-dom";
 import ApiService from "../api/ApiService";
 import { Context, SIGNEDUSER, TEAMS, TEAM_COLORS } from "../providers/provider";
+import { UnderlineH } from "../Pages/Stock";
 
 export default function Teams({}) {
   const [isAddTeamPopupOpen, setIsAddTeamPopupOpen] = useState(false);

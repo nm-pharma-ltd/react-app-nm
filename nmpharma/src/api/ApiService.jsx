@@ -1,23 +1,51 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://26.230.153.240:51050/api';  
+const API_BASE_URL = 'http://26.199.200.45:51050/api';
+
+// Create an Axios instance
+const apiInstance = axios.create({
+  baseURL: API_BASE_URL
+});
+
+// Add a request interceptor
+apiInstance.interceptors.request.use(
+  (config) => {
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Add a response interceptor
+apiInstance.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response) {
+      error.status = error.response.status; // Attach the status code to the error
+    }
+    return Promise.reject(error);
+  }
+);
 
 const ApiService = {
   
- //GET
+  // GET
   get: async (endpoint, headers_data) => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/${endpoint}`, { headers: headers_data });
+      const response = await apiInstance.get(endpoint, { headers: headers_data });
       return response.data;
     } catch (error) {
       throw error;
     }
   },
 
-  //POST
+  // POST
   post: async (endpoint, data, headers_data) => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/${endpoint}`, data, { headers: headers_data });
+      const response = await apiInstance.post(endpoint, data, { headers: headers_data });
       return response.data;
     } catch (error) {
       throw error;
@@ -27,13 +55,12 @@ const ApiService = {
   // DELETE
   delete: async (endpoint, headers_data) => {
     try {
-      const response = await axios.delete(`${API_BASE_URL}/${endpoint}`, { headers: headers_data });
+      const response = await apiInstance.delete(endpoint, { headers: headers_data });
       return response.data;
     } catch (error) {
       throw error;
     }
   },
-  
 };
 
 export default ApiService;

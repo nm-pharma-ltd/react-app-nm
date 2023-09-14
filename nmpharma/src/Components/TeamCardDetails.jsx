@@ -7,55 +7,75 @@ import { NavLink } from 'react-router-dom';
 import { GreenBox } from '../Components/Table';
 import { TiMediaRecord } from 'react-icons/ti';
 
-export default function TeamCardDetail({id, teamName, monthGoal, yearGoal, currentAmount, currentAmountMonth, cardwidth, progressbarheight, index, backgroundgradient, }) {
-  
+export default function TeamCardDetail({
+  id,
+  teamName,
+  monthGoal,
+  yearGoal,
+  currentAmount,
+  currentAmountMonth,
+  cardwidth,
+  progressbarheight,
+  index,
+  backgroundgradient,
+  isDetailPage }) {
+
+
   const monthProgress = (currentAmount / monthGoal) * 100;
   const yearProgress = (currentAmount / yearGoal) * 100;
-  
-  return (
+
+  const CardContent = (
     <>
-      <TeamBox
-        to={`/targets/teamdetails/${id}`}
-        cardwidth={cardwidth}
-        backgroundgradient={backgroundgradient}
-      >
-        <TeamName>
-          {teamName}
-          <TeamBadge>
-            <TeamBulletO />
-            Team
-          </TeamBadge>
-        </TeamName>
-        <Goal>
-          <GoalLabel>Month goal</GoalLabel>
-          <GoalAmount>{monthGoal} €</GoalAmount>
-        </Goal>
-        <ProgressBarWrapper progressbarheight={progressbarheight}>
-          <StyledLinearProgress variant="determinate" value={monthProgress} />
-          <LinearProgressLabel>{`${Math.floor(monthProgress)}%`}</LinearProgressLabel>
-        </ProgressBarWrapper>
+      <TeamName>
+        {teamName}
+        <TeamBadge>
+          <TeamBulletO />
+          Team
+        </TeamBadge>
+      </TeamName>
+      <Goal>
+        <GoalLabel>Month goal</GoalLabel>
+        <GoalAmount>{monthGoal} €</GoalAmount>
+      </Goal>
+      <ProgressBarWrapper progressbarheight={progressbarheight}>
+        <StyledLinearProgress variant="determinate" value={monthProgress} />
+        <LinearProgressLabel>{`${Math.floor(monthProgress)}%`}</LinearProgressLabel>
+      </ProgressBarWrapper>
 
-        <Goal>
-          <GoalLabel>Year goal</GoalLabel>
-          <GoalAmount>{yearGoal} €</GoalAmount>
-        </Goal>
-        <ProgressBarWrapper progressbarheight={progressbarheight}>
-          <StyledLinearProgress variant="determinate" value={yearProgress} />
-          <LinearProgressLabel>{`${Math.floor(yearProgress)}%`}</LinearProgressLabel>
-        </ProgressBarWrapper>
+      <Goal>
+        <GoalLabel>Year goal</GoalLabel>
+        <GoalAmount>{yearGoal} €</GoalAmount>
+      </Goal>
+      <ProgressBarWrapper progressbarheight={progressbarheight}>
+        <StyledLinearProgress variant="determinate" value={yearProgress} />
+        <LinearProgressLabel>{`${Math.floor(yearProgress)}%`}</LinearProgressLabel>
+      </ProgressBarWrapper>
 
-        <Earned>
-          <EarnedLabel>Earned last month</EarnedLabel>
-          <GreenBox>{currentAmountMonth} €</GreenBox>
-        </Earned>
-        <Earned>
-          <EarnedLabel>Earned this year</EarnedLabel>
-          <GreenBox>{currentAmount} €</GreenBox>
-        </Earned>
-
-      </TeamBox>
+      <Earned>
+        <EarnedLabel>Earned last month</EarnedLabel>
+        <GreenBox>{currentAmountMonth} €</GreenBox>
+      </Earned>
+      <Earned>
+        <EarnedLabel>Earned this year</EarnedLabel>
+        <GreenBox>{currentAmount} €</GreenBox>
+      </Earned>
     </>
   );
+
+  if (isDetailPage) {
+    return <TeamBox cardwidth={cardwidth} backgroundgradient={backgroundgradient}>
+      {CardContent}
+    </TeamBox>
+  }
+
+  return (
+    <TeamBox to={`/targets/teamdetails/${id}`} cardwidth={cardwidth} backgroundgradient={backgroundgradient}>
+      {CardContent}
+    </TeamBox>
+  );
+
+
+
 };
 
 
@@ -185,6 +205,8 @@ const Earned = styled.div`
   display: flex;
   align-items: center;
   margin: 0 auto;
+  width: 230px;
+  margin-bottom: 5px;
 `;
 
 const EarnedLabel = styled.span`
@@ -192,4 +214,5 @@ const EarnedLabel = styled.span`
   margin-right: 8px;
   font-size: 14px;
   color: #fff;
+  width: 130px;
 `;

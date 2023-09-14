@@ -19,6 +19,7 @@ export default function Login() {
   const navigate = useNavigate();
   const formRef = useRef(null);
   const [loading, setLoading] = useState(false);
+
   const [errorMessage, setErrorMessage] = useState('');
 
 
@@ -54,11 +55,9 @@ export default function Login() {
       });
       setLoading(false); // Stop the loader once done
       dispatch({ type: SIGNEDUSER, payload: { response } });
-      
+       
       navigate('/pharmacies');
       
-
-    
 
     } catch (error) {
       setLoading(false); // Stop the loader in case of an error
@@ -86,9 +85,7 @@ export default function Login() {
 
   return (
     <Container>
-      {errorMessage && 
-      <DangerAlert message={errorMessage} />
-}
+      {errorMessage && <DangerAlert message={errorMessage} />}
       <GlobalStyle />
       <LoginForm ref={formRef}>
         <Logo src={logoSrc} alt="Company Logo" />

@@ -7,7 +7,7 @@ import { Skeleton } from "@mui/material";
 import { FiSearch } from "react-icons/fi"; 
 import { Context, SIGNEDUSER, CLIENTS  } from '../providers/provider';
 
-export default function ClientDetails({loading}) {
+export default function ClientDetails({loading, selectedMonth, onMonthChange}) {
   const [searchTerm, setSearchTerm] = useState(""); 
   const [store, dispatch] = useContext(Context); 
 
@@ -87,7 +87,10 @@ export default function ClientDetails({loading}) {
             data={filteredPharmacies.map(pharmacy => ({
               ...pharmacy,
               clientName: <HighlightedText text={pharmacy.clientName} highlight={searchTerm} />
-            }))}                      
+            }))} 
+            content={"clients"} 
+            selectedMonth={selectedMonth}
+            onMonthChange={onMonthChange}                    
           />
         )}
         </MamRadVelkyZadky>

@@ -9,7 +9,7 @@ import { Input } from "./Register";
 import { Context, SIGNEDUSER, PRODUCTS,  } from '../providers/provider';
 
 
-export default function ProductDetails({ loading }) {
+export default function ProductDetails({ loading, selectedMonth, onMonthChange }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [store, dispatch] = useContext(Context);
@@ -94,6 +94,9 @@ export default function ProductDetails({ loading }) {
                 ...product,
                 productDescription: <HighlightedText text={product.productDescription} highlight={searchTerm} />
               }))}
+              content={"products"}
+              selectedMonth={selectedMonth}
+              onMonthChange={onMonthChange}
             />
           )}
         </MamRadVelkyZadky>

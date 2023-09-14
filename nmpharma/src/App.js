@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import './App.css';
 import { GlobalStyles } from './GlobalStyles';
 import Sidebar from './Components/Sidebar';
@@ -22,8 +22,10 @@ import { useContext, useState, useEffect } from 'react';
 import PrivateRoute from './providers/PrivateRoute';
 import { Context, SIGNEDUSER, PRODUCTS, CLIENTS } from './providers/provider';
 import ApiService from "./api/ApiService";
+import DangerAlert from './Components/DangerAlert';
 
 export default function App() {
+  const navigate = useNavigate();
   const location = useLocation();
   const [store, dispatch] = useContext(Context)
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -31,12 +33,15 @@ export default function App() {
   const [isLoadingProducts, setIsLoadingProducts] = useState(true);
   const [isLoadingPharmacies, setIsLoadingPharmacies] = useState(true);
 
+  const [error, setError] = useState(null);
+  const [selectedMonth, setSelectedMonth] = useState(6); // Default to January
+
 
   // PRODUCTS DATA FETCHING
-  async function fetchData() {
+  async function fetchData(year = 2023, month = selectedMonth) {
     try {
       setIsLoadingProducts(true);
-      const productsData = await ApiService.get("products/sales/2023/8", {"Authorization": "Bearer " + store.user.token });
+      const productsData = await ApiService.get(`products/sales/${year}/${month}`, { "Authorization": "Bearer " + store.user.token });
 
       // Ensure data is sorted by rank
       const sortedData = productsData.sort((a, b) => a.rank - b.rank);
@@ -49,27 +54,36 @@ export default function App() {
       }));
 
       dispatch({ type: PRODUCTS, payload: { processedData } });
-          
+
       setIsLoadingProducts(false);
 
     } catch (error) {
+      if (error.status === 401) {
+        navigate('/Login');
+      } else if (error.status === 500) {
+        setError("Internal Server Error. Please try again later.");
+      } else {
+        setError("An error occurred. Please try again.");
+      }
       console.error("Error fetching data:", error);
       setIsLoadingProducts(false);
     }
+
   }
 
 
   //CLIENTS DATA FETCHING
-  async function fetchPharmacyData() {
+  async function fetchPharmacyData(year = 2023, month = selectedMonth) {
     try {
       setIsLoadingPharmacies(true);
-      const fetchedData = await ApiService.get("clients/sales/2023/8", {"Authorization": "Bearer " + store.user.token });
+      const fetchedData = await ApiService.get(`clients/sales/${year}/${month}`, { "Authorization": "Bearer " + store.user.token });
 
       const sortedPharmacies = fetchedData.sort(
         (a, b) => b.monthlySale - a.monthlySale
       );
 
       const processedPharmacies = sortedPharmacies.map((pharmacy, index) => ({
+        clientCode: pharmacy.clientCode,
         rank: index + 1,
         clientName: pharmacy.clientName,
         monthlyProfit: pharmacy.monthlyProfit.toFixed(0),
@@ -77,22 +91,30 @@ export default function App() {
       }));
 
       dispatch({ type: CLIENTS, payload: { processedPharmacies } });
-    
+
       setIsLoadingPharmacies(false);
-      
+
     } catch (error) {
-      console.error("Error fetching pharmacy data:", error);
+      if (error.status === 401) {
+        navigate('/Login');
+      } else if (error.status === 500) {
+        setError("Internal Server Error. Please try again later.");
+      } else {
+        setError("An error occurred. Please try again.");
+      }
+      console.error("Error fetching data:", error);
       setIsLoadingPharmacies(false);
     }
   }
 
-
-
-
-  useEffect(() => {
+  async function FetchAll() {
     fetchData();
     fetchPharmacyData();
-  }, [])
+  }
+
+  useEffect(() => {
+    FetchAll()
+  }, [selectedMonth]);
 
   const isAuthPage = location.pathname === '/Login' || location.pathname === '/Register';
 
@@ -110,7 +132,13 @@ export default function App() {
     return <Navigate to="/Login" replace />;
   }
 
- 
+  const handleMonthChange = (month) => {
+    setSelectedMonth(month);
+    fetchData(undefined, month); // Fetch products for the new month
+    fetchPharmacyData(undefined, month); // Fetch pharmacies for the new month
+  };
+
+
 
   return (
     <Container>
@@ -120,19 +148,33 @@ export default function App() {
       <ContentWrapper>
         <Gradient />
         <Content open={isSidebarOpen && !isAuthPage}>
+          {error && <DangerAlert message={error} />}
           <Routes>
             <Route path="/" element={<PrivateRoute />}>
-              <Route path="/pharmacies" element={<Pharmacies IsLoadingPharmacies={isLoadingPharmacies} IsLoadingProducts={isLoadingProducts} />} />
-              <Route path="/pharmacies/productdetails" element={<ProductDetails loading={isLoadingProducts} />} />
-              <Route path="/pharmacies/clientdetails" element={<ClientDetails loading={isLoadingPharmacies} />} />
+              <Route
+                path="/pharmacies"
+                element={
+                  <Pharmacies
+                    IsLoadingPharmacies={isLoadingPharmacies}
+                    IsLoadingProducts={isLoadingProducts}
+                    onMonthChange={handleMonthChange}
+                    selectedMonth={selectedMonth}
+                  />
+                }
+              />
+              <Route path="/pharmacies/productdetails" element={<ProductDetails loading={isLoadingProducts} onMonthChange={handleMonthChange}
+                selectedMonth={selectedMonth} />} />
+              <Route path="/pharmacies/clientdetails" element={<ClientDetails loading={isLoadingPharmacies} onMonthChange={handleMonthChange}
+                selectedMonth={selectedMonth} />} />
               <Route path="/pharmacies/products/:productCode" element={<SingleProductDetails />} />
-              <Route path="/pharmacies/clients/:clientCode" element={<SinglePharmacyDetails />} />
+              <Route path="/pharmacies/clients/:clientCode" element={<SinglePharmacyDetails onMonthChange={handleMonthChange}
+                    selectedMonth={selectedMonth}/>} />
               <Route path="/stock" element={<Stock />} />
               <Route path="/stock/supplier" element={<Supplier />} />
               <Route path="/stock/:id" element={<ForecastSingleProduct />} />
               <Route path="/eru" element={<ERUs />} />
               <Route path="/targets" element={<Targets />} />
-              <Route path="/targets/teamdetails/:id" element={<TeamDetails/>} />
+              <Route path="/targets/teamdetails/:id" element={<TeamDetails />} />
               <Route path="/notifications" element={<Notifications />} />
               <Route path="/settings" element={<Settings />} />
             </Route>
