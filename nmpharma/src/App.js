@@ -114,7 +114,7 @@ export default function App() {
 
   useEffect(() => {
     FetchAll()
-  }, [selectedMonth]);
+  }, []);
 
   const isAuthPage = location.pathname === '/Login' || location.pathname === '/Register';
 
@@ -122,7 +122,6 @@ export default function App() {
     setIsSidebarOpen(prevState => !prevState);
   };
 
-  // This function will check if the user is authenticated.
   const isAuthenticated = () => {
     const token = store.user.token;
     return token !== null && token !== '';
@@ -134,8 +133,8 @@ export default function App() {
 
   const handleMonthChange = (month) => {
     setSelectedMonth(month);
-    fetchData(undefined, month); // Fetch products for the new month
-    fetchPharmacyData(undefined, month); // Fetch pharmacies for the new month
+    fetchData(undefined, month); 
+    fetchPharmacyData(undefined, month);
   };
 
 

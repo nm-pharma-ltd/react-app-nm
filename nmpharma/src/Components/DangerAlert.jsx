@@ -30,7 +30,8 @@ const AlertWrapper = styled.div`
   top: 0;
   left: 0;
   right: 0;
-  max-width: 600px;  // Or whatever max-width you feel is appropriate
+  width: auto;
+  max-width: 650px;  
   margin-left: auto;
   margin-right: auto;
 
