@@ -155,9 +155,9 @@ const StockCard = ({ data }) => {
                 <TableRow>
                   <TableHeaderCell align='center'>STOCK CODE</TableHeaderCell>
                   <TableHeaderCell align='center'>PRODUCT NAME</TableHeaderCell>
+                  <TableHeaderCell align='center'>TOTAL IN STOCK</TableHeaderCell>
                   <TableHeaderCell align='center'>ON ORDER</TableHeaderCell>
                   <TableHeaderCell align='center'>INCOMING</TableHeaderCell>
-                  <TableHeaderCell align='center'>TOTAL IN STOCK</TableHeaderCell>
                   <TableHeaderCell align='center'>MONTHS OF STOCK</TableHeaderCell>
                   <TableHeaderCell align='center'>EXPIRY</TableHeaderCell>
                   <TableHeaderCell align='center'>TO ORDER</TableHeaderCell>
@@ -170,15 +170,15 @@ const StockCard = ({ data }) => {
                     <TableRow key={index}>
                       <TableCellCode align='center'>{product.productCode}</TableCellCode>
                       <TableCell align='center'>{product.productDescription}</TableCell>
+                      <TableCellTotal align='center'>
+                        {product.inStock}
+                      </TableCellTotal>
                       <TableCellOrder align='center'>
                         + {product.quantityOrdered}
                       </TableCellOrder>
                       <TableCellInc align='center'>
                         {product.incoming && product.incoming !== 0 ? `+ ${product.incoming}` : '--'}
                       </TableCellInc>
-                      <TableCellTotal align='center'>
-                        {product.inStock}
-                      </TableCellTotal>
                       <TableCellTotal color={handleColorChange(product.productCode)} align='center'>
                         {typeof monthsOfStock[product.productCode] === "number" ? monthsOfStock[product.productCode].toFixed(2) : monthsOfStock[product.productCode] || "--"}
                       </TableCellTotal>

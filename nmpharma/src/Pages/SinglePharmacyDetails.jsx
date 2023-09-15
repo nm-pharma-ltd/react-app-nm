@@ -1,15 +1,12 @@
 import {useState, useEffect, useContext} from "react";
-import LineChart from "../Components/LineChart";
 import { GoBackButton, Title, TitleWrapper } from "./ClientsDetails";
 import { useParams } from "react-router";
 import Table from "../Components/Table";
 import ApiService from "../api/ApiService";
 import {Context} from "../providers/provider"
-import Skeleton from "@mui/material/Skeleton";
 import styled from "styled-components";
 import { NutellaSkeleton, NutellaSkeletonTableContainer } from "./Pharmacies";
-import { Switch, Checkbox, Slider  } from "./Appearance";
-import { UnderlineH } from "./Stock";
+import { ModeButtonL, ModeButtonR } from "./Stock";
 
 export function SinglePharmacyDetails({selectedMonth, onMonthChange}) {
   const params = useParams();
@@ -19,7 +16,8 @@ export function SinglePharmacyDetails({selectedMonth, onMonthChange}) {
   const [showAll, setShowAll] = useState(false);
   
   useEffect(() =>{
-      const response = ApiService.get(`pharmacies/top/2023/${params.clientCode}`, {Authorization: "Bearer " + store.user.token}).then(response => {
+      const year = new Date().getFullYear();
+      const response = ApiService.get(`pharmacies/breakdown/${year}/${params.clientCode}`, {Authorization: "Bearer " + store.user.token}).then(response => {
         response.forEach((item) => {
           item.products.slice(0, 5);
           item.products.forEach((product) => {
@@ -46,14 +44,25 @@ export function SinglePharmacyDetails({selectedMonth, onMonthChange}) {
         <Title>{pharmacyName}</Title>
         <GoBackButton to="/pharmacies">Back</GoBackButton>
       </TitleWrapper>
-      <Wrapper>
-        <UnderlineH>Show all products:</UnderlineH>
-        <Switch style={{marginBottom: "0.5em", marginLeft: "1em"}}>
-          <Checkbox type="checkbox" checked={showAll} onChange={() => setShowAll((prev) => !prev)} />
-          <Slider />
-        </Switch>
-      </Wrapper>
+      
+      
       {data !== undefined ? ( 
+      <>
+      <Wrapper>
+        <ModeButtonL
+          active={!showAll}
+          onClick={() => setShowAll((prev) => !prev)}
+        >
+          TOP 5
+        </ModeButtonL>
+        <ModeButtonR
+          active={showAll}
+          onClick={() => setShowAll((prev) => !prev)}
+        >
+          ALL
+        </ModeButtonR>
+
+      </Wrapper>
       <Table
         title="Product Profit & Quantity"
         subtitle= {showAll ? "ALL" : "TOP 5"}
@@ -66,10 +75,12 @@ export function SinglePharmacyDetails({selectedMonth, onMonthChange}) {
           { label: 'PROFIT', field: `profit`, align: 'center', },
           { label: 'QUANTITY/TARGET', field: `yearlyTarget`, align: 'center',},
         ]}
-        data={showAll ? data.find(item => item.month == selectedMonth).products : data.find(item => item.month == selectedMonth).products.slice(0, 5)}
+        data={showAll ? data.find(item => item.month == selectedMonth)?.products : data.find(item => item.month == selectedMonth)?.products.slice(0, 5)}
         selectedMonth={selectedMonth}
         onMonthChange={onMonthChange}
+        content={"products"}
       />
+      </>
       ) : (
         <NutellaSkeletonTableContainer style={{width: "97%", height: "auto"}}>
             {/* Table Rows */}
@@ -95,5 +106,6 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  margin-top: 1em;
   `;
 

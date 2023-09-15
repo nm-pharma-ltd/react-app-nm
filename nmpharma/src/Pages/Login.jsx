@@ -45,23 +45,23 @@ export default function Login() {
       setPasswordError('Please enter your password');
       return;
     }
-    setLoading(true); // Start the loader
+    setLoading(true); 
 
-    // Making the actual axios request
+   
     try {
       const response = await ApiService.post('auth/login', {
         email: email.trim(),
         password: password.trim(),
       });
-      setLoading(false); // Stop the loader once done
+      setLoading(false); 
       dispatch({ type: SIGNEDUSER, payload: { response } });
        
+      
       navigate('/pharmacies');
       
 
     } catch (error) {
-      setLoading(false); // Stop the loader in case of an error
-      // Handle errors from the server, like invalid credentials
+      setLoading(false); 
       if (error.message.includes('net::ERR_CONNECTION')) {
         setErrorMessage('Failed to connect. Please check your network and try again.');
       }
