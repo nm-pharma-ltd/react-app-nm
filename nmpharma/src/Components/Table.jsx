@@ -217,9 +217,9 @@ export const RedBox = styled.div`
   justify-content: center;
   align-items: center;
   color: #a72e39;
+  background-color: #fde8e8;
   margin: 0 auto;
   width: 65px;
-  background-color: #fde8e8;
   font-size: 13px;
   font-weight: 600;
 

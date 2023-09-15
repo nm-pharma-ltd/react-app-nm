@@ -38,7 +38,7 @@ export default function App() {
 
 
   // PRODUCTS DATA FETCHING
-  async function fetchData(year = 2023, month = selectedMonth) {
+  async function fetchData(year = 2023, month = selectedMonth, token) {
     try {
       setIsLoadingProducts(true);
       const productsData = await ApiService.get(`products/sales/${year}/${month}`, { "Authorization": "Bearer " + store.user.token });
@@ -73,7 +73,7 @@ export default function App() {
 
 
   //CLIENTS DATA FETCHING
-  async function fetchPharmacyData(year = 2023, month = selectedMonth) {
+  async function fetchPharmacyData(year = 2023, month = selectedMonth, token) {
     try {
       setIsLoadingPharmacies(true);
       const fetchedData = await ApiService.get(`clients/sales/${year}/${month}`, { "Authorization": "Bearer " + store.user.token });
@@ -110,6 +110,12 @@ export default function App() {
   async function FetchAll() {
     fetchData();
     fetchPharmacyData();
+  }
+
+  async function FetchAllWithToken(usertoken) {
+    console.log(usertoken)
+    fetchData(usertoken);
+    fetchPharmacyData(usertoken);
   }
 
   useEffect(() => {
@@ -177,7 +183,7 @@ export default function App() {
               <Route path="/notifications" element={<Notifications />} />
               <Route path="/settings" element={<Settings />} />
             </Route>
-            <Route path="/Login" element={<Login />} />
+            <Route path="/Login" element={<Login fetchDataWithToken={FetchAllWithToken}/>} />
             <Route path="/Register" element={<Register />} />
           </Routes>
         </Content>

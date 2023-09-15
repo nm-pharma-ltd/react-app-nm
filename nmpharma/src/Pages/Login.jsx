@@ -8,7 +8,7 @@ import ApiService from '../api/ApiService';
 import { Context, SIGNEDUSER } from '../providers/provider';
 import DangerAlert from '../Components/DangerAlert';
 
-export default function Login() {
+export default function Login({fetchDataWithToken}) {
 
   const [store, dispatch] = useContext(Context);
   const [showPassword, setShowPassword] = useState(false);
@@ -53,10 +53,12 @@ export default function Login() {
         email: email.trim(),
         password: password.trim(),
       });
-      setLoading(false); 
+
       dispatch({ type: SIGNEDUSER, payload: { response } });
-       
-      
+
+      fetchDataWithToken(response.token);
+
+      setLoading(false);
       navigate('/pharmacies');
       
 

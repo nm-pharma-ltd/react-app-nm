@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { FaChevronDown } from 'react-icons/fa';
-import { TableCell, ViewDetailsLink } from './Table';
+import { RedBox, TableCell, ViewDetailsLink } from './Table';
 import { TiMediaRecord } from 'react-icons/ti';
 import { NavLink } from 'react-router-dom';
 import { FaInfinity } from 'react-icons/fa6';
@@ -127,7 +127,7 @@ const StockCard = ({ data }) => {
             {hasExpiry && (
               <ExpiryBadge>
                 <TiMediaRecord />
-                Expiry
+                Expiring
               </ExpiryBadge>
             )}
             {hasIncoming && (
@@ -457,6 +457,7 @@ export const OnOrderBadge = styled.div`
     font-size: 12px;
   }
 `;
+
 export const ExpiryBadge = styled.div`
   height: 22px;
   text-align: center;
@@ -464,9 +465,9 @@ export const ExpiryBadge = styled.div`
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  color:  #796300; 
+  color: #a72e39;
+  background-color: #e3bfbf;
   margin: 0 0 0 20px;
-  background-color:  #e1c770; 
   min-width: fit-content;
   width: 90px;
   font-size: 13px;
