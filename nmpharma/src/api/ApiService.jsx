@@ -61,6 +61,16 @@ const ApiService = {
       throw error;
     }
   },
+
+  // PUT
+  put: async (endpoint, headers_data) => {
+    try {
+      const response = await apiInstance.put(endpoint, { headers: headers_data });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 export default ApiService;

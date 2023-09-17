@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { MamRadVelkyZadky } from './Pharmacies';
 import { ProfileSettings } from './ProfileSettings';
@@ -6,10 +6,18 @@ import { Appearance } from './Appearance';
 import { NotificationsSettings } from './NotificationsSettings';
 import ConfirmationPopup from '../Components/ConfirmationPopUp';
 import isPropValid from "@emotion/is-prop-valid";
+import ApiService from '../api/ApiService';
+import { CLEAR_USER, Context, LOGOUT } from '../providers/provider';
+import WarningAlert from '../Components/WarningAlert';
+import { useNavigate } from 'react-router';
 
 export default function Settings() {
 
   const [activeLink, setActiveLink] = useState('profile'); // Initialize to 'profile'
+  const [showConfirmPopup, setShowConfirmPopup] = useState(false);
+  const [warningMessage, setWarningMessage] = useState("");
+  const [store, dispatch] = useContext(Context);
+  const navigate = useNavigate();
 
   const renderContent = () => {
     switch (activeLink) {
@@ -24,30 +32,60 @@ export default function Settings() {
     }
   };
 
-  const [showConfirmPopup, setShowConfirmPopup] = useState(false);
+
 
   const handleDeleteProfile = () => {
     setShowConfirmPopup(true);
   };
 
   const handleClosePopup = () => {
+    console.log(store.user.userid);
     setShowConfirmPopup(false);
   };
 
-  const handleConfirmDelete = () => {
-    console.log("Profile deleted!");
-    // Implement actual delete logic here.
+  const handleConfirmDelete = async () => {
+    try {
+      const response = await ApiService.delete(`/user/${store.user.userid}`, {
+        "Authorization": "Bearer " + store.user.token
+      });
+
+      // Check for successful deletion
+      if (response.status === 200) {
+        console.log("Profile deleted!");
+        navigate('/Login');
+        dispatch({ type: LOGOUT });
+      } else {
+        // This will handle any other non-200 status codes
+        setWarningMessage("An error occurred while deleting the profile.");
+      }
+
+    } catch (error) {
+      console.error("Error deleting the profile:", error);
+
+      if (error.response && error.response.status === 403) {
+        setWarningMessage("You don't have permission to delete this profile.");
+      } else {
+        setWarningMessage("An error occurred while deleting the profile.");
+      }
+    }
+
     setShowConfirmPopup(false);
   };
+
+
+
+
+
 
 
 
   return (
     <MamRadVelkyZadky>
+      {warningMessage && <WarningAlert message={warningMessage} />}
       <h2>Settings</h2>
       <SettingsCard>
         <NavLinks>
-        <MenuItem isActive={activeLink === 'profile'} onClick={() => setActiveLink('profile')}>
+          <MenuItem isActive={activeLink === 'profile'} onClick={() => setActiveLink('profile')}>
             Profile
           </MenuItem>
           <MenuItem isactive={activeLink === 'appearance'} onClick={() => setActiveLink('appearance')}>

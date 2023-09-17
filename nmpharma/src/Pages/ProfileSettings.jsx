@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { FaPen, FaUser, FaEye, FaEyeSlash, FaUserCircle } from 'react-icons/fa';
 import { ViewDetailsLink } from '../Components/Table';
 import { Context, SIGNEDUSER } from '../providers/provider';
+import ApiService from '../api/ApiService';
 
 export const ProfileSettings = () => {
 
@@ -21,6 +22,7 @@ export const ProfileSettings = () => {
   };
 
   const toggleEdit = () => {
+    //console.log(store.user.userid);
 
     if (!isEditing) {
       setNewPassword(actualPassword);
@@ -29,24 +31,53 @@ export const ProfileSettings = () => {
   };
 
 
-  //Dodělat
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setActualPassword(newPassword);
-    dispatch({
-      type: "SIGNEDUSER",
-      payload: {
-        user: store.user,
-        token: store.token,
-        name: username,
+
+    try {
+      // Set up your payload
+      const payload = {
+        id: store.user.userid,
         email: email,
-        password: actualPassword
+        username: username
+      };
+      
+      
+      // Send the PUT request
+      const response = await ApiService.put(
+        'user/edit', 
+        payload, 
+        {
+          headers: {
+            "Authorization": "Bearer " + store.user.token
+          }
+        }
+      );
+    
+      if (response.status === 200) {
+        dispatch({
+          type: SIGNEDUSER,
+          payload: {
+            response: {
+              ...store.user, 
+              name: username, 
+              email: email
+            }
+          }
+        });
       }
-    });
+      else if (response.status === 401) {
+        console.error("Unauthorized request. Please login again.");
+        // Optionally redirect the user to a login page or show an error message
+      } else {
+        console.error(`Error updating profile: ${response.status}`);
+      }
+    } catch (error) {
+      console.error(`Failed to update profile: ${error.message}`);
+    }
 
     setNewPassword('');
     setIsEditing(false);
-    console.log("Profile settings updated!");
   };
 
 
@@ -54,7 +85,7 @@ export const ProfileSettings = () => {
     <>
       <HeadingSettings>
         <h3>Profile Settings</h3>
-        <ViewDetailsLink onClick={toggleEdit}>
+        <ViewDetailsLink onClick={toggleEdit == false}>
           Edit
           <Space />
         </ViewDetailsLink>
@@ -67,14 +98,14 @@ export const ProfileSettings = () => {
           <InfoItem>
             <InfoLabel>Username</InfoLabel>
             {isEditing ?
-              <Input type="text" value={store.user.username} onChange={(e) => setUsername(e.target.value)} /> :
+              <Input type="text" value={username} onChange={(e) => setUsername(e.target.value)} /> :
               <InfoData>{store.user.username}</InfoData>
             }
           </InfoItem>
           <InfoItem>
             <InfoLabel>Email</InfoLabel>
             {isEditing ?
-              <Input type="email" value={store.user.email} onChange={(e) => setEmail(e.target.value)} /> :
+              <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} /> :
               <InfoData>{store.user.email}</InfoData>
             }
           </InfoItem>
@@ -124,7 +155,7 @@ const InfoItem = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 15px 0;
-  border-bottom: 1px solid ${props=>props.theme.line};
+  border-bottom: 1px solid ${props => props.theme.line};
 
   &:last-child {
     border-bottom: none;
@@ -165,7 +196,7 @@ const Input = styled.input`
   background-color: ${props => props.theme.nav};
   outline: none;
   transition: border-color 0.3s ease;
-  color: ${props=> props.theme.text};
+  color: ${props => props.theme.text};
 
   &:focus{
     border-color: #949494;

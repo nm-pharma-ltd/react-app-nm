@@ -62,19 +62,25 @@ export default function Login({fetchDataWithToken}) {
       navigate('/pharmacies');
       
 
-    } catch (error) {
+    } 
+    catch (error) {
       setLoading(false); 
       if (error.message.includes('net::ERR_CONNECTION')) {
         setErrorMessage('Failed to connect. Please check your network and try again.');
       }
-       else if (error.response && error.response.data) {
-        setEmailError(error.response.data.email || '');
-        setPasswordError(error.response.data.password || '');
-      }
-      else {
+      else if (error.response) {
+        if (error.response.status === 400) {
+          setErrorMessage('Invalid credentials. Please try again. (User might not exist)');
+        } else if (error.response.data) {
+          setEmailError(error.response.data.email || '');
+          setPasswordError(error.response.data.password || '');
+        } else {
+          setErrorMessage('Failed to connect. Please check your network and try again.');
+        }
+      } else {
         setErrorMessage('Failed to connect. Please check your network and try again.');
       }
-    }
+    }    
   };
 
   const validateEmail = (email) => {
