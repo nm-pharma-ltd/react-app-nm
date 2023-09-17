@@ -1,15 +1,55 @@
 import styled from 'styled-components';
 import { NavLink, useNavigate } from "react-router-dom";
 import { Dropdownos } from './BarChart';
+import { useMemo, useState } from 'react';
 
 export default function Table({ title, subtitle, viewDetailsLink, width, columns, data, details, content, onMonthChange, selectedMonth }) {
-
   const navigate = useNavigate();
+
+  const [sortConfig, setSortConfig] = useState({
+    key: null,
+    direction: 'asc',
+  });
+
+  const handleHeaderClick = (columnName, fieldName) => {
+    const sortableColumns = ["rank", "productDescription", "monthlyProfit", "soldTarget", "clientName", "monthlySale"];
+    if (sortableColumns.includes(fieldName)) {
+      let direction = 'asc';
+      if (sortConfig.key === fieldName && sortConfig.direction === 'asc') {
+        direction = 'desc';
+      }
+      setSortConfig({ key: fieldName, direction });
+    }
+  };
+
+  const sortedData = useMemo(() => {
+    let sortableData = [...data];
+    if (sortConfig.key !== null) {
+        sortableData.sort((a, b) => {
+            let aValue = a[sortConfig.key];
+            let bValue = b[sortConfig.key];
+
+            if (sortConfig.key === 'monthlyProfit') {
+                aValue = parseFloat(aValue.replace('€', '').trim());
+                bValue = parseFloat(bValue.replace('€', '').trim());
+            }
+
+            if (aValue < bValue) {
+                return sortConfig.direction === 'asc' ? -1 : 1;
+            }
+            if (aValue > bValue) {
+                return sortConfig.direction === 'asc' ? 1 : -1;
+            }
+            return 0;
+        });
+    }
+    return sortableData;
+}, [data, sortConfig]);
 
 
   const generateRows = () => {
-    return data && data.map((item, index) => (
-      <TableRow key={index} onClick={() => navigate(`/pharmacies/${content}/${content == "clients" ? item.clientCode : item.productCode}`)}>
+    return sortedData && sortedData.map((item, index) => (
+      <TableRow key={index} onClick={() => navigate(`/pharmacies/${content}/${content === "clients" ? item.clientCode : item.productCode}`)}>
         {columns.map((column, colIndex) => (
           <TableCell key={colIndex} align={column.align}>
             {column.field === 'productName' ? (
@@ -40,8 +80,7 @@ export default function Table({ title, subtitle, viewDetailsLink, width, columns
     const month = Number(event.target.value);
     console.log("Month selected:", month);
     onMonthChange(month);
-};
-
+  };
 
   const monthDropdown = (
     <Dropdownos value={selectedMonth} onChange={handleMonthChange}>
@@ -53,11 +92,6 @@ export default function Table({ title, subtitle, viewDetailsLink, width, columns
     </Dropdownos>
   );
 
-//   useEffect(() => {
-//     console.log("Table data updated:", data);
-// }, [data]);
-
-
   return (
     <Card width={width}>
       <CardHeader>
@@ -68,15 +102,21 @@ export default function Table({ title, subtitle, viewDetailsLink, width, columns
       <Subtitle>{subtitle}</Subtitle>
       <TableContainer>
         <TableElement>
-          <TableHead>
-            <TableRow>
-              {columns.map((column, index) => (
-                <TableHeaderCell key={index} align={column.align}>
-                  {column.label}
-                </TableHeaderCell>
-              ))}
-            </TableRow>
-          </TableHead>
+        <TableHead>
+  <TableRow>
+    {columns.map((column, index) => (
+      <TableHeaderCell
+        key={index}
+        align={column.align}
+        onClick={() => handleHeaderClick(column.label, column.field)}
+      >
+        {column.label}
+        {(column.field === "rank" || column.field === "productDescription" || column.field === "monthlyProfit" || column.field === "soldTarget" || column.field === "monthlySale") && <span style={{ marginLeft: '5px' }}>↕</span>}
+      </TableHeaderCell>
+    ))}
+  </TableRow>
+</TableHead>
+
           <TableBody>{generateRows()}</TableBody>
         </TableElement>
       </TableContainer>
@@ -132,16 +172,14 @@ const TableHead = styled.thead`
 
 export const TableHeaderCell = styled.th`
   padding: 10px;
-  text-align: ${props => (props.align === 'right' ? 'right' : props.align === 'center' ? 'center' : 'left')};
+  text-align: ${props => props.align || 'left'}; // Use the passed alignment
   color: #909090;
   font-weight: 500;
+  cursor: pointer;
   text-wrap: nowrap;
-
-  span {
-    display: block;
-    text-align: inherit;
-  }
 `;
+
+
 
 export const TableCell = styled.td`
   padding: 10px;
