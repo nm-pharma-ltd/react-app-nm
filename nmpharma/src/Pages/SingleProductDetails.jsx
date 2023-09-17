@@ -9,7 +9,7 @@ import { UnderlineH } from "./Stock";
 
 export default function SingleProductDetails() {
   
-  const [store] = useContext(Context);  
+  const [store, ] = useContext(Context);  
   const { productCode } = useParams();
   const [productName, setProductName] = useState();
 

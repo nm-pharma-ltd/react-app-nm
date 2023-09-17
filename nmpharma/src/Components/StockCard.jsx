@@ -466,7 +466,7 @@ export const ExpiryBadge = styled.div`
   justify-content: space-evenly;
   align-items: center;
   color: #a72e39;
-  background-color: #e3bfbf;
+  background-color: #efcbcb;
   margin: 0 0 0 20px;
   min-width: fit-content;
   width: 90px;

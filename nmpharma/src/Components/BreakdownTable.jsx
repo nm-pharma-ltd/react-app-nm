@@ -1,30 +1,23 @@
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { NavLink, useNavigate } from "react-router-dom";
 import { Dropdownos } from './BarChart';
 
-export default function Table({ title, subtitle, viewDetailsLink, width, columns, data, details, content, onMonthChange, selectedMonth }) {
+export default function BreakdownTable({ title, subtitle, viewDetailsLink, width, data, details, content, onMonthChange, selectedMonth }) {
 
+  //Pridej sem ke "COLUMN: PROFIT", komponentu - <GreenBox>123 €</GreenBox>, podivej se do ...
   const navigate = useNavigate();
 
 
   const generateRows = () => {
     return data && data.map((item, index) => (
       <TableRow key={index} onClick={() => navigate(`/pharmacies/${content}/${content == "clients" ? item.clientCode : item.productCode}`)}>
-        {columns.map((column, colIndex) => (
-          <TableCell key={colIndex} align={column.align}>
-            {column.field === 'productName' ? (
-              <ProductLink>
-                {item[column.field]}
-              </ProductLink>
-            ) : column.field === 'monthlyProfit' ? (
-              Number(item[column.field]) >= 0 ? (
-                <GreenBox>{`${item[column.field]} €`}</GreenBox>
-              ) : (
-                <RedBox>{`${item[column.field]} €`}</RedBox>
-              )
-            ) : (
-              <span>{item[column.field]}</span>
-            )}
+        <TableCell key={index}>
+          {item.name}
+        </TableCell>
+        {item.sales && item.sales.map((item, index) => (
+          <TableCell key={index}>
+            {item.quantity}
           </TableCell>
         ))}
       </TableRow>
@@ -36,33 +29,10 @@ export default function Table({ title, subtitle, viewDetailsLink, width, columns
     'August', 'September', 'October', 'November', 'December'
   ];
 
-  const handleMonthChange = (event) => {
-    const month = Number(event.target.value);
-    console.log("Month selected:", month);
-    onMonthChange(month);
-};
-
-
-  const monthDropdown = (
-    <Dropdownos value={selectedMonth} onChange={handleMonthChange}>
-      {months.map((month, index) => (
-        <option key={index} value={index + 1}>
-          {month}
-        </option>
-      ))}
-    </Dropdownos>
-  );
-
-//   useEffect(() => {
-//     console.log("Table data updated:", data);
-// }, [data]);
-
-
   return (
     <Card width={width}>
       <CardHeader>
         <Title>{title}</Title>
-        {monthDropdown}
         <ViewDetailsLink to={viewDetailsLink}>{details}</ViewDetailsLink>
       </CardHeader>
       <Subtitle>{subtitle}</Subtitle>
@@ -70,9 +40,12 @@ export default function Table({ title, subtitle, viewDetailsLink, width, columns
         <TableElement>
           <TableHead>
             <TableRow>
-              {columns.map((column, index) => (
-                <TableHeaderCell key={index} align={column.align}>
-                  {column.label}
+              <TableHeaderCell>
+                NAME
+              </TableHeaderCell>
+              {months.map((month, index) => (
+                <TableHeaderCell key={index}>
+                  {month}
                 </TableHeaderCell>
               ))}
             </TableRow>

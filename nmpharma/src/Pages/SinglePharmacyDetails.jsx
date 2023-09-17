@@ -1,12 +1,13 @@
 import {useState, useEffect, useContext} from "react";
 import { GoBackButton, Title, TitleWrapper } from "./ClientsDetails";
 import { useParams } from "react-router";
-import Table from "../Components/Table";
 import ApiService from "../api/ApiService";
 import {Context} from "../providers/provider"
 import styled from "styled-components";
 import { NutellaSkeleton, NutellaSkeletonTableContainer } from "./Pharmacies";
 import { ModeButtonL, ModeButtonR } from "./Stock";
+import BreakdownTable from "../Components/BreakdownTable";
+import Table from "../Components/Table";
 
 export function SinglePharmacyDetails({selectedMonth, onMonthChange}) {
   const params = useParams();
@@ -22,7 +23,7 @@ export function SinglePharmacyDetails({selectedMonth, onMonthChange}) {
         response.forEach((item) => {
           item.products.slice(0, 5);
           item.products.forEach((product) => {
-            product.profit = product.profit.toFixed(0) + " €"
+            product.profit = product.profit.toFixed(0)
             product.salePrice = product.salePrice.toFixed(0) + " €"
             product.costPrice = product.costPrice.toFixed(0) + " €"
           })
@@ -30,13 +31,13 @@ export function SinglePharmacyDetails({selectedMonth, onMonthChange}) {
         setData(response);
         const response2 = ApiService.get(`pharmacies/breakdown/${year}/${params.clientCode}`, {Authorization: "Bearer " + store.user.token}).then(response => {
           setPhBreakdownData(response);
-          console.log(response);
         })
       });
+      console.log(response.product);
       const phName = store.clients.find(client => client.clientCode === params.clientCode);
       setPharmacyName(phName.clientName);
       
-      
+
   }, [])
 
 
@@ -75,7 +76,7 @@ export function SinglePharmacyDetails({selectedMonth, onMonthChange}) {
           { label: 'NAME', field: 'productName', align: 'left' },
           { label: 'SALE PRICE', field: `salePrice`, align: 'center',},
           { label: 'COST PRICE', field: `costPrice`, align: 'center',},
-          { label: 'PROFIT', field: `profit`, align: 'center', },
+          { label: 'PROFIT', field: `monthlyProfit`, align: 'center', },
           { label: 'QUANTITY', field: `quantity`, align: 'center',},
         ]}
         data={showAll ? data.find(item => item.month == selectedMonth)?.products : data.find(item => item.month == selectedMonth)?.products.slice(0, 5)}
@@ -86,7 +87,6 @@ export function SinglePharmacyDetails({selectedMonth, onMonthChange}) {
       </>
       ) : (
         <NutellaSkeletonTableContainer style={{width: "97%", height: "auto"}}>
-            {/* Table Rows */}
             {Array(5)
               .fill()
               .map((_, i) => (
@@ -101,26 +101,17 @@ export function SinglePharmacyDetails({selectedMonth, onMonthChange}) {
           </NutellaSkeletonTableContainer>
       ) 
     }
-    {phBreakdownData ? (
-      <Table
-      title="Pharamcy Breakdown"
-      subtitle="Breakdown of all product sold in a year"
-      viewDetailsLink="/pharmacies/productdetails"
-      width="auto"
-      columns={[
-        { label: 'NAME', field: 'name', align: 'left' },
-        { label: 'MONTH', field: 'month', align:'center'},
-        { label: 'SALE PRICE', field: `sales.salePrice`, align: 'center',},
-        { label: 'COST PRICE', field: `sales.costPrice`, align: 'center',},
-        { label: 'PROFIT', field: `sales.profit`, align: 'center', },
-        { label: 'QUANTITY', field: `sales.quantity`, align: 'center',},
-      ]}
-      data={phBreakdownData}
-      content={"products"}
+    {phBreakdownData !== undefined ? (
+      <BreakdownTable
+        title="Pharamcy Breakdown"
+        subtitle="Breakdown of all product sold in a year"
+        viewDetailsLink="/pharmacies/productdetails"
+        width="auto"
+        data={phBreakdownData}
+        content={"products"}
     />
     ):(
       <NutellaSkeletonTableContainer style={{width: "97%", height: "auto"}}>
-            {/* Table Rows */}
             {Array(5)
               .fill()
               .map((_, i) => (
@@ -132,7 +123,7 @@ export function SinglePharmacyDetails({selectedMonth, onMonthChange}) {
                   />
                 </div>
               ))}
-          </NutellaSkeletonTableContainer>
+      </NutellaSkeletonTableContainer>
     )}
     </>
   );

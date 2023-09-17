@@ -41,7 +41,9 @@ export default function App() {
   async function fetchData(year = 2023, month = selectedMonth, token) {
     try {
       setIsLoadingProducts(true);
-      const productsData = await ApiService.get(`products/sales/${year}/${month}`, { "Authorization": "Bearer " + store.user.token });
+      const authToken = token ? token : store.user.token;
+
+      const productsData = await ApiService.get(`products/sales/${year}/${month}`, { "Authorization": "Bearer " + authToken });
 
       // Ensure data is sorted by rank
       const sortedData = productsData.sort((a, b) => a.rank - b.rank);
@@ -75,8 +77,11 @@ export default function App() {
   //CLIENTS DATA FETCHING
   async function fetchPharmacyData(year = 2023, month = selectedMonth, token) {
     try {
+
       setIsLoadingPharmacies(true);
-      const fetchedData = await ApiService.get(`clients/sales/${year}/${month}`, { "Authorization": "Bearer " + store.user.token });
+      const authToken = token ? token : store.user.token;
+
+      const fetchedData = await ApiService.get(`clients/sales/${year}/${month}`, { "Authorization": "Bearer " + authToken });
 
       const sortedPharmacies = fetchedData.sort(
         (a, b) => b.monthlySale - a.monthlySale
@@ -114,13 +119,13 @@ export default function App() {
 
   async function FetchAllWithToken(usertoken) {
     console.log(usertoken)
-    fetchData(usertoken);
-    fetchPharmacyData(usertoken);
+    fetchData(undefined, undefined, usertoken);
+    fetchPharmacyData(undefined, undefined, usertoken);
   }
 
   useEffect(() => {
     FetchAll()
-  }, []);
+  }, [selectedMonth]);
 
   const isAuthPage = location.pathname === '/Login' || location.pathname === '/Register';
 
