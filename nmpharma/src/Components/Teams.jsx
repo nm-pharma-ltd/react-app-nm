@@ -8,12 +8,14 @@ import { NavLink } from "react-router-dom";
 import ApiService from "../api/ApiService";
 import { Context, SIGNEDUSER, TEAMS, TEAM_COLORS } from "../providers/provider";
 import { UnderlineH } from "../Pages/Stock";
+import DangerAlert from "./DangerAlert";
+import WarningAlert from "./WarningAlert";
 
 export default function Teams({}) {
   const [isAddTeamPopupOpen, setIsAddTeamPopupOpen] = useState(false);
   const [teamsData, setteamsData] = useState([]);
   const [store, dispatch] = useContext(Context);
-  
+ 
 
   async function fetchData() {
     try {
@@ -24,6 +26,7 @@ export default function Teams({}) {
       setteamsData(response);
       dispatch({ type: TEAMS, payload: { response } });
     } catch (error) {
+      
       console.error("Error:", error);
     }
   }

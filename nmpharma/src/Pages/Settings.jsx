@@ -65,6 +65,7 @@ export default function Settings() {
           <ConfirmationPopup
             onClose={handleClosePopup}
             onConfirm={handleConfirmDelete}
+            message={'Are you sure you want to delete your profile?'}
           />
         )}
       </SettingsCard>

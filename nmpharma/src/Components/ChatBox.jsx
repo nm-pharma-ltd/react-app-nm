@@ -5,20 +5,37 @@ import { FaCirclePlus } from "react-icons/fa6";
 import { BsPersonCircle } from "react-icons/bs";
 import { IconLink } from "../Pages/Pharmacies";
 import ApiService from "../api/ApiService";
-import { Context, SIGNEDUSER} from "../providers/provider";
+import { Context, SIGNEDUSER } from "../providers/provider";
 
-const ChatBox = () => {
+const ChatBox = ({content}) => {
   const [store, dispatch] = useContext(Context);
   const [inputValue, setInputValue] = useState("");
-  const [messages, setMessages] = useState([])
+  const [messages, setMessages] = useState([]);
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
   };
+
+
   const fetchComms = async () => {
-      const fetchedData = await ApiService.get("comments", {"Authorization": "Bearer " + store.user.token }); // Získání aktualizovaných zpráv ze serveru
+    try {
+      let endpoint = "comments";
+
+      // Pokud je content roven "basic", použijeme standardní endpoint
+      if (content !== "basic") {
+        endpoint = `comments/product/${content}`;
+      }
+
+      const fetchedData = await ApiService.get(endpoint, {
+        Authorization: "Bearer " + store.user.token,
+      });
+
       setMessages(fetchedData);
-  }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+    
+  };
 
   const handleTokenCommand = () => {
     if (inputValue.trim() === "/token") {
@@ -26,24 +43,23 @@ const ChatBox = () => {
       setInputValue("");
     }
   };
-  
+
   const handleSendMessage = async () => {
     if (inputValue.trim() !== "") {
       if (inputValue.trim() !== "/token") {
-
         const newMessage = {
           userId: store.user.userid,
           content: inputValue,
         };
-  
+
         try {
           // Odeslat novou zprávu na server
           await ApiService.post("comments", newMessage, {
-            "Authorization": "Bearer " + store.user.token,
+            Authorization: "Bearer " + store.user.token,
           });
-  
+
           await fetchComms();
-          
+
           // Vymazat text nové zprávy
           setInputValue("");
         } catch (error) {
@@ -52,7 +68,6 @@ const ChatBox = () => {
       }
     }
   };
-  
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -62,32 +77,35 @@ const ChatBox = () => {
       handleTokenCommand();
     }
   };
-  
 
-  const handleRemoveMessage = async (id) => {
-    try {
-      // Odstranit zprávu z DB
-      await ApiService.delete(`comments/${id}`, {"Authorization": "Bearer " + store.user.token });
+  const handleRemoveMessage = async (id, messageAuthor) => {
+    // Prověřit, zda je aktuální uživatel autorem komentáře
+    if (store.user.username === messageAuthor) {
+      try {
+        // Odstranit zprávu z DB
+        await ApiService.delete(`comments/${id}`, {
+          Authorization: "Bearer " + store.user.token,
+        });
 
-      // Načíst aktualizované zprávy ze serveru
-      await fetchComms()
-
-    } catch (error) {
-      console.error("Error:", error);
+        // Načíst aktualizované zprávy ze serveru
+        await fetchComms();
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    } else {
+      console.error("Nemáte oprávnění odstranit tento komentář.");
     }
   };
-  
-  useEffect( () => {
-     fetchComms()
-  },[])
-  
 
+  useEffect(() => {
+    fetchComms();
+  }, []);
 
   return (
     <ChatBoxWrapper>
       <BoxChat>
         <ChatInput
-          type="text"  
+          type="text"
           placeholder="Leave a message here..."
           value={inputValue}
           onChange={(e) => handleInputChange(e)}
@@ -107,9 +125,15 @@ const ChatBox = () => {
               <UserName>{message.username}</UserName>
             </AvatarDiv>
             <MessageText>{message.content}</MessageText>
-            <RemoveIcon onClick={() => handleRemoveMessage(message.commentid)}>
-              <FaTimes />
-            </RemoveIcon>
+            {store.user.username === message.username && ( // Přidáno porovnání s aktuálním uživatelem z kontextu
+              <RemoveIcon
+                onClick={() =>
+                  handleRemoveMessage(message.commentid, message.username)
+                }
+              >
+                <FaTimes />
+              </RemoveIcon>
+            )}
           </MessageHeader>
         </MessageContainer>
       ))}
@@ -118,7 +142,7 @@ const ChatBox = () => {
 };
 
 const UserLogo = styled(FaUserCircle)`
-  color: ${props=> props.theme.componentBackground};
+  color: ${(props) => props.theme.componentBackground};
 `;
 
 const BoxChat = styled.div`
@@ -134,7 +158,7 @@ const ChatBoxWrapper = styled.div`
   padding: 16px;
   margin-bottom: 40px;
   margin-top: 20px;
-  background: ${props => props.theme.componentBackground};
+  background: ${(props) => props.theme.componentBackground};
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -144,7 +168,7 @@ const ChatBoxWrapper = styled.div`
 const MessageContainer = styled.div`
   display: flex;
   flex-direction: column;
-  border-top: 1px solid ${props=>props.theme.line};
+  border-top: 1px solid ${(props) => props.theme.line};
   padding: 15px 0;
 `;
 
@@ -152,7 +176,6 @@ const MessageHeader = styled.div`
   display: flex;
   align-items: center;
 `;
-
 
 const Avatar = styled.div`
   width: 40px;
@@ -166,7 +189,6 @@ const Avatar = styled.div`
   align-items: center;
   margin-right: 1em;
 `;
-
 
 const UserName = styled.span`
   font-size: 14px;
@@ -184,9 +206,9 @@ const ChatInput = styled.input`
   border: none;
   font-size: 14px;
   width: 100%;
-  background-color: ${props => props.theme.componentBackground};
+  background-color: ${(props) => props.theme.componentBackground};
 
-  color: ${props => props.theme.text};
+  color: ${(props) => props.theme.text};
   &:focus {
     border-color: #fff;
     outline: none;

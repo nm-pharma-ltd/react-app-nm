@@ -64,7 +64,8 @@ export default function App() {
         navigate('/Login');
       } else if (error.status === 500) {
         setError("Internal Server Error. Please try again later.");
-      } else {
+      } 
+       else {
         setError("An error occurred. Please try again.");
       }
       console.error("Error fetching data:", error);

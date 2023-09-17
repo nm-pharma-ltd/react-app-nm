@@ -3,9 +3,15 @@ import { useState, useEffect, useContext } from "react";
 import LinearProgress from '@mui/material/LinearProgress';
 import Typography from '@mui/material/Typography';
 import styled from 'styled-components';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { GreenBox } from '../Components/Table';
 import { TiMediaRecord } from 'react-icons/ti';
+import { FaTimes } from 'react-icons/fa';
+import ConfirmationPopup from './ConfirmationPopUp';
+import ApiService from '../api/ApiService';
+import { Context } from '../providers/provider';
+import WarningAlert from './WarningAlert';
+import DangerAlert from './DangerAlert';
 
 export default function TeamCardDetail({
   id,
@@ -18,21 +24,67 @@ export default function TeamCardDetail({
   progressbarheight,
   index,
   backgroundgradient,
-  isDetailPage }) {
+  isDetailPage, }) {
 
-
+  const [store,] = useContext(Context);
   const monthProgress = (currentAmount / monthGoal) * 100;
   const yearProgress = (currentAmount / yearGoal) * 100;
+  const { id: paramId } = useParams()
+  const [showDeleteTeamPopup, setShowDeleteTeamPopup] = useState(false);
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [error2, setError2] = useState('');
+
+
+  // Handler functions
+  const handleOpenDeletePopup = (e) => {
+    setShowDeleteTeamPopup(true);
+  };
+
+  const handleClosePopup = () => {
+    setShowDeleteTeamPopup(false);
+  };
+
+  const handleConfirmDelete = async () => {
+    setLoading(true);
+    try {
+      await ApiService.delete(`teams/${paramId}`, { "Authorization": "Bearer " + store.user.token });
+      navigate('/pharmacies')
+    } catch (error) {
+      if (error.status === 403) {
+        setError('You dont have permission to do this type of action.')
+      }
+      else {
+        setError2("An error occurred. Please try again.");
+      }
+      console.error("Error deleting the team:", error);
+    }
+    setLoading(false);
+    setShowDeleteTeamPopup(false);
+  };
+
+
 
   const CardContent = (
     <>
-      <TeamName>
-        {teamName}
-        <TeamBadge>
-          <TeamBulletO />
-          Team
-        </TeamBadge>
-      </TeamName>
+      {error && <WarningAlert message={error} />}
+      {error2 && <DangerAlert message={error2} />}
+      {loading && <LinearProgress />}
+      <TeamNameDiv>
+        <TeamName>
+          <TopKonto>
+            {teamName}
+            <TeamBadge>
+              <TeamBulletO />
+              Team
+            </TeamBadge>
+          </TopKonto>
+        </TeamName>
+        <BottomKonto>
+          {isDetailPage && <DeleteIcon onClick={(e) => handleOpenDeletePopup(e)} />}
+        </BottomKonto>
+      </TeamNameDiv>
       <Goal>
         <GoalLabel>Month goal</GoalLabel>
         <GoalAmount>{monthGoal} €</GoalAmount>
@@ -59,8 +111,17 @@ export default function TeamCardDetail({
         <EarnedLabel>Earned this year</EarnedLabel>
         <GreenBox>{currentAmount} €</GreenBox>
       </Earned>
+      {showDeleteTeamPopup && (
+        <ConfirmationPopup
+          onClose={handleClosePopup}
+          onConfirm={handleConfirmDelete}
+          message={'Are you sure you want to delete this team?'}
+        />
+      )}
     </>
   );
+
+
 
   if (isDetailPage) {
     return <TeamBox cardwidth={cardwidth} backgroundgradient={backgroundgradient}>
@@ -80,7 +141,32 @@ export default function TeamCardDetail({
 
 
 
+const TopKonto = styled.div`
+  display: flex;
+  align-items: center;
+`;
+const BottomKonto = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  `;
 
+
+const DeleteIcon = styled(FaTimes)`
+  top: 10px;
+  right: 10px;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+  z-index: 990;
+  display: flex;
+  font-size: 20px;
+
+  &:hover {
+    color: red;
+  }
+`;
 
 export const TeamBulletO = styled(TiMediaRecord)`
   color: #e7f0ff;
@@ -155,6 +241,14 @@ const TeamName = styled.h3`
     font-size: 20px;
   }
 `;
+
+const TeamNameDiv = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+`;
+
 
 const Goal = styled.div`
   display: flex;

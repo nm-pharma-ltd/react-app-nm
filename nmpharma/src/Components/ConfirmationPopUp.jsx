@@ -1,13 +1,13 @@
 import React from "react";
 import styled from 'styled-components';
 
-const ConfirmationPopup = ({ onClose, onConfirm }) => {
+const ConfirmationPopup = ({ onClose, onConfirm, message }) => {
 
     return (
         <PopupContainer>
             <PopupContent>
                 <PopTitle>Confirmation</PopTitle>
-                <p>Are you sure you want to delete your profile?</p>
+                <p>{message}</p>
                 <ButtonContainer>
                     <ButtonD onClick={onConfirm}>Yes, Delete</ButtonD>
                     <ButtonC onClick={onClose}>Cancel</ButtonC>

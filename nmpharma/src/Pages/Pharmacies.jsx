@@ -186,7 +186,7 @@ export default function Pharmacies({ IsLoadingPharmacies, IsLoadingProducts, sel
       {/* CHAT */}
       <h2>Chat</h2>
       <Konto>
-        <ChatBox endPoint="comments" />
+        <ChatBox content={"basic"} />
       </Konto>
     </>
   );

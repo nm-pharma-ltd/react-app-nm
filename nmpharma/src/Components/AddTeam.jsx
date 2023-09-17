@@ -1,16 +1,21 @@
 import React, { useState, useEffect, useContext } from "react";
-import styled from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 import { Input, InputLabel } from "../Pages/Register";
 import ApiService from "../api/ApiService";
 import { Context, SIGNEDUSER } from "../providers/provider";
 import { FaCheck } from "react-icons/fa";
+import WarningAlert from "./WarningAlert";
+import DangerAlert from "./DangerAlert";
 
 const AddTeamPopup = ({ onClose, onSave, fetchData }) => {
   const [teamName, setTeamName] = useState("");
   const [yearGoal, setYearGoal] = useState("");
   const [reps, setReps] = useState([]);
   const [store, dispatch] = useContext(Context);
-
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [error2, setError2] = useState(null);
+  
   const date = new Date();
   let year = date.getFullYear();
 
@@ -36,6 +41,7 @@ const AddTeamPopup = ({ onClose, onSave, fetchData }) => {
       }));
       setReps(repsWithCheck);
     } catch (error) {
+      
       console.error("Error:", error);
     }
   };
@@ -65,6 +71,8 @@ const AddTeamPopup = ({ onClose, onSave, fetchData }) => {
         name: teamName,
         representativesIds: selectedMemberIds,
       };
+      setLoading(true); 
+
 
       try {
 
@@ -86,9 +94,18 @@ const AddTeamPopup = ({ onClose, onSave, fetchData }) => {
         } else {
           console.log("Creating of goals failed")
         }
-
+        setLoading(false); 
         onClose();
       } catch (error) {
+    
+        setLoading(false);
+        if (error.status === 403) {
+          setError('You dont have permission to do this type of action.')
+        }
+        else {
+          setError2("An error occurred. Please try again.");
+        }
+        
         console.log(newTeam);
         console.error("Error:", error);
       }
@@ -97,6 +114,8 @@ const AddTeamPopup = ({ onClose, onSave, fetchData }) => {
 
   return (
     <PopupContainer>
+      {error && <WarningAlert message={error} />}
+      {error2 && <DangerAlert message={error2} />}
       <PopupContent>
         <PopTitle>Add New Team</PopTitle>
         <InputLabel>
@@ -131,13 +150,40 @@ const AddTeamPopup = ({ onClose, onSave, fetchData }) => {
         </TeamMembersContainer>
 
         <ButtonContainer>
-          <Button onClick={handleSave}>Save & Upload</Button>
+          <Button onClick={handleSave}>
+            {loading ? <Spinner /> : "Save & Upload"}
+          </Button>
           <Button onClick={onClose}>Cancel</Button>
         </ButtonContainer>
       </PopupContent>
     </PopupContainer>
   );
 };
+
+const Spinner = styled.div`
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top: 4px solid #fff;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+  position: absolute;   // added this line
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
+
+const keyframes = `
+  @keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+`;
+
+const GlobalStyle = createGlobalStyle`
+  ${keyframes}
+`;
+
 
 const Peoples = styled.div`
   max-height: 200px;
@@ -235,6 +281,7 @@ const ButtonContainer = styled.div`
 `;
 
 const Button = styled.button`
+  width: 100%;
   padding: 10px 20px;
   margin-left: 10px;
   border: none;
@@ -242,10 +289,12 @@ const Button = styled.button`
   background-color: #d54529;
   color: #fff;
   cursor: pointer;
+  position: relative;   // added this line
 
   &:hover {
     background-color: #c23d2a;
   }
 `;
+
 
 export default AddTeamPopup;
