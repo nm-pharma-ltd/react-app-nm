@@ -6,6 +6,7 @@ import { Context, SIGNEDUSER } from "../providers/provider";
 import { FaCheck } from "react-icons/fa";
 import WarningAlert from "./WarningAlert";
 import DangerAlert from "./DangerAlert";
+import SuccessAlert from "./SuccessAlert";
 
 const AddTeamPopup = ({ onClose, onSave, fetchData }) => {
   const [teamName, setTeamName] = useState("");
@@ -15,7 +16,9 @@ const AddTeamPopup = ({ onClose, onSave, fetchData }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [error2, setError2] = useState(null);
-  
+  const [success, setSuccess] = useState(null);
+
+
   const date = new Date();
   let year = date.getFullYear();
 
@@ -89,12 +92,14 @@ const AddTeamPopup = ({ onClose, onSave, fetchData }) => {
           };
 
           await ApiService.post("teams/goal", goals, { Authorization: "Bearer " + store.user.token,})
-          fetchData()
+          fetchData();
+
 
         } else {
           console.log("Creating of goals failed")
         }
         setLoading(false); 
+        setSuccess('Team succesfully created.')
         onClose();
       } catch (error) {
     
@@ -116,6 +121,8 @@ const AddTeamPopup = ({ onClose, onSave, fetchData }) => {
     <PopupContainer>
       {error && <WarningAlert message={error} />}
       {error2 && <DangerAlert message={error2} />}
+      {success && <SuccessAlert message={success} />}
+
       <PopupContent>
         <PopTitle>Add New Team</PopTitle>
         <InputLabel>

@@ -1,9 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import {  FaTimes } from 'react-icons/fa';
+import React, { useState } from 'react';
+import styled, { keyframes } from 'styled-components';
+import { FaTimes } from 'react-icons/fa';
 import { FaCircleCheck } from 'react-icons/fa6';
 
-
+// Animation for sliding effect
+const slideDown = keyframes`
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+`;
 
 const AlertWrapper = styled.div`
   display: flex;
@@ -14,9 +22,21 @@ const AlertWrapper = styled.div`
   padding: 10px;
   border-radius: 10px;
   margin: 20px 20px 20px 0;
-  opacity: ${({ dismissed }) => (dismissed ? 0 : 1)};
-  transition: opacity 0.3s ease;
   align-content: center;
+  z-index: 9999;
+  
+  /* Positioning */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: auto;
+  max-width: 650px;  
+  margin-left: auto;
+  margin-right: auto;
+
+  /* Animation */
+  animation: ${slideDown} 0.5s ease-out;
 `;
 
 const Boxik = styled.div`
@@ -48,31 +68,24 @@ const CloseIcon = styled(FaTimes)`
   cursor: pointer;
 `;
 
-export default function SuccessAlert() {
-    const [dismissed, setDismissed] = useState(false);
-  
-    useEffect(() => {
-      let timeout;
-      if (dismissed) {
-        timeout = setTimeout(() => {
-          setDismissed(false);
-        }, 2000); // Delay before resetting dismissed state to show the fading effect
-      }
-  
-      return () => clearTimeout(timeout);
-    }, [dismissed]);
-  
-    const dismissAlert = () => {
-      setDismissed(true);
-    };
-  
-    return (
-      <AlertWrapper dismissed={dismissed ? 'true' : undefined}>
+export default function SuccessAlert({ message }) {
+  const [dismissed, setDismissed] = useState(false);
+
+  const dismissAlert = () => {
+    setDismissed(true);
+  };
+
+  if (dismissed) {
+    return null;
+  }
+
+  return (
+    <AlertWrapper>
       <Boxik>
         <SuccessIcon />
       </Boxik>
       <SuccessBadge>Success</SuccessBadge>
-      Your success message goes here!
+      {message}
       <CloseIcon onClick={dismissAlert} />
     </AlertWrapper>
   );
