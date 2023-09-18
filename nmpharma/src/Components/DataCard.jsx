@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const DataCard = ({ title, amount, icon, iconBackgroundColor, pluspercentage, timewhen }) => {
+const DataCard = ({ title, amount, icon, iconBackgroundColor }) => {
 
   const Icon = icon;
 
@@ -16,14 +16,7 @@ const DataCard = ({ title, amount, icon, iconBackgroundColor, pluspercentage, ti
           <CardAmount>{amount}</CardAmount>
         </CardContent>
       </TopKont>
-      <BottomKont>
-        <TextProgress>
-          <HighlightTextSuccess>
-            {pluspercentage}
-          </HighlightTextSuccess>
-          {timewhen}
-        </TextProgress>
-      </BottomKont>
+      
     </CardContainer>
   );
 };
@@ -39,12 +32,6 @@ const TopKont = styled.div`
 
 
 `
-const BottomKont = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-direction: row;
-`
 
 const CardContainer = styled.div`
   display: flex;
@@ -53,7 +40,7 @@ const CardContainer = styled.div`
   padding: 20px;
   margin-bottom: 10px;
   width: 290px;
-  height: 150px;
+  height: 120px;
   background: ${props => props.theme.componentBackground};
   box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
   justify-content: space-between;
@@ -70,15 +57,7 @@ const CardContainer = styled.div`
   }
 `;
 
-const TextProgress = styled.div`
-  display: flex;
-  color: #8b8b8bdd;
-`
 
-const HighlightTextSuccess = styled.div`
-  color: #197f3bdd;
-  margin-right: 5px;
-`
 
 const IconContainer = styled.div`
   display: flex;

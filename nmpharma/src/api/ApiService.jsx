@@ -7,28 +7,28 @@ const apiInstance = axios.create({
   baseURL: API_BASE_URL
 });
 
-// Add a request interceptor
-apiInstance.interceptors.request.use(
-  (config) => {
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+// // Add a request interceptor
+// apiInstance.interceptors.request.use(
+//   (config) => {
+//     return config;
+//   },
+//   (error) => {
+//     return Promise.reject(error);
+//   }
+// );
 
-// Add a response interceptor
-apiInstance.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    if (error.response) {
-      error.status = error.response.status; // Attach the status code to the error
-    }
-    return Promise.reject(error);
-  }
-);
+// // Add a response interceptor
+// apiInstance.interceptors.response.use(
+//   (response) => {
+//     return response;
+//   },
+//   (error) => {
+//     if (error.response) {
+//       error.status = error.response.status; // Attach the status code to the error
+//     }
+//     return Promise.reject(error);
+//   }
+// );
 
 const ApiService = {
   

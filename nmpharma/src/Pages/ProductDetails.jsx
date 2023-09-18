@@ -15,7 +15,7 @@ export default function ProductDetails({ loading, selectedMonth, onMonthChange }
   const [store, dispatch] = useContext(Context);
 
   // Initialize products state after store is defined
-  const [products, setProducts] = useState(store.products.slice(0, 82));
+  const [products, setProducts] = useState(store.products);
 
   useEffect(() => {
     if (searchTerm === "") {

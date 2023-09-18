@@ -1,13 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { FaChevronDown } from 'react-icons/fa';
 import { RedBox, TableCell, ViewDetailsLink } from './Table';
 import { TiMediaRecord } from 'react-icons/ti';
 import { NavLink } from 'react-router-dom';
 import { FaInfinity } from 'react-icons/fa6';
+import { Context, FORECAST_BUTTON_SAVE } from '../providers/provider';
 
 const StockCard = ({ data }) => {
   const cardRef = useRef(null);
+  const [store, dispatch] = useContext(Context);
   const [expanded, setExpanded] = useState(false);
   const [cardWidth, setCardWidth] = useState(null);
   const [inputValues, setInputValues] = useState({});
@@ -50,8 +52,8 @@ const StockCard = ({ data }) => {
     const calculatedMonths = (currentOnOrder + currentIncoming + currentTotalInStock + toOrder) / sixmonth;
     const months = sixmonth !== 0 && Number.isFinite(calculatedMonths) ? calculatedMonths : "--";
 
-    if (productCode == 'NMP002'){
-        console.log(currentOnOrder, currentIncoming, currentTotalInStock, calculatedMonths, sixmonth);
+    if (productCode == 'NMP002') {
+      console.log(currentOnOrder, currentIncoming, currentTotalInStock, calculatedMonths, sixmonth);
     }
 
     setMonthsOfStock(prevState => ({ ...prevState, [productCode]: months }));
@@ -114,7 +116,19 @@ const StockCard = ({ data }) => {
     }
   };
 
-
+  const handleProductClick = (product) => {
+    // Create a new object to contain the product data, supplierCode, and monthsOfStock
+    const productDataWithExtras = {
+      ...product,
+      supplierCode: data.supplierCode,
+      monthsOfStock: monthsOfStock[product.productCode] || '--',
+      expiry: product.productExpire || '--'
+    };
+  
+    console.log(productDataWithExtras);
+    dispatch({ type: FORECAST_BUTTON_SAVE, payload: { product: productDataWithExtras } });
+  };
+  
 
   return (
     <>
@@ -205,7 +219,10 @@ const StockCard = ({ data }) => {
                         </UniInput>
                       </TableCell>
                       <TableCell >
-                        <ForeButton to={`/stock/${product.productCode}`}>More</ForeButton>
+                        <ForeButton onClick={() => handleProductClick(product)}
+                          to={`/stock/${product.productCode}`}>
+                          More
+                        </ForeButton>
                       </TableCell>
                     </TableRow>
                   )

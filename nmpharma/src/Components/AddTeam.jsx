@@ -101,6 +101,7 @@ const AddTeamPopup = ({ onClose, onSave, fetchData }) => {
         setLoading(false); 
         setSuccess('Team succesfully created.')
         onClose();
+        
       } catch (error) {
     
         setLoading(false);

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const DataCardLarge = ({ supplier, code, name, profit, price }) => {
+const DataCardLarge = ({ supplier, code, name, expiry }) => {
   return (
     <CardContainer>
       <CardContent>
@@ -11,10 +11,8 @@ const DataCardLarge = ({ supplier, code, name, profit, price }) => {
       </CardContent>
       <VerticalDivider />
       <ProfitPriceContainer>
-        <CardTitle>Price:</CardTitle>
-        <CardAmount>{`${price} €`}</CardAmount>
-        <CardTitle>Profit:</CardTitle>
-        <CardAmount>{`+${profit} €`}</CardAmount>
+        <CardTitle>Expiry date:</CardTitle>
+        <CardAmount>{expiry}</CardAmount>
       </ProfitPriceContainer>
     </CardContainer>
   );
@@ -48,7 +46,7 @@ const VerticalDivider = styled.div`
 const CardContent = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-start; // added to push content to the left
+  justify-content: center; // added to push content to the left
 `;
 
 const CardTitle = styled.h3`
@@ -70,7 +68,7 @@ const CardAmount = styled.p`
 const ProfitPriceContainer = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-end; // added to push content to the right
+  justify-content: center; // added to push content to the right
 `;
 
 const Profit = styled.p`
