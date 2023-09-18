@@ -85,7 +85,7 @@ export const ProfileSettings = () => {
     <>
       <HeadingSettings>
         <h3>Profile Settings</h3>
-        <ViewDetailsLink onClick={toggleEdit == false}>
+        <ViewDetailsLink onClick={toggleEdit}>
           Edit
           <Space />
         </ViewDetailsLink>

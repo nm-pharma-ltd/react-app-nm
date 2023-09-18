@@ -23,7 +23,7 @@ export default function ForecastTable({ title, subtitle, width, columns, data, s
     return data.map((item, index) => (
       <TableRow key={index}>
         {columns.map((column, colIndex) => {
-          if (['name', 'price', 'profit'].includes(column.field)) {
+          if (['name', 'expiry'].includes(column.field)) {
             return <TableCell key={colIndex} align={column.align}><span>{item[column.field]}</span></TableCell>;
           } else {
             return (

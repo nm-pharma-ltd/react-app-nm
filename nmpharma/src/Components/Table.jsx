@@ -23,7 +23,7 @@ export default function Table({ title, subtitle, viewDetailsLink, width, columns
   };
 
   const sortedData = useMemo(() => {
-    let sortableData = [...data];
+    let sortableData = data && [...data];
     if (sortConfig.key !== null) {
         sortableData.sort((a, b) => {
             let aValue = a[sortConfig.key];

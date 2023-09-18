@@ -76,7 +76,7 @@ export function SinglePharmacyDetails({selectedMonth, onMonthChange}) {
           { label: 'NAME', field: 'productName', align: 'left' },
           { label: 'SALE PRICE', field: `salePrice`, align: 'center',},
           { label: 'COST PRICE', field: `costPrice`, align: 'center',},
-          { label: 'PROFIT', field: `monthlyProfit`, align: 'center', },
+          { label: 'PROFIT', field: `profit`, align: 'center', },
           { label: 'QUANTITY', field: `quantity`, align: 'center',},
         ]}
         data={showAll ? data.find(item => item.month == selectedMonth)?.products : data.find(item => item.month == selectedMonth)?.products.slice(0, 5)}
