@@ -181,8 +181,8 @@ export default function App() {
               <Route path="/pharmacies/clients/:clientCode" element={<SinglePharmacyDetails onMonthChange={handleMonthChange}
                     selectedMonth={selectedMonth}/>} />
               <Route path="/stock" element={<Stock />} />
-              <Route path="/stock/supplier" element={<Supplier />} />
-              <Route path="/stock/:id" element={<ForecastSingleProduct />} />
+              <Route path="/stock/supplier/:supplierCode" element={<Supplier />} />
+              <Route path="/stock/:productCode" element={<ForecastSingleProduct />} />
               <Route path="/eru" element={<ERUs />} />
               <Route path="/targets" element={<Targets />} />
               <Route path="/targets/teamdetails/:id" element={<TeamDetails />} />

@@ -1,4 +1,4 @@
-import React from "react";
+import {useState, useEffect, useContext} from "react";
 import ForecastTable from "../Components/ForecastTable";
 import { Kontainer } from "./Stock";
 import { FaBox, FaCalendarAlt, FaTruck } from "react-icons/fa";
@@ -9,10 +9,22 @@ import { GoBackButton, TitleWrapper } from "./ClientsDetails";
 import ChatBox from "../Components/ChatBox";
 import DataCardLarge from "../Components/DataCardLarge";
 import ForecastTableDetail from "../Components/ForecastTableDetail";
-
-
+import ApiService from "../api/ApiService";
+import { Context } from "../providers/provider";
+import { useParams } from "react-router";
 
 export default function ForecastSingleProduct() {
+  const [store, dispatch] = useContext(Context);
+  const {productCode} = useParams(); 
+  const [productInfo, setProductInfo] = useState();
+
+  // useEffect(() => {
+  //   console.log(productCode)
+  //   const response = ApiService.get(`suppliers/product/${productCode}`, {Authorization: "Bearer " + store.user.token}).then(data => {
+  //     console.log(data);
+  //   })
+  // }, [])
+
 
   const testData = [
     {
@@ -46,7 +58,7 @@ export default function ForecastSingleProduct() {
         <DataCard title="ON ORDER" amount="+200" pluspercentage={'+4% '} timewhen={' then last week'} icon={FaTruck} iconBackgroundColor="#d5d5d5" />
         <DataCard title="TOTAL IN STOCK" amount="680" pluspercentage={'+4% '} timewhen={' then last year'} icon={FaBox} iconBackgroundColor="#a4da05 " />
         <DataCard title="MONTHS OF STOCK" amount="9" pluspercentage={'+23% '} timewhen={' then last year'} icon={FaCalendarAlt} iconBackgroundColor="#ff9933" />
-        <DataCardLarge supplier="THE001" code="NMP019" name="AMLODIPINE TEVA 10 MG" price={200} profit={82} />
+        <DataCardLarge supplier={productCode} code="NMP019" name="AMLODIPINE TEVA 10 MG" price={200} profit={82} />
       </DataKontainer>
 
 

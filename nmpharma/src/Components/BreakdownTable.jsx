@@ -3,9 +3,8 @@ import styled from 'styled-components';
 import { NavLink, useNavigate } from "react-router-dom";
 import { Dropdownos } from './BarChart';
 
-export default function BreakdownTable({ title, subtitle, viewDetailsLink, width, data, details, content, onMonthChange, selectedMonth }) {
+export default function BreakdownTable({ title, subtitle, width, data, content }) {
 
-  //Pridej sem ke "COLUMN: PROFIT", komponentu - <GreenBox>123 €</GreenBox>, podivej se do ...
   const navigate = useNavigate();
 
 
@@ -16,7 +15,7 @@ export default function BreakdownTable({ title, subtitle, viewDetailsLink, width
           {item.name}
         </TableCell>
         {item.sales && item.sales.map((item, index) => (
-          <TableCell key={index}>
+          <TableCell key={index} align='center'>
             {item.quantity}
           </TableCell>
         ))}
@@ -33,7 +32,6 @@ export default function BreakdownTable({ title, subtitle, viewDetailsLink, width
     <Card width={width}>
       <CardHeader>
         <Title>{title}</Title>
-        <ViewDetailsLink to={viewDetailsLink}>{details}</ViewDetailsLink>
       </CardHeader>
       <Subtitle>{subtitle}</Subtitle>
       <TableContainer>
@@ -45,7 +43,7 @@ export default function BreakdownTable({ title, subtitle, viewDetailsLink, width
               </TableHeaderCell>
               {months.map((month, index) => (
                 <TableHeaderCell key={index}>
-                  {month}
+                  {month.toUpperCase()}
                 </TableHeaderCell>
               ))}
             </TableRow>

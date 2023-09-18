@@ -203,7 +203,8 @@ const TeamBox = styled(NavLink)`
   margin-bottom: 16px;
   background: ${(props) => props.backgroundgradient}; // Use the provided background gradient
   background-color: ${(props) => props.teamColor};
-  height: 370px;
+  height: auto;
+  min-height: 370px;
   display: flex;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   flex-direction: column;
@@ -247,13 +248,14 @@ const TeamNameDiv = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  text-wrap: nowrap;
 `;
 
 
 const Goal = styled.div`
   display: flex;
   align-items: flex-start;
-  margin-bottom: 8px;
+  margin-bottom: 5px;
   margin-top: 20px;
   flex-direction: column;
 `;
@@ -300,7 +302,7 @@ const Earned = styled.div`
   align-items: center;
   margin: 0 auto;
   width: 230px;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 `;
 
 const EarnedLabel = styled.span`

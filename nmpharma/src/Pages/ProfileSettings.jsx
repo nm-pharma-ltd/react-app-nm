@@ -6,12 +6,13 @@ import { Context, SIGNEDUSER } from '../providers/provider';
 import ApiService from '../api/ApiService';
 
 export const ProfileSettings = () => {
+  console.log("ProfileSettings component rendered");
 
   const [store, dispatch] = useContext(Context);
 
   const [isEditing, setIsEditing] = useState(false);
-  const [username, setUsername] = useState(store.name);
-  const [email, setEmail] = useState(store.email);
+  const [username, setUsername] = useState(store.user.username);
+  const [email, setEmail] = useState(store.user.email);
   const [newPassword, setNewPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [actualPassword, setActualPassword] = useState(store.password);
@@ -27,14 +28,15 @@ export const ProfileSettings = () => {
     if (!isEditing) {
       setNewPassword(actualPassword);
     }
-    setIsEditing(!isEditing);
+    setIsEditing((prev) => !prev);
   };
 
 
-  const handleSubmit = async (e) => {
+  const handleSubmit= (e) => {
+    console.log("handleSubmit triggered");
     e.preventDefault();
 
-    try {
+    //try {
       // Set up your payload
       const payload = {
         id: store.user.userid,
@@ -44,16 +46,15 @@ export const ProfileSettings = () => {
       
       
       // Send the PUT request
-      const response = await ApiService.put(
+      const response = ApiService.put(
         'user/edit', 
         payload, 
         {
-          headers: {
             "Authorization": "Bearer " + store.user.token
-          }
         }
       );
-    
+      console.log("Token:", store.user.token);
+      console.log("Payload:", payload);
       if (response.status === 200) {
         dispatch({
           type: SIGNEDUSER,
@@ -66,21 +67,18 @@ export const ProfileSettings = () => {
           }
         });
       }
-      else if (response.status === 401) {
-        console.error("Unauthorized request. Please login again.");
-        // Optionally redirect the user to a login page or show an error message
-      } else {
+      else {
         console.error(`Error updating profile: ${response.status}`);
       }
-    } catch (error) {
-      console.error(`Failed to update profile: ${error.message}`);
-    }
+    //} catch (error) {
+    //   console.error(`Failed to update profile: ${error.message}`);
+    // }
 
     setNewPassword('');
     setIsEditing(false);
   };
 
-
+  
   return (
     <>
       <HeadingSettings>
@@ -110,7 +108,7 @@ export const ProfileSettings = () => {
             }
           </InfoItem>
         </ProfileInfo>
-        {isEditing && <Button onClick={handleSubmit}>Save Changes</Button>}
+        {isEditing && <Button onClick={(e) => handleSubmit(e)}>Save Changes</Button>}
       </ProfileSettingsContainer>
     </>
   );

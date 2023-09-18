@@ -23,7 +23,7 @@ export function SinglePharmacyDetails({selectedMonth, onMonthChange}) {
         response.forEach((item) => {
           item.products.slice(0, 5);
           item.products.forEach((product) => {
-            product.profit = product.profit.toFixed(0)
+            product.profit = product.profit.toFixed(0) + " €"
             product.salePrice = product.salePrice.toFixed(0) + " €"
             product.costPrice = product.costPrice.toFixed(0) + " €"
           })
@@ -68,7 +68,7 @@ export function SinglePharmacyDetails({selectedMonth, onMonthChange}) {
 
       </Wrapper>
       <Table
-        title="Pharamcy products"
+        title={pharmacyName + " - Top selling products"}
         subtitle= {showAll ? "ALL" : "TOP 5"}
         viewDetailsLink="/pharmacies/productdetails"
         width="auto"
@@ -103,7 +103,7 @@ export function SinglePharmacyDetails({selectedMonth, onMonthChange}) {
     }
     {phBreakdownData !== undefined ? (
       <BreakdownTable
-        title="Pharamcy Breakdown"
+        title="Pharmacy breakdown"
         subtitle="Breakdown of all product sold in a year"
         viewDetailsLink="/pharmacies/productdetails"
         width="auto"

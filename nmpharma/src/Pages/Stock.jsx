@@ -16,7 +16,7 @@ export default function Stock() {
     const month = new Date().getMonth();
 
     ApiService.get(`suppliers/forecast/${year}/${month}`, { "Authorization": "Bearer " + store.user.token }).then(response => {
-      console.log("dashboard forecast:", month);
+      
       const sortedResponse = response.map(supplier => {
         supplier.productsForecast.sort((a, b) => 
           (a.productCode || '').localeCompare(b.productCode || '')

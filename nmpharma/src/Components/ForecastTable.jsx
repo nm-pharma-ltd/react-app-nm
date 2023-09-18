@@ -5,7 +5,9 @@ import { NavLink } from 'react-router-dom';
 export default function ForecastTable({ title, subtitle, width, columns, data, subcode }) {
 
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
   useEffect(() => {
+    
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
     };
@@ -20,10 +22,11 @@ export default function ForecastTable({ title, subtitle, width, columns, data, s
   const tableWidth = (windowWidth * 0.79) - 400;
 
   const generateRows = () => {
+  
     return data.map((item, index) => (
       <TableRow key={index}>
         {columns.map((column, colIndex) => {
-          if (['name', 'expiry'].includes(column.field)) {
+          if (['name', 'expiry', 'description'].includes(column.field)) {
             return <TableCell key={colIndex} align={column.align}><span>{item[column.field]}</span></TableCell>;
           } else {
             return (
@@ -39,6 +42,7 @@ export default function ForecastTable({ title, subtitle, width, columns, data, s
       </TableRow>
     ));
   };
+
 
 
   return (
@@ -70,7 +74,7 @@ export default function ForecastTable({ title, subtitle, width, columns, data, s
             </TableRow>
           </TableHead>
           {data.map((item, index) => (
-            <SidebarButton to='/stock/${id}' key={index}>More</SidebarButton>
+            <SidebarButton to={`/stock/${item.productCode}`} key={index}>More</SidebarButton>
           ))}
         </ButtonSidebar>
       </TableContainer>

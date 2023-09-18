@@ -96,8 +96,10 @@ export default function Table({ title, subtitle, viewDetailsLink, width, columns
     <Card width={width}>
       <CardHeader>
         <Title>{title}</Title>
-        {monthDropdown}
-        <ViewDetailsLink to={viewDetailsLink}>{details}</ViewDetailsLink>
+        <RightMenu>
+          {monthDropdown}
+          <ViewDetailsLink to={viewDetailsLink}>{details}</ViewDetailsLink>
+        </RightMenu>
       </CardHeader>
       <Subtitle>{subtitle}</Subtitle>
       <TableContainer>
@@ -124,7 +126,9 @@ export default function Table({ title, subtitle, viewDetailsLink, width, columns
   );
 }
 
-
+const RightMenu = styled.div`
+  padding: 0.1em;
+`
 const Card = styled.div`
   background-color: ${props => props.theme.componentBackground};
   border-radius: 20px;
@@ -209,6 +213,7 @@ export const ViewDetailsLink = styled(NavLink)`
   color: #e16a32;
   text-decoration: none;
   transition: all 0.25s ease-in-out;
+  margin-left: 0.5em;
     
   &:hover {
     color: #753619;
@@ -235,7 +240,7 @@ export const GreenBox = styled.div`
   align-items: center;
   color: #0e9f6e;
   margin: 0 auto;
-  width: 65px;
+  min-width: 65px;
   background-color: #def7ec;
   font-size: 13px;
   font-weight: 600;

@@ -50,6 +50,9 @@ const StockCard = ({ data }) => {
     const calculatedMonths = (currentOnOrder + currentIncoming + currentTotalInStock + toOrder) / sixmonth;
     const months = sixmonth !== 0 && Number.isFinite(calculatedMonths) ? calculatedMonths : "--";
 
+    if (productCode == 'NMP002'){
+        console.log(currentOnOrder, currentIncoming, currentTotalInStock, calculatedMonths, sixmonth);
+    }
 
     setMonthsOfStock(prevState => ({ ...prevState, [productCode]: months }));
   };
@@ -82,13 +85,13 @@ const StockCard = ({ data }) => {
 
   const isExpiryInSixMonths = (expiryDate) => {
     if (!expiryDate || expiryDate === "") return false; // Exclude no expiry and infinity products
-  
+
     const currentDate = new Date();
     const expiry = new Date(expiryDate);
     const differenceInMonths = (expiry.getFullYear() - currentDate.getFullYear()) * 12 + (expiry.getMonth() - currentDate.getMonth());
     return differenceInMonths < 6;
   };
-  
+
   const hasExpiry = data.productsForecast.some(product => isExpiryInSixMonths(product.productExpire) && product.productExpire !== "" && !!product.productExpire);
 
 
@@ -118,10 +121,14 @@ const StockCard = ({ data }) => {
       <CardContainer ref={cardRef} expanded={expanded ? 1 : 0}>
         <CardHeaderContainer onClick={handleExpand}>
           <CardTitlee>
-            <CodeTitle>
-              {data.supplierCode}
-            </CodeTitle>
-            {data.supplierName}
+            {(!data.supplierCode && !data.supplierName) ? "All products" : (
+              <>
+                <CodeTitle>
+                  {data.supplierCode}
+                </CodeTitle>
+                {data.supplierName}
+              </>
+            )}
           </CardTitlee>
           <RightKontainer>
             {hasExpiry && (
@@ -142,7 +149,7 @@ const StockCard = ({ data }) => {
                 On-Order
               </OnOrderBadge>
             )}
-            <ForeButton to="/stock/supplier">Forecast all</ForeButton>
+            <ForeButton to={`/stock/supplier/${data.supplierCode}`}>Forecast all</ForeButton>
             <ExpandIcon expanded={expanded ? 1 : 0} />
           </RightKontainer>
         </CardHeaderContainer>
@@ -198,7 +205,7 @@ const StockCard = ({ data }) => {
                         </UniInput>
                       </TableCell>
                       <TableCell >
-                        <ForeButton to='/stock/forecastdetails'>More</ForeButton>
+                        <ForeButton to={`/stock/${product.productCode}`}>More</ForeButton>
                       </TableCell>
                     </TableRow>
                   )

@@ -9,6 +9,7 @@ import ApiService from "../api/ApiService";
 import { Context, SIGNEDUSER, TEAMS, TEAM_COLORS } from "../providers/provider";
 
 const TeamDetails = ({ }) => {
+  
   const [store, dispatch] = useContext(Context);
   const { id } = useParams();
   const [teamMembers, setTeamMembers] = useState([]);
