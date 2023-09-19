@@ -1,13 +1,78 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
+import { Context, FORECAST_BUTTON_SAVE } from '../providers/provider';
 
 export default function ForecastTable({ title, subtitle, width, columns, data, subcode }) {
 
+  const location = useLocation();
+  const productDetails = location.state?.productDetails || {};
+  const monthsOfStock = location.state?.monthsOfStock || '--';
+
+
+  const [months, setMonths] = useState([
+    {
+      month: "January",
+      monthIndex: 1
+    },
+    {
+      month: "February",
+      monthIndex: 2
+    },
+    {
+      month: "March",
+      monthIndex: 3
+    },
+    {
+      month: "April",
+      monthIndex: 4
+    },
+    {
+      month: "May",
+      monthIndex: 5
+    },
+    {
+      month: "June",
+      monthIndex: 6
+    },
+    {
+      month: "July",
+      monthIndex: 7
+    },
+    {
+      month: "August",
+      monthIndex: 8
+    },
+    {
+      month: "September",
+      monthIndex: 9
+    },
+    {
+      month: "October",
+      monthIndex: 10
+    },
+    {
+      month: "November",
+      monthIndex: 11
+    },
+    {
+      month: "December",
+      monthIndex: 12
+    },
+  ])
+
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const currentMonth = new Date().getMonth() + 1;
+  const [monthsSliced, setMonthsSliced] = useState(false);
+  const [store, dispatch] = useContext(Context);
 
   useEffect(() => {
-    
+    if (monthsSliced == false) {
+      setMonths(months.slice(currentMonth - 1));
+      setMonthsSliced(true)
+    }
+
+
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
     };
@@ -22,18 +87,21 @@ export default function ForecastTable({ title, subtitle, width, columns, data, s
   const tableWidth = (windowWidth * 0.79) - 400;
 
   const generateRows = () => {
-  
-    return data.map((item, index) => (
+
+    console.log(data)
+
+    return data && data.map((item, index) => (
       <TableRow key={index}>
-        {columns.map((column, colIndex) => {
-          if (['name', 'expiry', 'description'].includes(column.field)) {
-            return <TableCell key={colIndex} align={column.align}><span>{item[column.field]}</span></TableCell>;
+        <TableCell>{item.productName}</TableCell>
+        {months.map((mesic, colIndex) => {
+          if (['name', 'expiry', 'productName'].includes(mesic.field)) {
+            return <TableCell key={index} align="center"><span>{item[mesic.field]}</span></TableCell>;
           } else {
             return (
-              <TableCell key={colIndex} align={column.align}>
+              <TableCell key={colIndex} align="center">
                 <KontDown>
+                  <span style={{ marginRight: "0.5em" }}>{item.amountOfProducts ? item.amountOfProducts : 0}</span>
                   <InputForecast type="number" placeholder="20" />
-                  <span>{item[column.field]}</span>
                 </KontDown>
               </TableCell>
             );
@@ -43,7 +111,17 @@ export default function ForecastTable({ title, subtitle, width, columns, data, s
     ));
   };
 
+  // const handleProductClick = (item) => {
+  //   // Create a new object to contain the product data, supplierCode, and monthsOfStock
+  //   const productDataWithExtras = {
+  //     ...item,
+  //     supplierCode: data.supplierCode,
+  //     expiry: item.productExpire || '--'
+  //   };
 
+  //   console.log(productDataWithExtras);
+  //   dispatch({ type: FORECAST_BUTTON_SAVE, payload: { item: productDataWithExtras } });
+  // };
 
   return (
     <Card style={{ width: `${tableWidth}px` }}>
@@ -58,9 +136,12 @@ export default function ForecastTable({ title, subtitle, width, columns, data, s
         <TableElement>
           <TableHead>
             <TableRow>
-              {columns.map((column, index) => (
-                <TableHeaderCell key={index} align={column.align}>
-                  {column.label}
+              <TableHeaderCell>
+                NAME
+              </TableHeaderCell>
+              {months.map((mesic, index) => (
+                <TableHeaderCell key={index} align="center">
+                  {mesic.month.toUpperCase()}
                 </TableHeaderCell>
               ))}
             </TableRow>
@@ -74,7 +155,14 @@ export default function ForecastTable({ title, subtitle, width, columns, data, s
             </TableRow>
           </TableHead>
           {data.map((item, index) => (
-            <SidebarButton to={`/stock/${item.productCode}`} key={index}>More</SidebarButton>
+            <SidebarButton
+              to={{
+                pathname: `/stock/${item.productCode}`,
+                state: { productDetails: item, monthsOfStock: monthsOfStock }
+              }}
+              key={index}>
+              More
+            </SidebarButton>
           ))}
         </ButtonSidebar>
       </TableContainer>
@@ -141,18 +229,18 @@ const TableElement = styled.table`
 
 
 const TableHead = styled.thead`
-  border-bottom: 1px solid ${props=>props.theme.line};
+  border-bottom: 1px solid ${props => props.theme.line};
   text-wrap: nowrap;
 
 `;
 
 const TableCell = styled.td`
   padding: 10px;
-  border-bottom: 1px solid ${props=>props.theme.line};
+  border-bottom: 1px solid ${props => props.theme.line};
   text-align: ${props => (props.align === 'right' ? 'right' : props.align === 'center' ? 'center' : 'left')};
 
   span {
-    color: ${props=> props.theme.text};
+    color: ${props => props.theme.text};
   }
 `;
 
@@ -184,9 +272,9 @@ const ButtonSidebar = styled.div`
   right: 0; 
   display: flex;
   flex-direction: column;
-  background: ${props=> props.theme.componentBackground};
+  background: ${props => props.theme.componentBackground};
   box-shadow: -2px 0px 4px rgba(0, 0, 0, 0.1); 
-  border-bottom: 1px solid ${props=>props.theme.line};
+  border-bottom: 1px solid ${props => props.theme.line};
 `;
 
 const SidebarButton = styled(NavLink)`
@@ -199,8 +287,8 @@ const SidebarButton = styled(NavLink)`
   font-size: 14px;
   font-weight: 500;
   transition: 0.2s ease-in-out;
-  background-color: ${props=> props.theme.componentBackground};
-  color: ${props=> props.theme.text};
+  background-color: ${props => props.theme.componentBackground};
+  color: ${props => props.theme.text};
 
   &:hover{
     background-color: #575757;
@@ -220,10 +308,10 @@ const KontDown = styled.div`
 `;
 
 const InputForecast = styled.input`
-  border: 1px solid ${props=> props.theme.nav};;
+  border: 1px solid ${props => props.theme.nav};;
   border-radius: 4px;
-  color:  ${props=> props.theme.text};
-  background: ${props=> props.theme.InputText};
+  color:  ${props => props.theme.text};
+  background: ${props => props.theme.InputText};
   font-size: 14px;
   outline: none;
   transition: border-color 0.3s ease;

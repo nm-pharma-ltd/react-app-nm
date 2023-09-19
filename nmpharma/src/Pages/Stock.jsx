@@ -13,7 +13,7 @@ export default function Stock() {
 
   useEffect(() => {
     const year = new Date().getFullYear();
-    const month = new Date().getMonth();
+    const month = new Date().getMonth() + 1;
 
     ApiService.get(`suppliers/forecast/${year}/${month}`, { "Authorization": "Bearer " + store.user.token }).then(response => {
       

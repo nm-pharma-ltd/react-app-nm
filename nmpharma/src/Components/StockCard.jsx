@@ -3,7 +3,7 @@ import styled, { keyframes } from 'styled-components';
 import { FaChevronDown } from 'react-icons/fa';
 import { RedBox, TableCell, ViewDetailsLink } from './Table';
 import { TiMediaRecord } from 'react-icons/ti';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { FaInfinity } from 'react-icons/fa6';
 import { Context, FORECAST_BUTTON_SAVE } from '../providers/provider';
 
@@ -124,11 +124,20 @@ const StockCard = ({ data }) => {
       monthsOfStock: monthsOfStock[product.productCode] || '--',
       expiry: product.productExpire || '--'
     };
-  
+
     console.log(productDataWithExtras);
     dispatch({ type: FORECAST_BUTTON_SAVE, payload: { product: productDataWithExtras } });
   };
-  
+
+  const getBackgroundColor = (averageType) => {
+    switch (averageType) {
+      case 0: return '#0d5d0d';
+      case 1: return '#2c287d';
+      case 2: return '#921e1e';
+      case 3: return '#5b5b5b';
+      default: return 'transparent';
+    }
+  };
 
   return (
     <>
@@ -163,7 +172,13 @@ const StockCard = ({ data }) => {
                 On-Order
               </OnOrderBadge>
             )}
-            <ForeButton to={`/stock/supplier/${data.supplierCode}`}>Forecast all</ForeButton>
+            <ForeButton as={Link}
+              to={{
+                pathname: `/stock/supplier/${data.supplierCode}`,
+                state: { supplierData: data, monthsOfStock: monthsOfStock }
+              }}>
+              Forecast all
+            </ForeButton>
             <ExpandIcon expanded={expanded ? 1 : 0} />
           </RightKontainer>
         </CardHeaderContainer>
@@ -189,7 +204,11 @@ const StockCard = ({ data }) => {
                 {data.productsForecast && data.productsForecast.map((product, index) => {
                   return (
                     <TableRow key={index}>
-                      <TableCellCode align='center'>{product.productCode}</TableCellCode>
+                      <TableCellCode align='center'>
+                        <StyledProductCode bgcolor={getBackgroundColor(product.averageType)}>
+                          {product.productCode}
+                        </StyledProductCode>
+                      </TableCellCode>
                       <TableCell align='center'>{product.productDescription}</TableCell>
                       <TableCellTotal align='center'>
                         {product.inStock}
@@ -236,6 +255,13 @@ const StockCard = ({ data }) => {
   );
 };
 
+
+const StyledProductCode = styled.div`
+  padding: 5px;
+  background-color: ${props => props.bgcolor || 'transparent'};
+  border-radius: 5px;
+  color: #fff;
+`
 
 const TableHeaderCell = styled.th`
   padding: 10px;

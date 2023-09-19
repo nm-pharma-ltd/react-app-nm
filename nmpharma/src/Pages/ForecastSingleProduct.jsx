@@ -109,7 +109,7 @@ export default function ForecastSingleProduct() {
       /> */}
       <h2>Chat</h2>
 
-      <ChatBox content={productCode} /> 
+      <ChatBox ContentType={productCode} /> 
 
     </Konto>
   );

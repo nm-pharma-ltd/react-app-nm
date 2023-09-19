@@ -15,6 +15,7 @@ const testData = [
   { name: 'Produkt 4', expiry: '07/2025' ,July: 30, August: 40, September: 60, October: 70, November: 50, December: 55 },
 ];
 
+
 function Supplier() {
 
   const { supplierCode } = useParams();
@@ -46,12 +47,12 @@ function Supplier() {
       </TitleWrapper>
 
       <ForecastTable
-      title={supplierCode}
+      title="Half year forecast of products"
       subcode={null}
-      subtitle="List of products"
+      subtitle=""
       width="100%"
       columns={[
-        { label: 'Product name', field: 'description', align: 'left' },
+        { label: 'Product name', field: 'productName', align: 'left' },
         { label: 'July', field: 'July', align: 'left' },
         { label: 'August', field: 'August', align: 'left' },
         { label: 'September', field: 'September', align: 'left' },

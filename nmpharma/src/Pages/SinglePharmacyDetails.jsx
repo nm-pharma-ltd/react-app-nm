@@ -8,6 +8,7 @@ import { NutellaSkeleton, NutellaSkeletonTableContainer } from "./Pharmacies";
 import { ModeButtonL, ModeButtonR } from "./Stock";
 import BreakdownTable from "../Components/BreakdownTable";
 import Table from "../Components/Table";
+import RankTable from "../Components/RankTable"
 
 export function SinglePharmacyDetails({selectedMonth, onMonthChange}) {
   const params = useParams();
@@ -83,6 +84,10 @@ export function SinglePharmacyDetails({selectedMonth, onMonthChange}) {
         selectedMonth={selectedMonth}
         onMonthChange={onMonthChange}
         content={"products"}
+      />
+      <RankTable
+        title="Top products"
+        data={data}
       />
       </>
       ) : (

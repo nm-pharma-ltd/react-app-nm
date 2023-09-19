@@ -7,10 +7,11 @@ import { IconLink } from "../Pages/Pharmacies";
 import ApiService from "../api/ApiService";
 import { Context, SIGNEDUSER } from "../providers/provider";
 
-const ChatBox = ({content}) => {
+const ChatBox = ({ContentType}) => {
   const [store, dispatch] = useContext(Context);
   const [inputValue, setInputValue] = useState("");
   const [messages, setMessages] = useState([]);
+  const [chatType, setChatType] = useState(ContentType);
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
@@ -19,11 +20,14 @@ const ChatBox = ({content}) => {
 
   const fetchComms = async () => {
     try {
+
       let endpoint = "comments";
 
-      // Pokud je content roven "basic", použijeme standardní endpoint
-      if (content !== "basic") {
-        endpoint = `comments/product/${content}`;
+      // Pokud je chatType roven "basic", použijeme standardní endpoint
+      if (chatType !== "basic") {
+
+        endpoint = `comments/product/${chatType}`;
+
       }
 
       const fetchedData = await ApiService.get(endpoint, {
@@ -31,6 +35,7 @@ const ChatBox = ({content}) => {
       });
 
       setMessages(fetchedData);
+
     } catch (error) {
       console.error("Error:", error);
     }
@@ -45,8 +50,33 @@ const ChatBox = ({content}) => {
   };
 
   const handleSendMessage = async () => {
+
     if (inputValue.trim() !== "") {
-      if (inputValue.trim() !== "/token") {
+
+        if (chatType !== "basic") {
+
+          const newMessage = {
+            userId: store.user.userid,
+            productCode: chatType,
+            content: inputValue,
+          };
+
+          try {
+            console.log(newMessage)
+            // Odeslat novou zprávu na server
+            await ApiService.post(`comments/product/${chatType}`, newMessage, {
+              Authorization: "Bearer " + store.user.token,
+            });
+  
+            await fetchComms();
+  
+            // Vymazat text nové zprávy
+            setInputValue("");
+          } catch (error) {
+            console.error("Error:", error);
+          }
+        }
+
         const newMessage = {
           userId: store.user.userid,
           content: inputValue,
@@ -65,7 +95,8 @@ const ChatBox = ({content}) => {
         } catch (error) {
           console.error("Error:", error);
         }
-      }
+      
+
     }
   };
 
