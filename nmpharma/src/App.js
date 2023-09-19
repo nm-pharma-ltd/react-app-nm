@@ -20,7 +20,7 @@ import ForecastSingleProduct from './Pages/ForecastSingleProduct';
 import Supplier from './Pages/Supplier';
 import { useContext, useState, useEffect } from 'react';
 import PrivateRoute from './providers/PrivateRoute';
-import { Context, SIGNEDUSER, PRODUCTS, CLIENTS } from './providers/provider';
+import { Context, SIGNEDUSER, PRODUCTS, CLIENTS, FORECAST } from './providers/provider';
 import ApiService from "./api/ApiService";
 import DangerAlert from './Components/DangerAlert';
 
@@ -32,6 +32,8 @@ export default function App() {
 
   const [isLoadingProducts, setIsLoadingProducts] = useState(true);
   const [isLoadingPharmacies, setIsLoadingPharmacies] = useState(true);
+  const [isLoadingForecast, setIsLoadingForecast] = useState(true);
+
 
   const [error, setError] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState(6); // Default to January
@@ -64,8 +66,8 @@ export default function App() {
         navigate('/Login');
       } else if (error.status === 500) {
         setError("Internal Server Error. Please try again later.");
-      } 
-       else {
+      }
+      else {
         setError("An error occurred. Please try again.");
       }
       console.error("Error fetching data:", error);
@@ -113,15 +115,53 @@ export default function App() {
     }
   }
 
+  async function fetchStockData(year = new Date().getFullYear(), month = new Date().getMonth() + 1, token) {
+    try {
+      setIsLoadingForecast(true);
+      const authToken = token ? token : store.user.token;
+
+      const stockData = await ApiService.get(`suppliers/forecast/${year}/${month}`, { "Authorization": "Bearer " + authToken });
+      console.log(stockData)
+
+      const processedForecast = stockData.map(supplier => {
+        supplier.productsForecast.sort((a, b) => (a.productCode || '').localeCompare(b.productCode || ''));
+        return supplier;
+      });
+
+
+
+      console.log(processedForecast);
+
+      dispatch({ type: FORECAST, payload: { processedForecast } });
+
+      setIsLoadingForecast(false);
+
+    } catch (error) {
+      if (error.status === 401) {
+        navigate('/Login');
+      } else if (error.status === 500) {
+        setError("Internal Server Error. Please try again later.");
+      } else {
+        setError("An error occurred. Please try again.");
+      }
+      console.error("Error fetching data:", error);
+      setIsLoadingPharmacies(false);
+    }
+  }
+
+
   async function FetchAll() {
     fetchData();
     fetchPharmacyData();
+    fetchStockData();
   }
 
   async function FetchAllWithToken(usertoken) {
     console.log(usertoken)
     fetchData(undefined, undefined, usertoken);
     fetchPharmacyData(undefined, undefined, usertoken);
+    fetchStockData(undefined, undefined, usertoken);
+
   }
 
   useEffect(() => {
@@ -145,7 +185,7 @@ export default function App() {
 
   const handleMonthChange = (month) => {
     setSelectedMonth(month);
-    fetchData(undefined, month); 
+    fetchData(undefined, month);
     fetchPharmacyData(undefined, month);
   };
 
@@ -179,8 +219,15 @@ export default function App() {
                 selectedMonth={selectedMonth} />} />
               <Route path="/pharmacies/products/:productCode" element={<SingleProductDetails />} />
               <Route path="/pharmacies/clients/:clientCode" element={<SinglePharmacyDetails onMonthChange={handleMonthChange}
-                    selectedMonth={selectedMonth}/>} />
-              <Route path="/stock" element={<Stock />} />
+                selectedMonth={selectedMonth} />} />
+              <Route
+                path="/stock"
+                element={
+                  <Stock
+                    IsLoadingForecast={isLoadingForecast}
+                  />
+                }
+              />
               <Route path="/stock/supplier/:supplierCode" element={<Supplier />} />
               <Route path="/stock/:productCode" element={<ForecastSingleProduct />} />
               <Route path="/eru" element={<ERUs />} />
@@ -189,7 +236,7 @@ export default function App() {
               <Route path="/notifications" element={<Notifications />} />
               <Route path="/settings" element={<Settings />} />
             </Route>
-            <Route path="/Login" element={<Login fetchDataWithToken={FetchAllWithToken}/>} />
+            <Route path="/Login" element={<Login fetchDataWithToken={FetchAllWithToken} />} />
             <Route path="/Register" element={<Register />} />
           </Routes>
         </Content>

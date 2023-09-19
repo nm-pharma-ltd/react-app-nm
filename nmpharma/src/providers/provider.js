@@ -16,12 +16,12 @@ export const TOGGLE_ROUNDED_NAV = "TOGGLE_ROUNDED_NAV";
 export const TEAMS = "TEAMS";
 export const TEAM_COLORS = "TEAM_COLORS";
 export const CLEAR_USER = "CLEAR_USER";
-export const FORECAST_BUTTON_SAVE = "FORECAST_BUTTON_SAVE";
+export const FORECAST = "FORECAST";
 
 
 
 const initialState = {
-  messages: [], products: [], clients: [], user: "", token: "", theme: "light", hideTeams: false, roundednav: true, teams: [], forecastProduct: [], team_colors: [
+  messages: [], products: [], clients: [], user: "", token: "", theme: "light", hideTeams: false, roundednav: true, teams: [], processedForecast: [], team_colors: [
     "linear-gradient(to bottom right, #a48300, #ffcf40, #9f7700)", //Gold
     "linear-gradient(to bottom right,  #646464,#c0c0c0 , #868585)",//Silver
     "linear-gradient(to bottom right, #742700, #ff7f50, #cc6849)", //Bronze
@@ -49,26 +49,37 @@ const dataReducer = (state, action) => {
         user: "",
         token: ""
       };
+
     case PRODUCTS:
       return {
         ...state,
         products: action.payload.processedData
       };
+
     case CLIENTS:
       return {
         ...state,
         clients: action.payload.processedPharmacies
       };
+
+    case FORECAST:
+      return {
+        ...state,
+        processedForecast: action.payload.processedForecast
+      };
+
     case NOTES:
       return {
         ...state,
         messages: action.payload.messages
       };
+
     case TOGGLE_THEME:
       return {
         ...state,
         theme: state.theme === "light" ? "dark" : "light",
       };
+
     case TOGGLE_HIDE_TEAMS:
       return {
         ...state,
@@ -95,11 +106,6 @@ const dataReducer = (state, action) => {
       return {
         ...state,
         roundednav: !state.roundednav,
-      };
-    case FORECAST_BUTTON_SAVE:
-      return {
-        ...state,
-        forecastProduct: action.payload.product,
       };
     case CLEAR_USER:
       return { ...state, user: "" }

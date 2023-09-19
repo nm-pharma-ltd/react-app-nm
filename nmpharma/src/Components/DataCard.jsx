@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const DataCard = ({ title, amount, icon, iconBackgroundColor }) => {
+const DataCard = ({ title, amount, icon, iconBackgroundColor, textColor  }) => {
 
   const Icon = icon;
 
@@ -13,7 +13,7 @@ const DataCard = ({ title, amount, icon, iconBackgroundColor }) => {
         </IconContainer>
         <CardContent>
           <CardTitle>{title}</CardTitle>
-          <CardAmount>{amount}</CardAmount>
+          <CardAmount textColor={textColor}>{amount}</CardAmount>
         </CardContent>
       </TopKont>
       
@@ -100,7 +100,7 @@ const CardAmount = styled.p`
   margin: 0;
   font-size: 22px;
   font-weight: bold;
-  color: '#494949';
+  color: ${props => props.textColor};
 `;
 
 export default DataCard;

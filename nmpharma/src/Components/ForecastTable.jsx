@@ -5,9 +5,7 @@ import { Context, FORECAST_BUTTON_SAVE } from '../providers/provider';
 
 export default function ForecastTable({ title, subtitle, width, columns, data, subcode }) {
 
-  const location = useLocation();
-  const productDetails = location.state?.productDetails || {};
-  const monthsOfStock = location.state?.monthsOfStock || '--';
+
 
 
   const [months, setMonths] = useState([
@@ -158,7 +156,6 @@ export default function ForecastTable({ title, subtitle, width, columns, data, s
             <SidebarButton
               to={{
                 pathname: `/stock/${item.productCode}`,
-                state: { productDetails: item, monthsOfStock: monthsOfStock }
               }}
               key={index}>
               More

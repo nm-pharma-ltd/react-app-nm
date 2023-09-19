@@ -8,6 +8,7 @@ import ApiService from "../api/ApiService";
 import { Context, SIGNEDUSER } from "../providers/provider";
 
 const ChatBox = ({ContentType}) => {
+  
   const [store, dispatch] = useContext(Context);
   const [inputValue, setInputValue] = useState("");
   const [messages, setMessages] = useState([]);
@@ -55,16 +56,16 @@ const ChatBox = ({ContentType}) => {
 
         if (chatType !== "basic") {
 
-          const newMessage = {
+          const newData = {
             userId: store.user.userid,
             productCode: chatType,
             content: inputValue,
           };
 
           try {
-            console.log(newMessage)
+            console.log(newData)
             // Odeslat novou zprávu na server
-            await ApiService.post(`comments/product/${chatType}`, newMessage, {
+            await ApiService.post(`comments/product`, newData, {
               Authorization: "Bearer " + store.user.token,
             });
   
@@ -77,26 +78,27 @@ const ChatBox = ({ContentType}) => {
           }
         }
 
-        const newMessage = {
-          userId: store.user.userid,
-          content: inputValue,
-        };
-
-        try {
-          // Odeslat novou zprávu na server
-          await ApiService.post("comments", newMessage, {
-            Authorization: "Bearer " + store.user.token,
-          });
-
-          await fetchComms();
-
-          // Vymazat text nové zprávy
-          setInputValue("");
-        } catch (error) {
-          console.error("Error:", error);
+        else{
+          const newMessage = {
+            userId: store.user.userid,
+            content: inputValue,
+          };
+  
+          try {
+            // Odeslat novou zprávu na server
+            await ApiService.post("comments", newMessage, {
+              Authorization: "Bearer " + store.user.token,
+            });
+  
+            await fetchComms();
+  
+            // Vymazat text nové zprávy
+            setInputValue("");
+          } catch (error) {
+            console.error("Error:", error);
+          }
         }
-      
-
+        
     }
   };
 
@@ -110,19 +112,39 @@ const ChatBox = ({ContentType}) => {
   };
 
   const handleRemoveMessage = async (id, messageAuthor) => {
+
     // Prověřit, zda je aktuální uživatel autorem komentáře
     if (store.user.username === messageAuthor) {
-      try {
-        // Odstranit zprávu z DB
-        await ApiService.delete(`comments/${id}`, {
-          Authorization: "Bearer " + store.user.token,
-        });
 
-        // Načíst aktualizované zprávy ze serveru
-        await fetchComms();
-      } catch (error) {
-        console.error("Error:", error);
+      if (chatType !== "basic") {
+        try {
+          // Odstranit zprávu z DB
+          await ApiService.delete(`comments/product/${id}`, {
+            Authorization: "Bearer " + store.user.token,
+          });
+  
+          // Načíst aktualizované zprávy ze serveru
+          await fetchComms();
+        } catch (error) {
+          console.error("Error:", error);
+        }
       }
+
+      else{
+        try {
+          // Odstranit zprávu z DB
+          await ApiService.delete(`comments/${id}`, {
+            Authorization: "Bearer " + store.user.token,
+          });
+  
+          // Načíst aktualizované zprávy ze serveru
+          await fetchComms();
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      }
+
+      
     } else {
       console.error("Nemáte oprávnění odstranit tento komentář.");
     }
@@ -143,6 +165,7 @@ const ChatBox = ({ContentType}) => {
           onKeyDown={(e) => handleKeyDown(e)}
         />
         <IconLink onClick={() => handleSendMessage()}>
+
           <FaCirclePlus />
         </IconLink>
       </BoxChat>

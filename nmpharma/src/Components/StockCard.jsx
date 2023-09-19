@@ -5,7 +5,7 @@ import { RedBox, TableCell, ViewDetailsLink } from './Table';
 import { TiMediaRecord } from 'react-icons/ti';
 import { Link, NavLink } from 'react-router-dom';
 import { FaInfinity } from 'react-icons/fa6';
-import { Context, FORECAST_BUTTON_SAVE } from '../providers/provider';
+import { Context } from '../providers/provider';
 
 const StockCard = ({ data }) => {
   const cardRef = useRef(null);
@@ -116,18 +116,7 @@ const StockCard = ({ data }) => {
     }
   };
 
-  const handleProductClick = (product) => {
-    // Create a new object to contain the product data, supplierCode, and monthsOfStock
-    const productDataWithExtras = {
-      ...product,
-      supplierCode: data.supplierCode,
-      monthsOfStock: monthsOfStock[product.productCode] || '--',
-      expiry: product.productExpire || '--'
-    };
-
-    console.log(productDataWithExtras);
-    dispatch({ type: FORECAST_BUTTON_SAVE, payload: { product: productDataWithExtras } });
-  };
+  
 
   const getBackgroundColor = (averageType) => {
     switch (averageType) {
@@ -238,7 +227,7 @@ const StockCard = ({ data }) => {
                         </UniInput>
                       </TableCell>
                       <TableCell >
-                        <ForeButton onClick={() => handleProductClick(product)}
+                        <ForeButton 
                           to={`/stock/${product.productCode}`}>
                           More
                         </ForeButton>

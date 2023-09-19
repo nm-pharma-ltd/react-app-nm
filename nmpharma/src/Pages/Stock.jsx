@@ -6,27 +6,11 @@ import { Context } from "../providers/provider";
 import Skeleton from "@mui/material/Skeleton";
 import { NavLink } from "react-router-dom";
 
-export default function Stock() {
-  const [pharmacies, setPharmacies] = useState();
+export default function Stock({ IsLoadingForecast }) {
   const [store, dispatch] = useContext(Context);
   const [displayMode, setDisplayMode] = useState("SUPPLIERS"); // default to SUPPLIERS
+  const [pharmacies, setPharmacies] = useState(store.processedForecast);
 
-  useEffect(() => {
-    const year = new Date().getFullYear();
-    const month = new Date().getMonth() + 1;
-
-    ApiService.get(`suppliers/forecast/${year}/${month}`, { "Authorization": "Bearer " + store.user.token }).then(response => {
-      
-      const sortedResponse = response.map(supplier => {
-        supplier.productsForecast.sort((a, b) => 
-          (a.productCode || '').localeCompare(b.productCode || '')
-        );
-        return supplier;
-      });
-      setPharmacies(sortedResponse);
-    });
-    
-  }, [])
 
   return (
     <Kontainer>
@@ -49,15 +33,15 @@ export default function Stock() {
 
       </div>
 
-      {displayMode === "SUPPLIERS" ? (
-        pharmacies ? pharmacies.map((item, index) => (
-          <StockCard key={index} data={item} />
-        )) : renderSkeletons()
-      ) : (
-        // You can either fetch all products or use existing data to display them in a single StockCard
-        // Assuming you use the existing data:
-        pharmacies ? <StockCard data={{ productsForecast: pharmacies.flatMap(item => item.productsForecast).sort((a, b) => (a.productCode || '').localeCompare(b.productCode || '')) }} /> : renderSkeletons()
-        )}
+      {IsLoadingForecast ? renderSkeletons() : (
+        displayMode === "SUPPLIERS" ? (
+          pharmacies ? pharmacies.map((item, index) => (
+            <StockCard key={index} data={item} />
+          )) : <p>No Data</p>
+        ) : (
+          pharmacies ? <StockCard data={{ processedForecast: pharmacies.flatMap(item => item.productsForecast).sort((a, b) => (a.productCode || '').localeCompare(b.productCode || '')) }} /> : <p>No Data</p>
+        )
+      )}
     </Kontainer>
   );
 
