@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { Dropdownos } from './BarChart';
 import { useMemo, useState } from 'react';
 
-export default function Table({ title, subtitle, viewDetailsLink, width, columns, data, details, content, onMonthChange, selectedMonth }) {
+export default function Table({ title, subtitle, viewDetailsLink, width, columns, data, details, content, onMonthChange, selectedMonth, onYearChange, selectedYear }) {
   const navigate = useNavigate();
 
   const [sortConfig, setSortConfig] = useState({
@@ -76,11 +76,21 @@ export default function Table({ title, subtitle, viewDetailsLink, width, columns
     'August', 'September', 'October', 'November', 'December'
   ];
 
+  const years = [2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033];
+
+
   const handleMonthChange = (event) => {
     const month = Number(event.target.value);
     console.log("Month selected:", month);
     onMonthChange(month);
   };
+  
+  const handleYearChange = (event) => {
+    const year = event.target.value;
+    console.log("Year selected:", year);
+    onYearChange(year);
+  };
+
 
   const monthDropdown = (
     <Dropdownos value={selectedMonth} onChange={handleMonthChange}>
@@ -91,6 +101,16 @@ export default function Table({ title, subtitle, viewDetailsLink, width, columns
       ))}
     </Dropdownos>
   );
+  const yearDropdown = (
+    <Dropdownos value={selectedYear} onChange={handleYearChange}>
+      {years.map((year) => (
+        <option key={year} value={year}>
+          {year}
+        </option>
+      ))}
+    </Dropdownos>
+  );
+  
 
   return (
     <Card width={width}>
@@ -98,6 +118,7 @@ export default function Table({ title, subtitle, viewDetailsLink, width, columns
         <Title>{title}</Title>
         <RightMenu>
           {monthDropdown}
+          {yearDropdown}
           <ViewDetailsLink to={viewDetailsLink}>{details}</ViewDetailsLink>
         </RightMenu>
       </CardHeader>

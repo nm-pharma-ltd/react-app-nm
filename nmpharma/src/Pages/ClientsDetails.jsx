@@ -7,7 +7,7 @@ import { Skeleton } from "@mui/material";
 import { FiSearch } from "react-icons/fi"; 
 import { Context, SIGNEDUSER, CLIENTS  } from '../providers/provider';
 
-export default function ClientDetails({loading, selectedMonth, onMonthChange}) {
+export default function ClientDetails({loading, selectedMonth, onMonthChange,selectedYear, onYearChange}) {
   const [searchTerm, setSearchTerm] = useState(""); 
   const [store, dispatch] = useContext(Context); 
 
@@ -90,7 +90,9 @@ export default function ClientDetails({loading, selectedMonth, onMonthChange}) {
             }))} 
             content={"clients"} 
             selectedMonth={selectedMonth}
-            onMonthChange={onMonthChange}                    
+            selectedYear={selectedYear}
+            onYearChange={onYearChange}
+            onMonthChange={onMonthChange}                  
           />
         )}
         </MamRadVelkyZadky>

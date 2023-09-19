@@ -10,7 +10,7 @@ import Skeleton from "@mui/material/Skeleton";
 import DangerAlert from "../Components/DangerAlert";
 import { Context, SIGNEDUSER, PRODUCTS, CLIENTS  } from '../providers/provider';
 
-export default function Pharmacies({ IsLoadingPharmacies, IsLoadingProducts, selectedMonth, onMonthChange }) {
+export default function Pharmacies({ IsLoadingPharmacies, IsLoadingProducts, selectedMonth, selectedYear, onMonthChange, onYearChange }) {
 
   const [store, dispatch] = useContext(Context);
   const [errorMessage, setErrorMessage] = useState('');
@@ -97,6 +97,8 @@ export default function Pharmacies({ IsLoadingPharmacies, IsLoadingProducts, sel
             data={store.products.slice(0, 10)}
             content={"products"}
             selectedMonth={selectedMonth}
+            selectedYear={selectedYear}
+            onYearChange={onYearChange}
             onMonthChange={onMonthChange}
             />
         )}
@@ -175,6 +177,8 @@ export default function Pharmacies({ IsLoadingPharmacies, IsLoadingProducts, sel
             data={store.clients.slice(0, 10)}
             content={"clients"}
             selectedMonth={selectedMonth}
+            selectedYear={selectedYear}
+            onYearChange={onYearChange}
             onMonthChange={onMonthChange}
           />
         )}

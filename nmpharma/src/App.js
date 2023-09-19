@@ -36,11 +36,12 @@ export default function App() {
 
 
   const [error, setError] = useState(null);
-  const [selectedMonth, setSelectedMonth] = useState(6); // Default to January
+  const [selectedMonth, setSelectedMonth] = useState(8);
+  const [selectedYear, setSelectedYear] = useState(2023);
 
 
   // PRODUCTS DATA FETCHING
-  async function fetchData(year = 2023, month = selectedMonth, token) {
+  async function fetchData(year = selectedYear, month = selectedMonth, token) {
     try {
       setIsLoadingProducts(true);
       const authToken = token ? token : store.user.token;
@@ -78,7 +79,7 @@ export default function App() {
 
 
   //CLIENTS DATA FETCHING
-  async function fetchPharmacyData(year = 2023, month = selectedMonth, token) {
+  async function fetchPharmacyData(year = selectedYear, month = selectedMonth, token) {
     try {
 
       setIsLoadingPharmacies(true);
@@ -188,6 +189,11 @@ export default function App() {
     fetchData(undefined, month);
     fetchPharmacyData(undefined, month);
   };
+  const handleYearChange = (year) => {
+    setSelectedYear(year);
+    fetchData(undefined, year);
+    fetchPharmacyData(undefined, year);
+  };
 
 
 
@@ -209,14 +215,16 @@ export default function App() {
                     IsLoadingPharmacies={isLoadingPharmacies}
                     IsLoadingProducts={isLoadingProducts}
                     onMonthChange={handleMonthChange}
+                    onYearChange={handleYearChange}
                     selectedMonth={selectedMonth}
+                    selectedYear={selectedYear}
                   />
                 }
               />
-              <Route path="/pharmacies/productdetails" element={<ProductDetails loading={isLoadingProducts} onMonthChange={handleMonthChange}
-                selectedMonth={selectedMonth} />} />
-              <Route path="/pharmacies/clientdetails" element={<ClientDetails loading={isLoadingPharmacies} onMonthChange={handleMonthChange}
-                selectedMonth={selectedMonth} />} />
+              <Route path="/pharmacies/productdetails" element={<ProductDetails loading={isLoadingProducts} onYearChange={handleYearChange} onMonthChange={handleMonthChange}
+                selectedMonth={selectedMonth} selectedYear={selectedYear} />} />
+              <Route path="/pharmacies/clientdetails" element={<ClientDetails loading={isLoadingPharmacies} onYearChange={handleYearChange} onMonthChange={handleMonthChange}
+                selectedMonth={selectedMonth} selectedYear={selectedYear} />} />
               <Route path="/pharmacies/products/:productCode" element={<SingleProductDetails />} />
               <Route path="/pharmacies/clients/:clientCode" element={<SinglePharmacyDetails onMonthChange={handleMonthChange}
                 selectedMonth={selectedMonth} />} />

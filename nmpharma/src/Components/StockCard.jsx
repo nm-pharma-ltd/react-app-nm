@@ -14,6 +14,9 @@ const StockCard = ({ data }) => {
   const [cardWidth, setCardWidth] = useState(null);
   const [inputValues, setInputValues] = useState({});
   const [monthsOfStock, setMonthsOfStock] = useState({});
+  const [editingProductCode, setEditingProductCode] = useState(null);
+  const [editingIncomingValues, setEditingIncomingValues] = useState({});
+
 
   const hasOnOrder = data.productsForecast.some(product => product.quantityOrdered > 0);
   const hasIncoming = data.productsForecast.some(product => product.incoming > 0);
@@ -106,6 +109,11 @@ const StockCard = ({ data }) => {
     setInputValues(prevValues => ({ ...prevValues, [productCode]: value }));
   };
 
+  const handleIncomingInputChange = (productCode, value) => {
+    setEditingIncomingValues(prevValues => ({ ...prevValues, [productCode]: value }));
+  };
+
+
   const handleColorChange = (productCode) => {
     if (monthsOfStock[productCode] < 6) {
       return 'red';
@@ -116,7 +124,7 @@ const StockCard = ({ data }) => {
     }
   };
 
-  
+
 
   const getBackgroundColor = (averageType) => {
     switch (averageType) {
@@ -127,6 +135,14 @@ const StockCard = ({ data }) => {
       default: return 'transparent';
     }
   };
+  const toggleEditMode = (productCode) => {
+    if (editingProductCode === productCode) {
+      setEditingProductCode(null);
+    } else {
+      setEditingProductCode(productCode);
+    }
+  };
+
 
   return (
     <>
@@ -205,9 +221,31 @@ const StockCard = ({ data }) => {
                       <TableCellOrder align='center'>
                         + {product.quantityOrdered}
                       </TableCellOrder>
+
                       <TableCellInc align='center'>
-                        {product.incoming && product.incoming !== 0 ? `+ ${product.incoming}` : '--'}
+                        {product.productCode === editingProductCode ? (
+                          <UniInput>
+                            <InputStock
+                              type="number"
+                              value={editingIncomingValues[product.productCode] || product.incoming}
+                              onChange={(e) => handleIncomingInputChange(product.productCode, e.target.value)}
+                              onBlur={() => setEditingProductCode(null)}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                  //add the number
+                                  console.log('penis');
+                                  toggleEditMode(null);
+                                }
+                              }}
+                            />
+                          </UniInput>
+                        ) : (
+                          <span onClick={() => toggleEditMode(product.productCode)}>
+                            {product.incoming && product.incoming !== 0 ? `+ ${product.incoming}` : '--'}
+                          </span>
+                        )}
                       </TableCellInc>
+
                       <TableCellTotal color={handleColorChange(product.productCode)} align='center'>
                         {typeof monthsOfStock[product.productCode] === "number" ? monthsOfStock[product.productCode].toFixed(2) : monthsOfStock[product.productCode] || "--"}
                       </TableCellTotal>
@@ -227,10 +265,11 @@ const StockCard = ({ data }) => {
                         </UniInput>
                       </TableCell>
                       <TableCell >
-                        <ForeButton 
+                        <ForeButton
                           to={`/stock/${product.productCode}`}>
                           More
                         </ForeButton>
+
                       </TableCell>
                     </TableRow>
                   )
@@ -309,6 +348,26 @@ const UniInput = styled.div`
   margin: 0 auto;
 `
 export const InputStock = styled.input`
+    border: 1px solid ${props => props.theme.nav};
+    border-radius: 4px;
+    font-size: 14px;
+    color:  ${props => props.theme.text};
+    background: ${props => props.theme.InputText};
+    outline: none;
+    transition: border-color 0.3s ease;
+    height: 40px;
+    width: 55px;
+    text-align: center;
+    onChange={(e) => setInputValue(e.target.value)};
+`;
+
+const UniInput2 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  margin: 0 auto;
+`
+export const InputStock2 = styled.input`
     border: 1px solid ${props => props.theme.nav};
     border-radius: 4px;
     font-size: 14px;

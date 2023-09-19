@@ -12,6 +12,7 @@ import DangerAlert from "./DangerAlert";
 import WarningAlert from "./WarningAlert";
 
 export default function Teams({}) {
+
   const [isAddTeamPopupOpen, setIsAddTeamPopupOpen] = useState(false);
   const [teamsData, setteamsData] = useState([]);
   const [store, dispatch] = useContext(Context);
@@ -53,10 +54,13 @@ export default function Teams({}) {
     <>
       <IconContainer>
         <h2>Teams</h2>
+
         <IconLink onClick={handleAddTeamClick}>
+          
           <FaCirclePlus />
         </IconLink>
       </IconContainer>
+
       {isAddTeamPopupOpen && (
         <AddTeamPopup
           onClose={handleClosePopup}
