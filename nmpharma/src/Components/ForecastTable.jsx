@@ -72,7 +72,7 @@ export default function ForecastTable({ title, subtitle, width, columns, data, s
       let currentDate = new Date();
 
       let currentMonth = currentDate.getMonth();
-      let endMonth = addMonths(currentDate, 5).getMonth() + 1; 
+      let endMonth = addMonths(currentDate, 5).getMonth() + 1;
 
       let ind = currentMonth;
       let increase = 0;
@@ -82,7 +82,7 @@ export default function ForecastTable({ title, subtitle, width, columns, data, s
           ind = 0;
         }
 
-        let new_month = {...months[ind]};
+        let new_month = { ...months[ind] };
         new_month["index"] = increase;
 
         newMonths.push(new_month);
@@ -113,20 +113,18 @@ export default function ForecastTable({ title, subtitle, width, columns, data, s
     let toOrder = 0;
 
     if (inputs[product.productCode] !== undefined) {
-      console.log(inputs);
-      let monthToOrder = inputs[product.productCode].filter(p => p.index <= index);
-      
+      let monthToOrder = inputs[product.productCode].filter(p => p.month <= index);
 
       monthToOrder.forEach((item) => {
         toOrder += item["toOrder"];
       });
     }
-    
-    return (stock + toOrder - product.averageQuantitySold*index) / product.averageQuantitySold;
+
+    return (stock + toOrder - product.averageQuantitySold * index) / product.averageQuantitySold;
   };
 
   const handleChange = (e, product, month) => {
-    if (e.target.value === "")
+    if (e.target.value === "" || e.key !== "Enter")
       return;
 
     let value = Number(e.target.value);
@@ -134,16 +132,16 @@ export default function ForecastTable({ title, subtitle, width, columns, data, s
     let obj;
 
     if (inputs[code] === undefined) {
-      obj = {...inputs};
-      obj[code] = [{"toOrder": value, "month": month}];
+      obj = { ...inputs };
+      obj[code] = [{ "toOrder": value, "month": month }];
     }
     else {
-      obj = {...inputs};
-      
+      obj = { ...inputs };
+
       let existinObj = obj[code].filter(m => m.month === month);
 
       if (existinObj.length === 0)
-        obj[code].push({"toOrder": value, "month": month});
+        obj[code].push({ "toOrder": value, "month": month });
       else
         existinObj[0]["toOrder"] = value;
     }
@@ -155,14 +153,14 @@ export default function ForecastTable({ title, subtitle, width, columns, data, s
       <TableRow key={index}>
         <TableCell>{item.productDescription}</TableCell>
         {months.map((mesic, colIndex) => {
-            return (
-              <TableCell key={colIndex} align="center">
-                <KontDown>
-                  <span style={{ marginRight: "0.5em" }}>{calculateMonthsOfStock(item, mesic.index).toFixed(2)}</span>
-                  <InputForecast onChange={(e) => handleChange(e, item, mesic.index)} type="number" placeholder="" />
-                </KontDown>
-              </TableCell>
-            );
+          return (
+            <TableCell key={colIndex} align="center">
+              <KontDown>
+                <span style={{ marginRight: "0.5em" }}>{calculateMonthsOfStock(item, mesic.index).toFixed(2)}</span>
+                <InputForecast onKeyPress={(e) => handleChange(e, item, mesic.index)} type="number" placeholder="" />
+              </KontDown>
+            </TableCell>
+          );
         })}
       </TableRow>
     ));
