@@ -8,7 +8,7 @@ import { FaInfinity } from "react-icons/fa6";
 import { Context, FORECAST_UPDATE } from "../providers/provider";
 import ApiService from "../api/ApiService";
 
-const StockCard = ({ data = { productsForecast: [] } }) => {
+const StockCard = ({ data }) => {
   const cardRef = useRef(null);
   const [store, dispatch] = useContext(Context);
   const [expanded, setExpanded] = useState(false);
@@ -18,16 +18,17 @@ const StockCard = ({ data = { productsForecast: [] } }) => {
   const [editingProductCode, setEditingProductCode] = useState(null);
   const [editingIncomingValues, setEditingIncomingValues] = useState({});
 
-  const hasOnOrder = data.productsForecast?.some(
+  const hasOnOrder = data.productsForecast.some(
     (product) => product.quantityOrdered > 0
   );
-  
-  const hasIncoming = data.productsForecast?.some(
+
+  const hasIncoming = data.productsForecast.some(
     (product) => product.incoming > 0
   );
 
+
   const calculateToOrder = (productCode) => {
-    const productData = data.productsForecast.find(
+    const productData = data.productsForecast?.find(
       (prod) => prod.productCode === productCode
     );
 
@@ -51,7 +52,7 @@ const StockCard = ({ data = { productsForecast: [] } }) => {
     const toOrder = inputValues[productCode]
       ? parseInt(inputValues[productCode], 10)
       : 0;
-    const productData = data.productsForecast.find(
+    const productData = data.productsForecast?.find(
       (prod) => prod.productCode === productCode
     );
 
@@ -88,13 +89,14 @@ const StockCard = ({ data = { productsForecast: [] } }) => {
   const handleExpand = () => {
     setExpanded((prevExpanded) => !prevExpanded);
     if (!expanded) {
-      data.productsForecast.forEach((product) => {
+      data.productsForecast?.forEach((product) => {
         handleCalculation(product.productCode);
       });
     }
   };
 
   useEffect(() => {
+    console.log(data);
     if (cardRef.current) {
       setCardWidth(cardRef.current.offsetWidth);
     }
@@ -122,12 +124,7 @@ const StockCard = ({ data = { productsForecast: [] } }) => {
     return differenceInMonths < 6;
   };
 
-  const hasExpiry = data.productsForecast.some(
-    (product) =>
-      isExpiryInSixMonths(product.productExpire) &&
-      product.productExpire !== "" &&
-      !!product.productExpire
-  );
+
 
   const handleExpiryColorChange = (productExpire) => {
     if (!productExpire) return "green";
@@ -209,6 +206,14 @@ const StockCard = ({ data = { productsForecast: [] } }) => {
     }
   };
 
+  const hasExpiry = data.productsForecast.some(
+    (product) =>
+      isExpiryInSixMonths(product.productExpire) &&
+      product.productExpire !== "" &&
+      !!product.productExpire
+  );
+
+
   return (
     <>
       <CardContainer ref={cardRef} expanded={expanded ? 1 : 0}>
@@ -242,15 +247,19 @@ const StockCard = ({ data = { productsForecast: [] } }) => {
                 On-Order
               </OnOrderBadge>
             )}
-            <ForeButton
-              as={Link}
-              to={{
-                pathname: `/stock/supplier/${data.supplierCode}`,
-                state: { supplierData: data, monthsOfStock: monthsOfStock },
-              }}
-            >
-              Forecast all
-            </ForeButton>
+            {
+              data.supplierCode && data.supplierName && (
+                <ForeButton
+                  as={Link}
+                  to={{
+                    pathname: `/stock/supplier/${data.supplierCode}`,
+                    state: { supplierData: data, monthsOfStock: monthsOfStock },
+                  }}
+                >
+                  Forecast all
+                </ForeButton>
+              )
+            }
             <ExpandIcon expanded={expanded ? 1 : 0} />
           </RightKontainer>
         </CardHeaderContainer>
@@ -333,10 +342,9 @@ const StockCard = ({ data = { productsForecast: [] } }) => {
                               }
                             >
                               {editingIncomingValues[product.productCode] !==
-                              undefined
-                                ? `+ ${
-                                    editingIncomingValues[product.productCode]
-                                  }`
+                                undefined
+                                ? `+ ${editingIncomingValues[product.productCode]
+                                }`
                                 : `+${product.incoming}`}{" "}
                             </span>
                           )}
@@ -347,7 +355,7 @@ const StockCard = ({ data = { productsForecast: [] } }) => {
                           align="center"
                         >
                           {typeof monthsOfStock[product.productCode] ===
-                          "number"
+                            "number"
                             ? monthsOfStock[product.productCode].toFixed(2)
                             : monthsOfStock[product.productCode] || "--"}
                         </TableCellTotal>
@@ -418,8 +426,8 @@ const TableHeaderCell = styled.th`
     props.align === "right"
       ? "right"
       : props.align === "center"
-      ? "center"
-      : "left"};
+        ? "center"
+        : "left"};
   color: #909090;
   font-weight: 500;
   text-wrap: nowrap;
@@ -443,8 +451,8 @@ export const TableCellCode = styled.td`
     props.align === "right"
       ? "right"
       : props.align === "center"
-      ? "center"
-      : "left"};
+        ? "center"
+        : "left"};
 `;
 export const TableCellOrder = styled.td`
   padding: 10px;
@@ -455,8 +463,8 @@ export const TableCellOrder = styled.td`
     props.align === "right"
       ? "right"
       : props.align === "center"
-      ? "center"
-      : "left"};
+        ? "center"
+        : "left"};
 `;
 export const TableCellInc = styled.td`
   padding: 10px;
@@ -467,8 +475,8 @@ export const TableCellInc = styled.td`
     props.align === "right"
       ? "right"
       : props.align === "center"
-      ? "center"
-      : "left"};
+        ? "center"
+        : "left"};
 `;
 
 export const TableCellTotal = styled.td`
@@ -479,8 +487,8 @@ export const TableCellTotal = styled.td`
     props.align === "right"
       ? "right"
       : props.align === "center"
-      ? "center"
-      : "left"};
+        ? "center"
+        : "left"};
   color: ${(props) => props.color || ""};
 `;
 

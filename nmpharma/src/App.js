@@ -116,7 +116,7 @@ export default function App() {
     }
   }
 
-  async function fetchStockData(year = new Date().getFullYear(), month = new Date().getMonth() + 1, token) {
+  async function fetchStockData(year = new Date().getFullYear(), month = 5, token) {
     try {
       setIsLoadingForecast(true);
       const authToken = token ? token : store.user.token;

@@ -42,8 +42,8 @@ export default function Stock({ IsLoadingForecast }) {
             <StockCard key={index} data={item} />
           )) : <p>No Data</p>
         ) : (
-          pharmacies ? <StockCard data={{ processedForecast: pharmacies.flatMap(item => item.productsForecast).sort((a, b) => (a.productCode || '').localeCompare(b.productCode || '')) }} /> : <p>No Data</p>
-        )
+          pharmacies ? <StockCard data={{ productsForecast: pharmacies.flatMap(item => item.productsForecast).sort((a, b) => (a.productCode || '').localeCompare(b.productCode || '')) }} /> : <p>No Data</p>
+          )
       )}
     </Kontainer>
   );
