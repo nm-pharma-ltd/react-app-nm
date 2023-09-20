@@ -56,7 +56,7 @@ export default function Table({ title, subtitle, viewDetailsLink, width, columns
               <ProductLink>
                 {item[column.field]}
               </ProductLink>
-            ) : column.field === 'monthlyProfit' ? (
+            ) : column.field === 'monthlyProfit' || column.field ==="profit" ? (
               Number(item[column.field]) >= 0 ? (
                 <GreenBox>{`${item[column.field]} €`}</GreenBox>
               ) : (
@@ -84,7 +84,7 @@ export default function Table({ title, subtitle, viewDetailsLink, width, columns
     console.log("Month selected:", month);
     onMonthChange(month);
   };
-  
+
   const handleYearChange = (event) => {
     const year = event.target.value;
     console.log("Year selected:", year);
@@ -110,7 +110,7 @@ export default function Table({ title, subtitle, viewDetailsLink, width, columns
       ))}
     </Dropdownos>
   );
-  
+
 
   return (
     <Card width={width}>

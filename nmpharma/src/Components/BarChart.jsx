@@ -1,20 +1,19 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { useParams } from 'react-router-dom';
-import { Bar } from 'react-chartjs-2';
-import {Chart, registerables } from "chart.js"
-import styled from 'styled-components';
-import ApiService from '../api/ApiService';
-import { Context } from '../providers/provider';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import React, { useState, useEffect, useContext } from "react";
+import { useParams } from "react-router-dom";
+import { Bar } from "react-chartjs-2";
+import { Chart, registerables } from "chart.js";
+import styled from "styled-components";
+import ApiService from "../api/ApiService";
+import { Context } from "../providers/provider";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 Chart.register(...registerables);
 const BarChart = ({ onProductNameUpdate }) => {
-
   const [store] = useContext(Context);
   const { productCode } = useParams();
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [chartData, setChartData] = useState({ labels: [], datasets: [] });
   const [totalTarget, setTotalTarget] = useState(0);
-  const [productName, setProductName] = useState(''); // Add this to store product name
+  const [productName, setProductName] = useState(""); // Add this to store product name
 
   const months = [
     "January",
@@ -28,8 +27,8 @@ const BarChart = ({ onProductNameUpdate }) => {
     "September",
     "October",
     "November",
-    "December",]
-
+    "December",
+  ];
 
   useEffect(() => {
     const fetchDataForMonth = async (year) => {
@@ -37,42 +36,42 @@ const BarChart = ({ onProductNameUpdate }) => {
       let monthlyDataSold = new Array(12).fill(null);
       let monthlyDataProfit = new Array(12).fill(null);
 
-
-      const productData = await ApiService.get(`products/${productCode}/${year}/sales`, { "Authorization": "Bearer " + store.user.token });
-      console.log(productData)
-      setTotalTarget(productData.yearlyTarget)
-      productData.monthlySales.forEach(element => {
+      const productData = await ApiService.get(
+        `products/${productCode}/${year}/sales`,
+        { Authorization: "Bearer " + store.user.token }
+      );
+      console.log(productData);
+      setTotalTarget(productData.yearlyTarget);
+      productData.monthlySales.forEach((element) => {
         const monthIndex = element.month - 1;
-        monthlyDataTarget[monthIndex] =(productData.yearlyTarget/12).toFixed(0);
+        monthlyDataTarget[monthIndex] = element.monthlyTarget;
         monthlyDataSold[monthIndex] = element.quantitySold;
         monthlyDataProfit[monthIndex] = element.profit;
-
       });
 
       if (productData && productData.productDescription) {
         onProductNameUpdate(productData.productDescription);
-        setProductName(productData.productDescription);  // Set the product name to state
-
+        setProductName(productData.productDescription); // Set the product name to state
       }
       setChartData({
         labels: months,
         datasets: [
           {
-            label: 'Target',
+            label: "Target",
             data: monthlyDataTarget,
-            backgroundColor: '#dc3545',
+            backgroundColor: "#dc3545",
           },
           {
-            label: 'Sold',
+            label: "Sold",
             data: monthlyDataSold,
-            backgroundColor: '#4a679d',
+            backgroundColor: "#4a679d",
           },
           {
-            label: 'Profit',
+            label: "Profit",
             data: monthlyDataProfit,
-            backgroundColor: '#3ebc62',
+            backgroundColor: "#3ebc62",
           },
-        ]
+        ],
       });
     };
 
@@ -82,45 +81,51 @@ const BarChart = ({ onProductNameUpdate }) => {
   const options = {
     scales: {
       y: {
-        beginAtZero: true
-      }
-    }
+        beginAtZero: true,
+      },
+    },
   };
 
-  const totalSold = chartData.datasets.length > 0 ? chartData.datasets[1].data.reduce((acc, value) => acc + value, 0) : 0;
+  const totalSold =
+    chartData.datasets.length > 0
+      ? chartData.datasets[1].data.reduce((acc, value) => acc + value, 0)
+      : 0;
   // const totalTarget = chartData.datasets.length > 0 ? chartData.datasets[0].data.reduce((acc, value) => acc + value, 0) : 0;
-  const totalProfit = chartData.datasets.length > 0 ? chartData.datasets[2].data.reduce((acc, value) => acc + value, 0) : 0;
+  const totalProfit =
+    chartData.datasets.length > 0
+      ? chartData.datasets[2].data.reduce((acc, value) => acc + value, 0)
+      : 0;
 
-
-  const changeYear = event => {
+  const changeYear = (event) => {
     setSelectedYear(event.target.value);
   };
 
   const renderYearDropdown = () => {
     let years = [];
     for (let i = 2020; i <= 2050; i++) {
-      years.push(<option key={i} value={i}>{i}</option>);
+      years.push(
+        <option key={i} value={i}>
+          {i}
+        </option>
+      );
     }
     return years;
   };
 
-
   return (
     <Kontaineros>
-      <NavigationContainer>
-
-      </NavigationContainer>
+      <NavigationContainer></NavigationContainer>
 
       <ChartContainer>
-
         <ResponsiveChart>
           <Bar data={chartData} options={options} />
         </ResponsiveChart>
         <InfoContainer>
-
-        <InfoBox>
+          <InfoBox>
             <InfoLabel>Year</InfoLabel>
-            <Dropdownos value={selectedYear} onChange={e => setSelectedYear(Number(e.target.value))}>
+            <Dropdownos
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(Number(e.target.value))}>
               {renderYearDropdown()}
             </Dropdownos>
           </InfoBox>
@@ -139,11 +144,10 @@ const BarChart = ({ onProductNameUpdate }) => {
             <InfoLabel>Total Target</InfoLabel>
             <InfoValue>{totalTarget} pk</InfoValue>
           </InfoBox>
-
         </InfoContainer>
       </ChartContainer>
     </Kontaineros>
-  )
+  );
 };
 const NavigationContainer = styled.div`
   display: flex;
@@ -170,18 +174,19 @@ const NavigationButton = styled.button`
 `;
 
 export const Dropdownos = styled.select`
-  background-color: ${props => props.theme.componentBackground};;
-  border: 1px solid ${props => props.theme.line};
+  background-color: ${(props) => props.theme.componentBackground};
+  border: 1px solid ${(props) => props.theme.line};
   padding: 5px 10px;
   border-radius: 5px;
   font-size: 16px;
   outline: none;
   cursor: pointer;
-  color: ${props => props.theme.text};
+  color: ${(props) => props.theme.text};
   max-width: 120px;
 
-  &:hover, &:focus {
-    border-color: ${props => props.theme.line};;
+  &:hover,
+  &:focus {
+    border-color: ${(props) => props.theme.line};
   }
 `;
 
@@ -191,7 +196,7 @@ const Kontaineros = styled.div`
 `;
 
 const ChartContainer = styled.div`
-  background-color: ${props => props.theme.componentBackground};
+  background-color: ${(props) => props.theme.componentBackground};
   border-radius: 20px;
   padding: 20px;
   margin-top: 20px;
@@ -199,7 +204,7 @@ const ChartContainer = styled.div`
   display: flex;
   width: auto;
 
-  @media (max-width: 1200px){
+  @media (max-width: 1200px) {
     flex-direction: column;
   }
 `;
@@ -215,13 +220,13 @@ const InfoContainer = styled.div`
   justify-content: space-between;
   margin: 20px;
 
-  @media (max-width: 1200px){
+  @media (max-width: 1200px) {
     flex-direction: column;
   }
 `;
 
 const InfoBox = styled.div`
-  border-bottom: 1px solid ${props => props.theme.line};;
+  border-bottom: 1px solid ${(props) => props.theme.line};
   padding: 10px;
   margin: 10px;
   width: 100%;

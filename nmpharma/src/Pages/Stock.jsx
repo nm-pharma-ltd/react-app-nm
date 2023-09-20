@@ -11,6 +11,9 @@ export default function Stock({ IsLoadingForecast }) {
   const [displayMode, setDisplayMode] = useState("SUPPLIERS"); // default to SUPPLIERS
   const [pharmacies, setPharmacies] = useState(store.processedForecast);
 
+  useEffect(() => {
+    setPharmacies(store.processedForecast);
+  }, [store.processedForecast]);
 
   return (
     <Kontainer>

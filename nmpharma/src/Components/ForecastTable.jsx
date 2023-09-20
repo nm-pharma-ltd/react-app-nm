@@ -5,9 +5,6 @@ import { Context, FORECAST_BUTTON_SAVE } from '../providers/provider';
 
 export default function ForecastTable({ title, subtitle, width, columns, data, subcode }) {
 
-
-
-
   const [months, setMonths] = useState([
     {
       month: "January",
@@ -59,22 +56,46 @@ export default function ForecastTable({ title, subtitle, width, columns, data, s
     },
   ])
 
+  function addMonths(date, months) {
+    date.setMonth(date.getMonth() + months);
+    return date;
+  }
+
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const currentMonth = new Date().getMonth() + 1;
   const [monthsSliced, setMonthsSliced] = useState(false);
+  let [inputs, setInputs] = useState({});
   const [store, dispatch] = useContext(Context);
 
   useEffect(() => {
     if (monthsSliced == false) {
-      setMonths(months.slice(currentMonth - 1));
+      let newMonths = [];
+      let currentDate = new Date();
+
+      let currentMonth = currentDate.getMonth();
+      let endMonth = addMonths(currentDate, 5).getMonth() + 1; 
+
+      let ind = currentMonth;
+      let increase = 0;
+
+      while (ind != endMonth) {
+        if (ind > 11) {
+          ind = 0;
+        }
+
+        let new_month = {...months[ind]};
+        new_month["index"] = increase;
+
+        newMonths.push(new_month);
+        ind++;
+        increase++;
+      }
+
+      setMonths(newMonths);
       setMonthsSliced(true)
     }
-
-
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
     };
-
     window.addEventListener('resize', handleResize);
 
     return () => {
@@ -84,26 +105,64 @@ export default function ForecastTable({ title, subtitle, width, columns, data, s
 
   const tableWidth = (windowWidth * 0.79) - 400;
 
+  const calculateMonthsOfStock = (product, index) => {
+    if (product.averageQuantitySold === null)
+      return 0;
+
+    let stock = product.inStock + product.quantityOrdered + product.incoming; // This sum stays the same
+    let toOrder = 0;
+
+    if (inputs[product.productCode] !== undefined) {
+      console.log(inputs);
+      let monthToOrder = inputs[product.productCode].filter(p => p.index <= index);
+      
+
+      monthToOrder.forEach((item) => {
+        toOrder += item["toOrder"];
+      });
+    }
+    
+    return (stock + toOrder - product.averageQuantitySold*index) / product.averageQuantitySold;
+  };
+
+  const handleChange = (e, product, month) => {
+    if (e.target.value === "")
+      return;
+
+    let value = Number(e.target.value);
+    let code = `${product.productCode}`;
+    let obj;
+
+    if (inputs[code] === undefined) {
+      obj = {...inputs};
+      obj[code] = [{"toOrder": value, "month": month}];
+    }
+    else {
+      obj = {...inputs};
+      
+      let existinObj = obj[code].filter(m => m.month === month);
+
+      if (existinObj.length === 0)
+        obj[code].push({"toOrder": value, "month": month});
+      else
+        existinObj[0]["toOrder"] = value;
+    }
+    setInputs(obj);
+  }
+
   const generateRows = () => {
-
-    console.log(data)
-
     return data && data.map((item, index) => (
       <TableRow key={index}>
-        <TableCell>{item.productName}</TableCell>
+        <TableCell>{item.productDescription}</TableCell>
         {months.map((mesic, colIndex) => {
-          if (['name', 'expiry', 'productName'].includes(mesic.field)) {
-            return <TableCell key={index} align="center"><span>{item[mesic.field]}</span></TableCell>;
-          } else {
             return (
               <TableCell key={colIndex} align="center">
                 <KontDown>
-                  <span style={{ marginRight: "0.5em" }}>{item.amountOfProducts ? item.amountOfProducts : 0}</span>
-                  <InputForecast type="number" placeholder="20" />
+                  <span style={{ marginRight: "0.5em" }}>{calculateMonthsOfStock(item, mesic.index).toFixed(2)}</span>
+                  <InputForecast onChange={(e) => handleChange(e, item, mesic.index)} type="number" placeholder="" />
                 </KontDown>
               </TableCell>
             );
-          }
         })}
       </TableRow>
     ));
@@ -297,7 +356,7 @@ const SidebarButton = styled(NavLink)`
 const KontDown = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
   width: 75px;
   font-weight: 600;

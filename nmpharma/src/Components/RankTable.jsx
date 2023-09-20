@@ -1,38 +1,71 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 import { NavLink, useNavigate } from "react-router-dom";
-import { Dropdownos } from './BarChart';
-import { useMemo, useState, useEffect } from 'react';
+import { Dropdownos } from "./BarChart";
+import { useEffect, useMemo, useState } from "react";
 
-export default function RankTable({ title, subtitle, width, data, content }) {
+export default function RankTable({
+  title,
+  subtitle,
+  viewDetailsLink,
+  width,
+  data,
+}) {
   const navigate = useNavigate();
-  useEffect(() =>{
-    console.log(data)
-  },[data])
-  const months = [
-    'January', 'February', 'March', 'April', 'May', 'June', 'July',
-    'August', 'September', 'October', 'November', 'December'
-  ];
 
-  
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
   const generateRows = () => {
-    return data && data.map((item, index) => (
-      <TableRow key={index} onClick={() => navigate(`/pharmacies/${content}/${content === "clients" ? item.clientCode : item.productCode}`)}>
-        {item.products.map((product, prodIndex) => {
-            <TableCell key={prodIndex} align={"center"}>
-            {product.productName}
+    return (
+      data &&
+      data.map((item, index) => (
+        <TableRow key={index}>
+          <TableCell key={index} align="center">
+            {item.rank}
           </TableCell>
-        })}
-          
-      </TableRow>
-    ));
+          {item.products.map((product) => (
+            <TableCell key={product.month} align="center">
+              {product.product}
+            </TableCell>
+          ))}
+        </TableRow>
+      ))
+    );
   };
 
-  
-  
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  const tableWidth = (windowWidth * 0.79) - 400;
 
   return (
-    <Card width={"98%"}>
+    <Card style={{ width: `${tableWidth}px` }}>
       <CardHeader>
         <Title>{title}</Title>
       </CardHeader>
@@ -41,11 +74,10 @@ export default function RankTable({ title, subtitle, width, data, content }) {
         <TableElement>
           <TableHead>
             <TableRow>
-              {months.map((month) => (
-                <TableHeaderCell
-                  align={"center"}
-                >
-                  {month}
+              <TableHeaderCell>RANK</TableHeaderCell>
+              {months.map((month, index) => (
+                <TableHeaderCell key={index} align="center">
+                  {month.toUpperCase()}
                 </TableHeaderCell>
               ))}
             </TableRow>
@@ -60,18 +92,19 @@ export default function RankTable({ title, subtitle, width, data, content }) {
 
 const RightMenu = styled.div`
   padding: 0.1em;
-`
+`;
+
 const Card = styled.div`
-  background-color: ${props => props.theme.componentBackground};
+  background-color: ${(props) => props.theme.componentBackground};
   border-radius: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 20px;
   margin-top: 20px;
   margin-right: 25px;
-  width: ${props => props.width || '48%'};
-  min-width: 250px;
+  width: ${(props) => props.width};
+  min-width: 100%;
 
-  @media (max-width: 1320px){
+  @media (max-width: 1320px) {
     width: 100%;
   }
 `;
@@ -93,8 +126,10 @@ const Subtitle = styled.p`
 `;
 
 const TableContainer = styled.div`
+  max-width: 100%;
   overflow-x: auto;
   margin-bottom: 20px;
+  display: flex;
 `;
 
 const TableElement = styled.table`
@@ -103,32 +138,35 @@ const TableElement = styled.table`
 `;
 
 const TableHead = styled.thead`
-  border-bottom: 1px solid ${props => props.theme.line};
+  border-bottom: 1px solid ${(props) => props.theme.line};
 `;
 
 export const TableHeaderCell = styled.th`
   padding: 10px;
-  text-align: ${props => props.align || 'left'}; // Use the passed alignment
+  text-align: ${(props) => props.align || "left"}; // Use the passed alignment
   color: #909090;
   font-weight: 500;
   cursor: pointer;
   text-wrap: nowrap;
 `;
 
-
-
 export const TableCell = styled.td`
   padding: 10px;
-  border-bottom: 1px solid ${props => props.theme.line};
-  text-align: ${props => (props.align === 'right' ? 'right' : props.align === 'center' ? 'center' : 'left')};
-  white-space: nowrap;   // Prevents the text from wrapping onto the next line
-  overflow: hidden;      // Hides any text that goes beyond the container width
+  border-bottom: 1px solid ${(props) => props.theme.line};
+  border-right: 1px solid ${(props) => props.theme.line};
+  border-left: 1px solid ${(props) => props.theme.line};
+  text-align: ${(props) =>
+    props.align === "right"
+      ? "right"
+      : props.align === "center"
+      ? "center"
+      : "left"};
+  white-space: nowrap; // Prevents the text from wrapping onto the next line
+  overflow: hidden; // Hides any text that goes beyond the container width
   text-overflow: ellipsis; // Adds ellipsis when the text overflows
-  //width: auto;  
-  max-width: 220px;    // or whatever width you want to set
+  width: auto; // or whatever width you want to set
+  max-width: 13em
 `;
-
-
 
 const TableBody = styled.tbody``;
 
@@ -136,33 +174,27 @@ const TableRow = styled.tr`
   cursor: pointer;
 
   &:hover {
-    background-color: ${props => props.theme.background};
+    background-color: ${(props) => props.theme.background};
   }
 `;
-
-
 
 export const ViewDetailsLink = styled(NavLink)`
   color: #e16a32;
   text-decoration: none;
   transition: all 0.25s ease-in-out;
   margin-left: 0.5em;
-    
+
   &:hover {
     color: #753619;
     margin-right: 3px;
   }
 `;
 
-
 export const ProductLink = styled(NavLink)`
-  color: ${props => props.theme.text};
+  color: ${(props) => props.theme.text};
   text-decoration: none;
   transition: all 0.25s ease-in-out;
-
-
 `;
-
 
 export const GreenBox = styled.div`
   height: 22px;

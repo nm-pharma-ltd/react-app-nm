@@ -22,22 +22,21 @@ function Supplier() {
   const [store, dispatch] = useContext(Context);
   const [supplierProducts, setSupplierProducts] = useState([]);
 
-  async function fetchData() {
-    try {
-      const response = await ApiService.get(`suppliers/products/${supplierCode}`, {
-        Authorization: "Bearer " + store.user.token,
-      });
-      setSupplierProducts(response.products)
-      
-    } catch (error) {
-      console.error("Error:", error);
-    }
+  // Get data needed for calculating the months of stock left from context
+  // Basically get all products from current supplier
+  async function getData() {
+    store.processedForecast.forEach(supplier =>
+    {
+      if (supplier.supplierCode == supplierCode)
+      {
+        setSupplierProducts(supplier.productsForecast);
+      }
+    });
   }
 
   useEffect(() => {
-    fetchData();  
+    getData();  
   }, []);
-
 
   return (
     <MamRadVelkyZadky2>
@@ -47,20 +46,20 @@ function Supplier() {
       </TitleWrapper>
 
       <ForecastTable
-      title="Half year forecast of products"
-      subcode={null}
-      subtitle=""
-      width="100%"
-      columns={[
-        { label: 'Product name', field: 'productName', align: 'left' },
-        { label: 'July', field: 'July', align: 'left' },
-        { label: 'August', field: 'August', align: 'left' },
-        { label: 'September', field: 'September', align: 'left' },
-        { label: 'October', field: 'October', align: 'left' },
-        { label: 'November', field: 'November', align: 'left' },
-        { label: 'December', field: 'December', align: 'left' },
-      ]}
-      data={supplierProducts}
+        title="Half year forecast of products"
+        subcode={null}
+        subtitle=""
+        width="100%"
+        columns={[
+          { label: 'Product name', field: 'productName', align: 'left' },
+          { label: 'July', field: 'July', align: 'center' },
+          { label: 'August', field: 'August', align: 'center' },
+          { label: 'September', field: 'September', align: 'center' },
+          { label: 'October', field: 'October', align: 'center' },
+          { label: 'November', field: 'November', align: 'center' },
+          { label: 'December', field: 'December', align: 'center' },
+        ]}
+        data={supplierProducts}
     />
 
 

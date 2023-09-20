@@ -17,11 +17,13 @@ export const TEAMS = "TEAMS";
 export const TEAM_COLORS = "TEAM_COLORS";
 export const CLEAR_USER = "CLEAR_USER";
 export const FORECAST = "FORECAST";
+export const FORECAST_UPDATE = "FORECAST";
+
 
 
 
 const initialState = {
-  messages: [], products: [], clients: [], user: "", token: "", theme: "light", hideTeams: false, roundednav: true, teams: [], processedForecast: [], team_colors: [
+  messages: [], products: [], clients: [], user: "", token: "", theme: "light", hideTeams: false, roundednav: true, teams: [], processedForecast: [], productsForecast: [], team_colors: [
     "linear-gradient(to bottom right, #a48300, #ffcf40, #9f7700)", //Gold
     "linear-gradient(to bottom right,  #646464,#c0c0c0 , #868585)",//Silver
     "linear-gradient(to bottom right, #742700, #ff7f50, #cc6849)", //Bronze
@@ -65,8 +67,45 @@ const dataReducer = (state, action) => {
     case FORECAST:
       return {
         ...state,
+
         processedForecast: action.payload.processedForecast
       };
+
+
+      // NEDOKONCENO JE TO FEATURE NENI TO BUG
+      
+    // case FORECAST_UPDATE:
+    //   // Získání payload z akce
+    //   const { payload } = action.payload;
+
+    //   console.log(payload)
+    //   // Aktualizace processedForecast
+    //   const updatedProcessedForecast = state.processedForecast.map(supplier => {
+    //     // Najdeme produkt s odpovídajícím productCode u dodavatele
+    //     const updatedProductsForecast = supplier.productsForecast.map(product => {
+    //       if (product.productCode === payload.productCode) {
+    //         // Pokud odpovídající produkt nalezen, aktualizujeme incoming
+    //         return {
+    //           ...product,
+    //           incoming: payload.incoming,
+    //         };
+    //       }
+    //       return product;
+    //     });
+
+    //     // Vrátíme aktualizované produkty pro dodavatele
+    //     return {
+    //       ...supplier,
+    //       productsForecast: updatedProductsForecast,
+    //     };
+    //   });
+
+    //   // Vrátíme nový stav s aktualizovaným processedForecast
+    //   return {
+    //     ...state,
+    //     processedForecast: updatedProcessedForecast,
+    //   };
+
 
     case NOTES:
       return {

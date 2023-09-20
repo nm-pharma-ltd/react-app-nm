@@ -120,23 +120,29 @@ export default function App() {
     try {
       setIsLoadingForecast(true);
       const authToken = token ? token : store.user.token;
-
+  
       const stockData = await ApiService.get(`suppliers/forecast/${year}/${month}`, { "Authorization": "Bearer " + authToken });
       console.log(stockData)
-
+  
       const processedForecast = stockData.map(supplier => {
         supplier.productsForecast.sort((a, b) => (a.productCode || '').localeCompare(b.productCode || ''));
         return supplier;
       });
-
-
-
+  
       console.log(processedForecast);
-
-      dispatch({ type: FORECAST, payload: { processedForecast } });
-
+  
+      // Dispatch akce a uložte si Promise, který představuje dokončení dispatchu
+      const dispatchPromise = new Promise(resolve => {
+        dispatch({ type: FORECAST, payload: { processedForecast } });
+        resolve(); // Tady můžete přidat další logiku, pokud je to nutné
+      });
+  
+      // Počkejte na dokončení dispatchu
+      await dispatchPromise;
+  
+      console.log("Local storage updated");
       setIsLoadingForecast(false);
-
+  
     } catch (error) {
       if (error.status === 401) {
         navigate('/Login');
@@ -146,10 +152,13 @@ export default function App() {
         setError("An error occurred. Please try again.");
       }
       console.error("Error fetching data:", error);
+  
+    } finally {
+      // Tato část se spustí vždy, ať už byla operace úspěšná nebo ne
       setIsLoadingPharmacies(false);
     }
   }
-
+  
 
   async function FetchAll() {
     fetchData();
@@ -226,8 +235,8 @@ export default function App() {
               <Route path="/pharmacies/clientdetails" element={<ClientDetails loading={isLoadingPharmacies} onYearChange={handleYearChange} onMonthChange={handleMonthChange}
                 selectedMonth={selectedMonth} selectedYear={selectedYear} />} />
               <Route path="/pharmacies/products/:productCode" element={<SingleProductDetails />} />
-              <Route path="/pharmacies/clients/:clientCode" element={<SinglePharmacyDetails onMonthChange={handleMonthChange}
-                selectedMonth={selectedMonth} />} />
+              <Route path="/pharmacies/clients/:clientCode" element={<SinglePharmacyDetails loading={isLoadingPharmacies} onYearChange={handleYearChange} onMonthChange={handleMonthChange}
+                selectedMonth={selectedMonth} selectedYear={selectedYear} />} />
               <Route
                 path="/stock"
                 element={

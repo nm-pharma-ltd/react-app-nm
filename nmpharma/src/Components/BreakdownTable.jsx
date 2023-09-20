@@ -1,35 +1,84 @@
-import { useEffect, useState } from 'react';
-import styled from 'styled-components';
+import { useEffect, useState } from "react";
+import styled from "styled-components";
 import { NavLink, useNavigate } from "react-router-dom";
-import { Dropdownos } from './BarChart';
+import { Dropdownos } from "./BarChart";
 
-export default function BreakdownTable({ title, subtitle, width, data, content }) {
-
+export default function BreakdownTable({
+  title,
+  subtitle,
+  width,
+  data,
+  content,
+}) {
   const navigate = useNavigate();
 
-
   const generateRows = () => {
-    return data && data.map((item, index) => (
-      <TableRow key={index} onClick={() => navigate(`/pharmacies/${content}/${content == "clients" ? item.clientCode : item.productCode}`)}>
-        <TableCell key={index}>
-          {item.name}
-        </TableCell>
-        {item.sales && item.sales.map((item, index) => (
-          <TableCell key={index} align='center'>
-            {item.quantity}
-          </TableCell>
-        ))}
-      </TableRow>
-    ));
+    const processedNames = new Set(); // Create a set to keep track of processed names
+
+    return (
+      data &&
+      data.map((item, index) => {
+        // Check if the name has already been processed
+        if (!processedNames.has(item.name)) {
+          processedNames.add(item.name); // Add the name to the set
+
+          return (
+            <TableRow
+              key={index}
+              onClick={() =>
+                navigate(
+                  `/pharmacies/${content}/${
+                    content == "clients" ? item.clientCode : item.productCode
+                  }`
+                )
+              }>
+              <TableCell key={index}>{item.name}</TableCell>
+              {item.sales &&
+                item.sales.map((item, index) => (
+                  <TableCell key={index} align="center">
+                    {item.quantity}
+                  </TableCell>
+                ))}
+            </TableRow>
+          );
+        }
+        return null; // Return null for duplicate names
+      })
+    );
   };
 
   const months = [
-    'January', 'February', 'March', 'April', 'May', 'June', 'July',
-    'August', 'September', 'October', 'November', 'December'
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
 
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  const tableWidth = (windowWidth * 0.79) - 400;
+
   return (
-    <Card width={width}>
+    <Card style={{ width: `${tableWidth}px` }}>
       <CardHeader>
         <Title>{title}</Title>
       </CardHeader>
@@ -38,9 +87,7 @@ export default function BreakdownTable({ title, subtitle, width, data, content }
         <TableElement>
           <TableHead>
             <TableRow>
-              <TableHeaderCell>
-                NAME
-              </TableHeaderCell>
+              <TableHeaderCell>NAME</TableHeaderCell>
               {months.map((month, index) => (
                 <TableHeaderCell key={index}>
                   {month.toUpperCase()}
@@ -55,18 +102,16 @@ export default function BreakdownTable({ title, subtitle, width, data, content }
   );
 }
 
-
 const Card = styled.div`
-  background-color: ${props => props.theme.componentBackground};
+  background-color: ${(props) => props.theme.componentBackground};
   border-radius: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 20px;
   margin-top: 20px;
   margin-right: 25px;
-  width: ${props => props.width || '48%'};
-  min-width: 500px;
+  min-width: 100%;  
 
-  @media (max-width: 1320px){
+  @media (max-width: 1320px) {
     width: 100%;
   }
 `;
@@ -88,22 +133,30 @@ const Subtitle = styled.p`
 `;
 
 const TableContainer = styled.div`
+  max-width: 100%;
   overflow-x: auto;
   margin-bottom: 20px;
+  display: flex;
 `;
 
 const TableElement = styled.table`
-  width: 100%;
+  min-width: 100%;
+  width: max-content;
   border-collapse: collapse;
 `;
 
 const TableHead = styled.thead`
-  border-bottom: 1px solid ${props => props.theme.line};
+  border-bottom: 1px solid ${(props) => props.theme.line};
 `;
 
 export const TableHeaderCell = styled.th`
   padding: 10px;
-  text-align: ${props => (props.align === 'right' ? 'right' : props.align === 'center' ? 'center' : 'left')};
+  text-align: ${(props) =>
+    props.align === "right"
+      ? "right"
+      : props.align === "center"
+      ? "center"
+      : "left"};
   color: #909090;
   font-weight: 500;
   text-wrap: nowrap;
@@ -116,15 +169,18 @@ export const TableHeaderCell = styled.th`
 
 export const TableCell = styled.td`
   padding: 10px;
-  border-bottom: 1px solid ${props => props.theme.line};
-  text-align: ${props => (props.align === 'right' ? 'right' : props.align === 'center' ? 'center' : 'left')};
-  white-space: nowrap;   // Prevents the text from wrapping onto the next line
-  overflow: hidden;      // Hides any text that goes beyond the container width
+  border-bottom: 1px solid ${(props) => props.theme.line};
+  text-align: ${(props) =>
+    props.align === "right"
+      ? "right"
+      : props.align === "center"
+      ? "center"
+      : "left"};
+  white-space: nowrap; // Prevents the text from wrapping onto the next line
+  overflow: hidden; // Hides any text that goes beyond the container width
   text-overflow: ellipsis; // Adds ellipsis when the text overflows
-  max-width: 220px;      // or whatever width you want to set
+  max-width: 220px; // or whatever width you want to set
 `;
-
-
 
 const TableBody = styled.tbody``;
 
@@ -132,32 +188,26 @@ const TableRow = styled.tr`
   cursor: pointer;
 
   &:hover {
-    background-color: ${props => props.theme.background};
+    background-color: ${(props) => props.theme.background};
   }
 `;
-
-
 
 export const ViewDetailsLink = styled(NavLink)`
   color: #e16a32;
   text-decoration: none;
   transition: all 0.25s ease-in-out;
-    
+
   &:hover {
     color: #753619;
     margin-right: 3px;
   }
 `;
 
-
 export const ProductLink = styled(NavLink)`
-  color: ${props => props.theme.text};
+  color: ${(props) => props.theme.text};
   text-decoration: none;
   transition: all 0.25s ease-in-out;
-
-
 `;
-
 
 export const GreenBox = styled.div`
   height: 22px;

@@ -72,6 +72,7 @@ export const ProfileSettings = () => {
       }
     //} catch (error) {
     //   console.error(`Failed to update profile: ${error.message}`);
+    //1 + 6 / 3 + 3 
     // }
 
     setNewPassword('');
