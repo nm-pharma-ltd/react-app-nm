@@ -4,9 +4,95 @@ import { CardHeader, Subtitle, Title } from './ForecastTable';
 
 export default function ForecastTableDetail({ width, columns, data, title, subtitle }) {
 
+  const [months, setMonths] = useState([
+    {
+      month: "January",
+      monthIndex: 1
+    },
+    {
+      month: "February",
+      monthIndex: 2
+    },
+    {
+      month: "March",
+      monthIndex: 3
+    },
+    {
+      month: "April",
+      monthIndex: 4
+    },
+    {
+      month: "May",
+      monthIndex: 5
+    },
+    {
+      month: "June",
+      monthIndex: 6
+    },
+    {
+      month: "July",
+      monthIndex: 7
+    },
+    {
+      month: "August",
+      monthIndex: 8
+    },
+    {
+      month: "September",
+      monthIndex: 9
+    },
+    {
+      month: "October",
+      monthIndex: 10
+    },
+    {
+      month: "November",
+      monthIndex: 11
+    },
+    {
+      month: "December",
+      monthIndex: 12
+    },
+  ])
+
+  function addMonths(date, months) {
+    date.setMonth(date.getMonth() + months);
+    return date;
+  }
+
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [monthsSliced, setMonthsSliced] = useState(false);
+  let [inputs, setInputs] = useState({}); // Use state for toOrder inputs in the forecast table
 
   useEffect(() => {
+    // Get the six months ahead from the current month for forecasting
+    if (monthsSliced == false) {
+      let newMonths = [];
+      let currentDate = new Date();
+
+      let currentMonth = currentDate.getMonth();
+      let endMonth = addMonths(currentDate, 11).getMonth() + 1;
+
+      let monthIndex = currentMonth; // Index for getting the the month data from the array
+      let monthOrder = 0; // Month order index so we can know how they're ordered (because of the year overlap)
+
+      while (monthIndex != endMonth) {
+        if (monthIndex > 11)
+          monthIndex = 0;
+
+        let new_month = { ...months[monthIndex] };
+        new_month["index"] = monthOrder;
+        newMonths.push(new_month);
+
+        monthIndex++;
+        monthOrder++;
+      }
+
+      console.log(newMonths);
+
+      setMonths(newMonths);
+      setMonthsSliced(true)
+    }
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
     };
@@ -17,6 +103,40 @@ export default function ForecastTableDetail({ width, columns, data, title, subti
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  // Calculate months of stock using the toOrder input
+  const calculateMonthsOfStock = (product, index) => {
+    if (product.averageQuantitySold === null)
+      return 0;
+
+    let stock = product.inStock + product.quantityOrdered + product.incoming; // This sum stays the same
+    let toOrder = 0;
+
+    if (inputs[product.productCode] !== undefined) {
+      let monthToOrder = inputs[product.productCode].filter(p => p.month <= index);
+      monthToOrder.forEach((item) => toOrder += item["toOrder"]);
+    }
+
+    return (stock + toOrder - product.averageQuantitySold * index) / product.averageQuantitySold;
+  };
+
+  // Calculate the toOrder placeholder value
+  const predictProductsPurchase = (product, index) => {
+    let order = 0;
+
+    if (inputs[product.productCode] !== undefined) {
+      let monthToOrder = inputs[product.productCode].filter(p => p.month <= index);
+      monthToOrder.forEach((item) => order += item["toOrder"]);
+    }
+    
+    let stock = product.inStock + product.quantityOrdered + product.incoming; // This sum stays the same
+    let toOrder = 6*product.averageQuantitySold - stock + product.averageQuantitySold * index - order;
+
+    if (toOrder < 0)
+      return 0;
+    
+    return toOrder;
+  };
 
   const tableWidth = (windowWidth * 0.79) - 400;
 
