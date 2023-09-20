@@ -93,22 +93,22 @@ export default function Table({ title, subtitle, viewDetailsLink, width, columns
 
 
   const monthDropdown = (
-    <Dropdownos value={selectedMonth} onChange={handleMonthChange}>
+    <DropdownosMain value={selectedMonth} onChange={handleMonthChange}>
       {months.map((month, index) => (
         <option key={index} value={index + 1}>
           {month}
         </option>
       ))}
-    </Dropdownos>
+    </DropdownosMain>
   );
   const yearDropdown = (
-    <Dropdownos value={selectedYear} onChange={handleYearChange}>
+    <DropdownosMain value={selectedYear} onChange={handleYearChange}>
       {years.map((year) => (
         <option key={year} value={year}>
           {year}
         </option>
       ))}
-    </Dropdownos>
+    </DropdownosMain>
   );
 
 
@@ -146,6 +146,25 @@ export default function Table({ title, subtitle, viewDetailsLink, width, columns
     </Card>
   );
 }
+
+const DropdownosMain = styled.select`
+  background-color: ${(props) => props.theme.componentBackground};
+  border: 1px solid ${(props) => props.theme.line};
+  padding: 5px 10px;
+  margin-right: 7px;
+  border-radius: 5px;
+  font-size: 16px;
+  outline: none;
+  cursor: pointer;
+  color: ${(props) => props.theme.text};
+  max-width: 110px;
+
+  &:hover,
+  &:focus {
+    border-color: ${(props) => props.theme.line};
+  }
+`;
+
 
 const RightMenu = styled.div`
   padding: 0.1em;
@@ -239,7 +258,6 @@ export const ViewDetailsLink = styled(NavLink)`
     
   &:hover {
     color: #753619;
-    margin-right: 3px;
   }
 `;
 

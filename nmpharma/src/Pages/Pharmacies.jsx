@@ -87,7 +87,7 @@ export default function Pharmacies({ IsLoadingPharmacies, IsLoadingProducts, sel
             subtitle="TOP 10"
             details="View details"
             viewDetailsLink="/pharmacies/productdetails"
-            width="47%"
+            width="48%"
             columns={[
               { label: "RANK", field: "rank", align: "left" },
               { label: "NAME", field: "productDescription", align: "left" },
@@ -167,7 +167,7 @@ export default function Pharmacies({ IsLoadingPharmacies, IsLoadingProducts, sel
             subtitle="TOP 10"
             details="View details"
             viewDetailsLink="/pharmacies/clientdetails"
-            width="47%"
+            width="48%"
             columns={[
               { label: "RANK", field: "rank", align: "left" },
               { label: "NAME", field: "clientName", align: "left" },

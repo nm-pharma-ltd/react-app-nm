@@ -8,7 +8,7 @@ import { FaInfinity } from "react-icons/fa6";
 import { Context, FORECAST_UPDATE } from "../providers/provider";
 import ApiService from "../api/ApiService";
 
-const StockCard = ({ data }) => {
+const StockCard = ({ data = { productsForecast: [] } }) => {
   const cardRef = useRef(null);
   const [store, dispatch] = useContext(Context);
   const [expanded, setExpanded] = useState(false);
@@ -18,10 +18,11 @@ const StockCard = ({ data }) => {
   const [editingProductCode, setEditingProductCode] = useState(null);
   const [editingIncomingValues, setEditingIncomingValues] = useState({});
 
-  const hasOnOrder = data.productsForecast.some(
+  const hasOnOrder = data.productsForecast?.some(
     (product) => product.quantityOrdered > 0
   );
-  const hasIncoming = data.productsForecast.some(
+  
+  const hasIncoming = data.productsForecast?.some(
     (product) => product.incoming > 0
   );
 

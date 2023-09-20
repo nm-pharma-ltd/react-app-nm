@@ -63,10 +63,10 @@ export default function ForecastTable({ title, subtitle, width, columns, data, s
 
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [monthsSliced, setMonthsSliced] = useState(false);
-  let [inputs, setInputs] = useState({});
-  const [store, dispatch] = useContext(Context);
+  let [inputs, setInputs] = useState({}); // Use state for toOrder inputs in the forecast table
 
   useEffect(() => {
+    // Get the six months ahead from the current month for forecasting
     if (monthsSliced == false) {
       let newMonths = [];
       let currentDate = new Date();
@@ -74,37 +74,36 @@ export default function ForecastTable({ title, subtitle, width, columns, data, s
       let currentMonth = currentDate.getMonth();
       let endMonth = addMonths(currentDate, 5).getMonth() + 1;
 
-      let ind = currentMonth;
-      let increase = 0;
+      let monthIndex = currentMonth; // Index for getting the the month data from the array
+      let monthOrder = 0; // Month order index so we can know how they're ordered (because of the year overlap)
 
-      while (ind != endMonth) {
-        if (ind > 11) {
-          ind = 0;
-        }
+      while (monthIndex != endMonth) {
+        if (monthIndex > 11)
+          monthIndex = 0;
 
-        let new_month = { ...months[ind] };
-        new_month["index"] = increase;
-
+        let new_month = { ...months[monthIndex] };
+        new_month["index"] = monthOrder;
         newMonths.push(new_month);
-        ind++;
-        increase++;
+
+        monthIndex++;
+        monthOrder++;
       }
 
       setMonths(newMonths);
       setMonthsSliced(true)
     }
+    
+    // Window resize
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
     };
     window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const tableWidth = (windowWidth * 0.79) - 400;
 
+  // Calculate months of stock using the toOrder input
   const calculateMonthsOfStock = (product, index) => {
     if (product.averageQuantitySold === null)
       return 0;
@@ -114,16 +113,31 @@ export default function ForecastTable({ title, subtitle, width, columns, data, s
 
     if (inputs[product.productCode] !== undefined) {
       let monthToOrder = inputs[product.productCode].filter(p => p.month <= index);
-
-      monthToOrder.forEach((item) => {
-        toOrder += item["toOrder"];
-      });
+      monthToOrder.forEach((item) => toOrder += item["toOrder"]);
     }
 
     return (stock + toOrder - product.averageQuantitySold * index) / product.averageQuantitySold;
   };
 
-  const handleChange = (e, product, month) => {
+  // Calculate the toOrder placeholder value
+  const predictProductsPurchase = (product, index) => {
+    let order = 0;
+
+    if (inputs[product.productCode] !== undefined) {
+      let monthToOrder = inputs[product.productCode].filter(p => p.month <= index);
+      monthToOrder.forEach((item) => order += item["toOrder"]);
+    }
+    
+    let stock = product.inStock + product.quantityOrdered + product.incoming; // This sum stays the same
+    let toOrder = 6*product.averageQuantitySold - stock + product.averageQuantitySold * index - order;
+
+    if (toOrder < 0)
+      return 0;
+    
+    return toOrder;
+  };
+
+  const toOrderChange = (e, product, month) => {
     if (e.target.value === "" || e.key !== "Enter")
       return;
 
@@ -157,7 +171,7 @@ export default function ForecastTable({ title, subtitle, width, columns, data, s
             <TableCell key={colIndex} align="center">
               <KontDown>
                 <span style={{ marginRight: "0.5em" }}>{calculateMonthsOfStock(item, mesic.index).toFixed(2)}</span>
-                <InputForecast onKeyPress={(e) => handleChange(e, item, mesic.index)} type="number" placeholder="" />
+                <InputForecast onKeyPress={(e) => toOrderChange(e, item, mesic.index)} type="number" placeholder={predictProductsPurchase(item, mesic.index)} />
               </KontDown>
             </TableCell>
           );

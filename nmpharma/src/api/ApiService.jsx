@@ -1,11 +1,12 @@
 import axios from 'axios';
 
 //Olas
-const API_BASE_URL = 'http://26.199.200.45:51050/api';
-
+//const API_BASE_URL = 'http://26.199.200.45:51050/api';
 //Roman
 //const API_BASE_URL = 'http://26.230.153.240:51050/api';
 
+//OFFICIAL 
+const API_BASE_URL = 'https://nmpharmaltdapi.azurewebsites.net/api'
 
 // Create an Axios instance
 const apiInstance = axios.create({

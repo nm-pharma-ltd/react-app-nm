@@ -5,8 +5,8 @@ import { Chart, registerables } from "chart.js";
 import styled from "styled-components";
 import ApiService from "../api/ApiService";
 import { Context } from "../providers/provider";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 Chart.register(...registerables);
+
 const BarChart = ({ onProductNameUpdate }) => {
   const [store] = useContext(Context);
   const { productCode } = useParams();
