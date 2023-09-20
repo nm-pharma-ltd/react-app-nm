@@ -26,21 +26,21 @@ export default function ForecastSingleProduct() {
         if (product.productCode == productCode) {
           // Assuming averageQuantitySold is the average quantity sold in 6 months
           const sixmonth = product.averageQuantitySold;
-
+  
           const currentOnOrder = product.quantityOrdered;
           const currentIncoming = product.incoming;
           const currentTotalInStock = product.inStock;
-
+  
           let monthsOfStock = "--"; // Default to '--' if calculation doesn't succeed
           if (sixmonth && sixmonth !== 0) {
             const calculatedMonths = (currentOnOrder + currentIncoming + currentTotalInStock) / sixmonth;
             monthsOfStock = Number.isFinite(calculatedMonths) ? calculatedMonths : "--";
           }
-
+  
           newData = {
             ...product,
             expiry: product.productExpire ? product.productExpire : <FaInfinity />,
-            monthsOfStock: monthsOfStock,
+            monthsOfStock: typeof monthsOfStock === 'number' ? monthsOfStock.toFixed(2) : monthsOfStock,
           }
           return;
         }
@@ -48,6 +48,7 @@ export default function ForecastSingleProduct() {
       setProductInfo({ ...newData, supplierCode: supplier.supplierCode })
     });
   }
+  
 
 
   useEffect(() => {
@@ -89,7 +90,7 @@ export default function ForecastSingleProduct() {
         <DataCard title="TOTAL IN STOCK" amount={productInfo?.inStock} pluspercentage={'+4% '} timewhen={' then last year'} icon={FaBox} iconBackgroundColor="#a4da05 " />
         <DataCard
           title="MONTHS OF STOCK"
-          amount={productInfo?.monthsOfStock.toFixed(2)}
+          amount={productInfo?.monthsOfStock}
           icon={FaCalendarAlt}
           textColor={handleColorChange()}
           iconBackgroundColor={'#ff9933'} />
