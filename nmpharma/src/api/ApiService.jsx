@@ -1,16 +1,16 @@
-import axios from 'axios';
+import axios from "axios";
 
 //Olas
-const API_BASE_URL = 'http://26.199.200.45:51050/api';
+// const API_BASE_URL = 'http://26.199.200.45:51050/api';
 //Roman
 //const API_BASE_URL = 'http://26.230.153.240:51050/api';
 
-//OFFICIAL 
-//const API_BASE_URL = 'https://nmpharmaltdapi.azurewebsites.net/api'
+//OFFICIAL
+const API_BASE_URL = "https://nmpharmaltdapi.azurewebsites.net/api";
 
 // Create an Axios instance
 const apiInstance = axios.create({
-  baseURL: API_BASE_URL
+  baseURL: API_BASE_URL,
 });
 
 // // Add a request interceptor
@@ -37,11 +37,12 @@ const apiInstance = axios.create({
 // );
 
 const ApiService = {
-  
   // GET
   get: async (endpoint, headers_data) => {
     try {
-      const response = await apiInstance.get(endpoint, { headers: headers_data });
+      const response = await apiInstance.get(endpoint, {
+        headers: headers_data,
+      });
       return response.data;
     } catch (error) {
       throw error;
@@ -51,7 +52,9 @@ const ApiService = {
   // POST
   post: async (endpoint, data, headers_data) => {
     try {
-      const response = await apiInstance.post(endpoint, data, { headers: headers_data });
+      const response = await apiInstance.post(endpoint, data, {
+        headers: headers_data,
+      });
       return response.data;
     } catch (error) {
       throw error;
@@ -61,7 +64,9 @@ const ApiService = {
   // DELETE
   delete: async (endpoint, headers_data) => {
     try {
-      const response = await apiInstance.delete(endpoint, { headers: headers_data });
+      const response = await apiInstance.delete(endpoint, {
+        headers: headers_data,
+      });
       return response.data;
     } catch (error) {
       throw error;
@@ -71,7 +76,9 @@ const ApiService = {
   // PUT
   put: async (endpoint, data, headers_data) => {
     try {
-      const response = await apiInstance.put(endpoint, data, { headers: headers_data });
+      const response = await apiInstance.put(endpoint, data, {
+        headers: headers_data,
+      });
       return response.data;
     } catch (error) {
       throw error;
